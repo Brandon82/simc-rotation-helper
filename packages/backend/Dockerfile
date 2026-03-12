@@ -21,9 +21,7 @@ COPY --from=builder /app/packages/backend/dist ./dist
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/packages/backend/package.json ./package.json
 
-# Data volume for LowDB JSON file
-VOLUME ["/app/data"]
-ENV DB_PATH=/app/data/db.json
+ENV DB_PATH=/app/data/db.sqlite
 
 EXPOSE 3001
 CMD ["node", "dist/index.js"]
