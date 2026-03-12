@@ -24,4 +24,4 @@ COPY --from=builder /app/packages/backend/package.json ./package.json
 ENV DB_PATH=/app/data/db.sqlite
 
 EXPOSE 3001
-CMD ["node", "dist/index.js"]
+CMD ["node", "dist/backend/src/index.js"]
