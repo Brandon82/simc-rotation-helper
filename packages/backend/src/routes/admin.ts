@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import type { Request, Response } from 'express';
 import { config } from '../config.js';
-import { checkAndUpdateSpec } from '../services/guideService.js';
+import { checkAndUpdateSpec, checkAndUpdateAll } from '../services/guideService.js';
 import { getSpecInfo } from '../data/specs.js';
 
 const router = Router();
@@ -24,6 +24,12 @@ router.post('/refresh', async (req: Request, res: Response) => {
   const { spec } = req.body as { spec?: string };
   if (!spec) {
     res.status(400).json({ error: 'Missing "spec" field in request body' });
+    return;
+  }
+
+  if (spec === 'all') {
+    const results = await checkAndUpdateAll();
+    res.json({ triggered: true, spec: 'all', results });
     return;
   }
 
