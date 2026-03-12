@@ -1,16 +1,15 @@
-import { Low } from 'lowdb';
-import { JSONFile } from 'lowdb/node';
+import Database from 'better-sqlite3';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
-import type { DbSchema, Guide, AplSnapshot } from '@simc-helper/shared';
+import type { Guide, AplSnapshot } from '@simc-helper/shared';
 import { config } from '../config.js';
 
-const defaultData: DbSchema = { guides: [], apl_snapshots: [] };
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-let db: Low<DbSchema> | null = null;
+let db: Database.Database | null = null;
 
-export async function getDb(): Promise<Low<DbSchema>> {
+export function getDb(): Database.Database {
   if (db) return db;
 
   const dir = path.dirname(config.dbPath);
@@ -18,74 +17,144 @@ export async function getDb(): Promise<Low<DbSchema>> {
     fs.mkdirSync(dir, { recursive: true });
   }
 
-  const adapter = new JSONFile<DbSchema>(config.dbPath);
-  db = new Low<DbSchema>(adapter, defaultData);
-  await db.read();
-  db.data.guides ??= [];
-  db.data.apl_snapshots ??= [];
-  await db.write();
+  db = new Database(config.dbPath);
+  db.pragma('journal_mode = WAL');
+  db.pragma('foreign_keys = ON');
+
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS guides (
+      id TEXT PRIMARY KEY,
+      spec_name TEXT NOT NULL,
+      class_name TEXT NOT NULL,
+      apl_content TEXT NOT NULL,
+      guide_content TEXT NOT NULL,
+      apl_commit_sha TEXT NOT NULL,
+      apl_commit_date TEXT NOT NULL,
+      generated_at TEXT NOT NULL,
+      is_current INTEGER NOT NULL DEFAULT 0,
+      model_used TEXT NOT NULL,
+      prompt_version TEXT NOT NULL
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_guides_spec_current
+      ON guides (spec_name, is_current);
+
+    CREATE TABLE IF NOT EXISTS apl_snapshots (
+      id TEXT PRIMARY KEY,
+      spec_name TEXT NOT NULL,
+      commit_sha TEXT NOT NULL,
+      commit_date TEXT NOT NULL,
+      content TEXT NOT NULL,
+      checked_at TEXT NOT NULL
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_snapshots_spec
+      ON apl_snapshots (spec_name);
+  `);
+
   return db;
 }
 
-/** Re-reads the JSON file from disk before every read operation so external
- *  processes (scripts, separate runs) are always reflected. */
-async function freshRead(): Promise<Low<DbSchema>> {
-  const instance = await getDb();
-  await instance.read();
-  return instance;
+// ── Row ↔ Guide conversion ────────────────────────────────────
+
+function rowToGuide(row: Record<string, unknown>): Guide {
+  return {
+    id: row.id as string,
+    spec_name: row.spec_name as string,
+    class_name: row.class_name as string,
+    apl_content: row.apl_content as string,
+    guide_content: JSON.parse(row.guide_content as string),
+    apl_commit_sha: row.apl_commit_sha as string,
+    apl_commit_date: row.apl_commit_date as string,
+    generated_at: row.generated_at as string,
+    is_current: (row.is_current as number) === 1,
+    model_used: row.model_used as string,
+    prompt_version: row.prompt_version as string,
+  };
+}
+
+function rowToAplSnapshot(row: Record<string, unknown>): AplSnapshot {
+  return {
+    id: row.id as string,
+    spec_name: row.spec_name as string,
+    commit_sha: row.commit_sha as string,
+    commit_date: row.commit_date as string,
+    content: row.content as string,
+    checked_at: row.checked_at as string,
+  };
 }
 
 // ── Guide helpers ────────────────────────────────────────────
 
 export async function getCurrentGuide(specName: string): Promise<Guide | null> {
-  const db = await freshRead();
-  return db.data.guides.find(g => g.spec_name === specName && g.is_current) ?? null;
+  const row = getDb()
+    .prepare('SELECT * FROM guides WHERE spec_name = ? AND is_current = 1 LIMIT 1')
+    .get(specName) as Record<string, unknown> | undefined;
+  return row ? rowToGuide(row) : null;
 }
 
 export async function getGuideById(id: string): Promise<Guide | null> {
-  const db = await freshRead();
-  return db.data.guides.find(g => g.id === id) ?? null;
+  const row = getDb()
+    .prepare('SELECT * FROM guides WHERE id = ? LIMIT 1')
+    .get(id) as Record<string, unknown> | undefined;
+  return row ? rowToGuide(row) : null;
 }
 
 export async function getGuideHistory(specName: string): Promise<Guide[]> {
-  const db = await freshRead();
-  return db.data.guides
-    .filter(g => g.spec_name === specName)
-    .sort((a, b) => b.generated_at.localeCompare(a.generated_at));
+  const rows = getDb()
+    .prepare('SELECT * FROM guides WHERE spec_name = ? ORDER BY generated_at DESC')
+    .all(specName) as Record<string, unknown>[];
+  return rows.map(rowToGuide);
 }
 
 export async function markGuidesNotCurrent(specName: string): Promise<void> {
-  const db = await freshRead();
-  db.data.guides.forEach(g => {
-    if (g.spec_name === specName) g.is_current = false;
-  });
-  await db.write();
+  getDb()
+    .prepare('UPDATE guides SET is_current = 0 WHERE spec_name = ?')
+    .run(specName);
 }
 
 export async function insertGuide(guide: Guide): Promise<void> {
-  const db = await getDb();
-  db.data.guides.push(guide);
-  await db.write();
+  getDb()
+    .prepare(`
+      INSERT INTO guides
+        (id, spec_name, class_name, apl_content, guide_content, apl_commit_sha,
+         apl_commit_date, generated_at, is_current, model_used, prompt_version)
+      VALUES
+        (@id, @spec_name, @class_name, @apl_content, @guide_content, @apl_commit_sha,
+         @apl_commit_date, @generated_at, @is_current, @model_used, @prompt_version)
+    `)
+    .run({
+      ...guide,
+      guide_content: JSON.stringify(guide.guide_content),
+      is_current: guide.is_current ? 1 : 0,
+    });
 }
 
 export async function getCurrentGuideShas(): Promise<Record<string, string>> {
-  const db = await freshRead();
+  const rows = getDb()
+    .prepare('SELECT spec_name, apl_commit_sha FROM guides WHERE is_current = 1')
+    .all() as { spec_name: string; apl_commit_sha: string }[];
   const result: Record<string, string> = {};
-  db.data.guides
-    .filter(g => g.is_current)
-    .forEach(g => { result[g.spec_name] = g.apl_commit_sha; });
+  for (const row of rows) result[row.spec_name] = row.apl_commit_sha;
   return result;
 }
 
 // ── APL Snapshot helpers ─────────────────────────────────────
 
 export async function insertAplSnapshot(snapshot: AplSnapshot): Promise<void> {
-  const db = await getDb();
-  db.data.apl_snapshots.push(snapshot);
-  await db.write();
+  getDb()
+    .prepare(`
+      INSERT INTO apl_snapshots
+        (id, spec_name, commit_sha, commit_date, content, checked_at)
+      VALUES
+        (@id, @spec_name, @commit_sha, @commit_date, @content, @checked_at)
+    `)
+    .run(snapshot);
 }
 
 export async function getSpecsWithGuides(): Promise<Set<string>> {
-  const db = await freshRead();
-  return new Set(db.data.guides.filter(g => g.is_current).map(g => g.spec_name));
+  const rows = getDb()
+    .prepare('SELECT DISTINCT spec_name FROM guides WHERE is_current = 1')
+    .all() as { spec_name: string }[];
+  return new Set(rows.map(r => r.spec_name));
 }

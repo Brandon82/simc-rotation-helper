@@ -24,7 +24,7 @@ if (!ALL_SPECS.find(s => s.name === specName)) {
   process.exit(1);
 }
 
-await getDb();
+getDb();
 const result = await checkAndUpdateSpec(specName, force);
 console.log(`\nResult: ${result}`);
 process.exit(0);
