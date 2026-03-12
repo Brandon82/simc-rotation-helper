@@ -14,7 +14,7 @@ async function seed() {
   console.log('Starting in 3 seconds... (Ctrl+C to abort)\n');
   await new Promise(r => setTimeout(r, 3000));
 
-  await getDb(); // ensure DB is initialized
+  getDb(); // ensure DB is initialized
   await checkAndUpdateAll(2000); // 2s between specs
 
   console.log('\nSeed complete!');

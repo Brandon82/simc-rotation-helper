@@ -17,7 +17,7 @@ for (const p of candidates) {
 
 export const config = {
   port: parseInt(process.env.PORT ?? '3001', 10),
-  dbPath: path.resolve(__dirname, '..', process.env.DB_PATH ?? 'data/db.json'),
+  dbPath: path.resolve(__dirname, '..', process.env.DB_PATH ?? 'data/db.sqlite'),
   anthropicApiKey: process.env.ANTHROPIC_API_KEY ?? '',
   anthropicModel: process.env.ANTHROPIC_MODEL ?? 'claude-opus-4-6',
   promptVersion: process.env.PROMPT_VERSION ?? '1.0.0',

@@ -25,9 +25,9 @@ app.get('/api/health', (_req, res) => {
 
 // ── Start ────────────────────────────────────────────────────
 async function main() {
-  // Initialize DB (creates file if it doesn't exist)
-  await getDb();
-  console.log('[db] LowDB initialized');
+  // Initialize DB (creates file + tables if they don't exist)
+  getDb();
+  console.log('[db] SQLite initialized');
 
   // Start daily cron
   startCron();
