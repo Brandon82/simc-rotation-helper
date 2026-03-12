@@ -1,0 +1,21 @@
+node_modules/
+dist/
+.env
+*.env.local
+
+# LowDB data file (contains generated content - gitignore or not, your choice)
+packages/backend/data/db.json
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Vite
+packages/frontend/dist/
+
+# TypeScript
+*.tsbuildinfo
