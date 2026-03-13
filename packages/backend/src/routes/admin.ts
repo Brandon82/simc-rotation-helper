@@ -21,15 +21,15 @@ function requireAdminAuth(req: Request, res: Response): boolean {
 router.post('/refresh', async (req: Request, res: Response) => {
   if (!requireAdminAuth(req, res)) return;
 
-  const { spec } = req.body as { spec?: string };
+  const { spec, force } = req.body as { spec?: string; force?: boolean };
   if (!spec) {
     res.status(400).json({ error: 'Missing "spec" field in request body' });
     return;
   }
 
   if (spec === 'all') {
-    const results = await checkAndUpdateAll();
-    res.json({ triggered: true, spec: 'all', results });
+    const results = await checkAndUpdateAll(2000, !!force);
+    res.json({ triggered: true, spec: 'all', force: !!force, results });
     return;
   }
 
@@ -39,8 +39,8 @@ router.post('/refresh', async (req: Request, res: Response) => {
     return;
   }
 
-  const result = await checkAndUpdateSpec(spec);
-  res.json({ triggered: true, spec, result });
+  const result = await checkAndUpdateSpec(spec, !!force);
+  res.json({ triggered: true, spec, force: !!force, result });
 });
 
 export default router;

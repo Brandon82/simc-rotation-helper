@@ -86,13 +86,15 @@ export async function checkAndUpdateSpec(specName: string, force = false): Promi
  * Runs checkAndUpdateSpec for all known specs sequentially.
  * Used by the daily cron job only — not exposed via the admin API.
  */
-export async function checkAndUpdateAll(delayMs = 2000): Promise<void> {
-  console.log(`[guideService] Starting full update for ${ALL_SPECS.length} specs`);
+export async function checkAndUpdateAll(delayMs = 2000, force = false): Promise<Record<string, string>> {
+  console.log(`[guideService] Starting full update for ${ALL_SPECS.length} specs (force=${force})`);
+  const results: Record<string, string> = {};
   for (const spec of ALL_SPECS) {
-    await checkAndUpdateSpec(spec.name);
+    results[spec.name] = await checkAndUpdateSpec(spec.name, force);
     if (delayMs > 0) {
       await new Promise(res => setTimeout(res, delayMs));
     }
   }
   console.log('[guideService] Full update complete');
+  return results;
 }

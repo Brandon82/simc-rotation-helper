@@ -36,13 +36,20 @@ else
   SPEC="all"
 fi
 
-echo "Refreshing guides for spec: $SPEC"
+read -rp "Force regenerate (skip SHA check)? [y/N]: " FORCE_ANSWER
+if [[ "${FORCE_ANSWER,,}" == "y" ]]; then
+  FORCE="true"
+else
+  FORCE="false"
+fi
+
+echo "Refreshing guides for spec: $SPEC (force=$FORCE)"
 echo "Target: $RAILWAY_URL"
 
 RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "$RAILWAY_URL/api/admin/refresh" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $ADMIN_SECRET" \
-  -d "{\"spec\":\"$SPEC\"}")
+  -d "{\"spec\":\"$SPEC\",\"force\":$FORCE}")
 
 BODY=$(echo "$RESPONSE" | head -n -1)
 STATUS=$(echo "$RESPONSE" | tail -n 1)
