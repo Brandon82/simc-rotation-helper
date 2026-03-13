@@ -183,6 +183,14 @@ export async function getAllGuideSummaries(): Promise<Omit<Guide, 'guide_content
   }));
 }
 
+export async function deleteOldGuides(specName?: string): Promise<number> {
+  const stmt = specName
+    ? getDb().prepare('DELETE FROM guides WHERE is_current = 0 AND spec_name = ?')
+    : getDb().prepare('DELETE FROM guides WHERE is_current = 0');
+  const result = specName ? stmt.run(specName) : stmt.run();
+  return result.changes;
+}
+
 export async function getSpecsWithGuides(): Promise<Set<string>> {
   const rows = getDb()
     .prepare('SELECT DISTINCT spec_name FROM guides WHERE is_current = 1')

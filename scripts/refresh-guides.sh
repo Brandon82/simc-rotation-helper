@@ -20,6 +20,38 @@ if [ -z "$ADMIN_SECRET" ]; then
   pause; exit 1
 fi
 
+# Prompt for action
+echo "Action:"
+echo "  1) Refresh guides"
+echo "  2) Delete old (non-current) guides"
+read -rp "Choice [1/2]: " ACTION
+
+if [ "$ACTION" = "2" ]; then
+  read -rp "Spec name to purge (or leave blank for all specs): " PURGE_SPEC
+  if [ -n "$PURGE_SPEC" ]; then
+    PURGE_BODY="{\"spec\":\"$PURGE_SPEC\"}"
+    echo "Deleting old guides for spec: $PURGE_SPEC"
+  else
+    PURGE_BODY="{}"
+    echo "Deleting old guides for all specs"
+  fi
+  echo "Target: $RAILWAY_URL"
+  RESPONSE=$(curl -s -w "\n%{http_code}" -X DELETE "$RAILWAY_URL/api/admin/guides/history" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer $ADMIN_SECRET" \
+    -d "$PURGE_BODY")
+  BODY=$(echo "$RESPONSE" | head -n -1)
+  STATUS=$(echo "$RESPONSE" | tail -n 1)
+  echo "Status: $STATUS"
+  echo "Response: $BODY"
+  if [ "$STATUS" -ge 200 ] && [ "$STATUS" -lt 300 ]; then
+    echo "Done."
+  else
+    echo "Error: request failed." >&2
+  fi
+  pause; exit 0
+fi
+
 # Prompt for spec type
 echo "Refresh type:"
 echo "  1) all"
