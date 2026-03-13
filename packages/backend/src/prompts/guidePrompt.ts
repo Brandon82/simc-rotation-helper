@@ -13,7 +13,10 @@ Key rules:
   - "rage>=52" → "when you have 52 or more Rage"
   - "talent.x.enabled" → "if you have the X talent"
 - Merge run_action_list / call_action_list jumps — describe the resulting priority, not the jump mechanic
-- For the priority lists, use the ACTUAL priority order from the APL (higher priority = lower order number)
+- For the priority lists, follow the MAIN execution sequence of the APL exactly. The main sequence is the section marked "# Executed every time the actor is available." (i.e. the top-level "actions+=" lines, which call into sub-lists). Inline the contents of each called sub-list in-place, preserving their relative order within the overall sequence.
+- For the single_target priority: follow the main sequence but skip any entries that belong exclusively to AoE sub-lists (e.g. run_action_list/call_action_list targeting an aoe-named list when the condition is a multi-target check). Keep everything else — cooldowns, utility, execute phases, etc.
+- For the aoe priority: follow the main sequence but skip any entries that belong exclusively to single-target sub-lists. Keep everything else — shared cooldowns, utility, etc.
+- Use the ACTUAL priority order from the APL (higher priority = lower order number)
 - Omit variable-setting lines from priority lists; only include actual ability casts
 - The "condition" field should be an empty string for unconditional casts
 - Keep ability conditions concise but accurate (1 sentence max)
@@ -31,10 +34,11 @@ The following is the complete Action Priority List for this spec. Each line foll
 Key syntax:
 - Lines starting with # are comments
 - "actions.precombat+=" = pre-combat setup actions
+- "actions+=" = the MAIN execution sequence (top-level, run every GCD). This is the spine of both priority lists.
 - "actions.X+=" = named sub-list X (e.g. st, aoe, execute, cooldowns, trinkets)
 - "if=" = condition gate (ability only used when true)
 - "variable,name=X,value=Y" = sets a local variable (skip these in priority lists)
-- "run_action_list,name=X" / "call_action_list,name=X" = jump to sub-list X
+- "run_action_list,name=X" / "call_action_list,name=X" = jump to sub-list X; inline those sub-list entries at that position
 - Conditions use dot-notation: buff.X.up, debuff.X.remains, cooldown.X.ready, etc.
 
 ---APL START---
@@ -66,7 +70,7 @@ Return ONLY this JSON (no markdown fences, no extra text):
       "title": "Single Target Priority",
       "content": "Brief description of the core single target loop",
       "priority": [
-        { "order": 1, "ability": "Ability Name", "condition": "condition or empty string", "note": "" }
+        { "order": 1, "ability": "Ability Name", "condition": "condition or empty string", "note": "Follow the main APL sequence; omit AoE-only branches" }
       ]
     },
     {
@@ -74,21 +78,13 @@ Return ONLY this JSON (no markdown fences, no extra text):
       "title": "AoE Priority",
       "content": "When to switch to AoE (target count threshold) and what changes",
       "priority": [
-        { "order": 1, "ability": "Ability Name", "condition": "condition or empty string", "note": "" }
+        { "order": 1, "ability": "Ability Name", "condition": "condition or empty string", "note": "Follow the main APL sequence; omit single-target-only branches" }
       ]
     },
     {
       "id": "items_and_racials",
       "title": "Trinkets, Racials & On-Use Items",
       "content": "A single prose paragraph describing when and how to use on-use trinkets, racial abilities, and other active items"
-    },
-    {
-      "id": "summary",
-      "title": "Priority List Summary",
-      "content": "One-liner capturing the essence of the rotation",
-      "priority": [
-        { "order": 1, "ability": "Ability Name", "condition": "condition or empty string", "note": "" }
-      ]
     }
   ]
 }`;
