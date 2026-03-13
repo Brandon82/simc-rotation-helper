@@ -62,7 +62,7 @@ export function SpecPage() {
   const specLabel = toLabel(specName ?? '');
 
   return (
-    <div className="max-w-3xl">
+    <div>
       {/* Spec header */}
       <div className="flex items-start justify-between mb-4">
         <div>
