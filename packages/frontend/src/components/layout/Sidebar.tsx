@@ -4,19 +4,35 @@ import { useState } from 'react';
 
 // WoW class colors as border/glow accents
 const CLASS_BORDER: Record<string, string> = {
-  death_knight: 'border-red-600 text-red-400',
-  demon_hunter: 'border-purple-500 text-purple-400',
-  druid: 'border-orange-400 text-orange-400',
-  evoker: 'border-teal-400 text-teal-400',
-  hunter: 'border-lime-400 text-lime-400',
-  mage: 'border-sky-400 text-sky-400',
-  monk: 'border-emerald-400 text-emerald-400',
-  paladin: 'border-pink-300 text-pink-300',
-  priest: 'border-gray-200 text-gray-200',
-  rogue: 'border-yellow-300 text-yellow-300',
-  shaman: 'border-blue-400 text-blue-400',
-  warlock: 'border-violet-400 text-violet-400',
-  warrior: 'border-yellow-600 text-yellow-500',
+  death_knight: 'border-red-600',
+  demon_hunter: 'border-purple-500',
+  druid: 'border-orange-400',
+  evoker: 'border-teal-400',
+  hunter: 'border-lime-400',
+  mage: 'border-sky-400',
+  monk: 'border-emerald-400',
+  paladin: 'border-pink-300',
+  priest: 'border-gray-200',
+  rogue: 'border-yellow-300',
+  shaman: 'border-blue-400',
+  warlock: 'border-violet-400',
+  warrior: 'border-yellow-600',
+};
+
+const CLASS_TEXT: Record<string, string> = {
+  death_knight: 'text-red-400',
+  demon_hunter: 'text-purple-400',
+  druid: 'text-orange-400',
+  evoker: 'text-teal-400',
+  hunter: 'text-lime-400',
+  mage: 'text-sky-400',
+  monk: 'text-emerald-400',
+  paladin: 'text-pink-300',
+  priest: 'text-gray-200',
+  rogue: 'text-yellow-300',
+  shaman: 'text-blue-400',
+  warlock: 'text-violet-400',
+  warrior: 'text-yellow-500',
 };
 
 const CLASS_ACTIVE_BG: Record<string, string> = {
@@ -101,7 +117,8 @@ export function Sidebar() {
 
         <div className="space-y-0.5">
           {data?.classes.map(cls => {
-            const colors = CLASS_BORDER[cls.name] ?? 'border-gray-500 text-gray-300';
+            const borderColor = CLASS_BORDER[cls.name] ?? 'border-gray-500';
+            const textColor = CLASS_TEXT[cls.name] ?? 'text-gray-300';
             const activeBg = CLASS_ACTIVE_BG[cls.name] ?? 'bg-gray-800/20';
             const isOpen = !!collapsed[cls.name];
 
@@ -109,10 +126,10 @@ export function Sidebar() {
               <div key={cls.name}>
                 <button
                   onClick={() => toggleClass(cls.name)}
-                  className={`w-full text-left flex items-center justify-between px-2.5 py-1.5 rounded-md transition-all text-xs font-semibold border-l-2 ${
+                  className={`w-full text-left flex items-center justify-between px-2.5 py-1.5 rounded-md transition-all text-xs font-semibold border-l-2 ${textColor} ${
                     isOpen
-                      ? `${colors} ${activeBg}`
-                      : 'border-transparent text-gray-400 hover:text-gray-200 hover:bg-gray-800/40'
+                      ? `${borderColor} ${activeBg}`
+                      : 'border-transparent hover:bg-gray-800/40'
                   }`}
                 >
                   <span>{cls.label}</span>
