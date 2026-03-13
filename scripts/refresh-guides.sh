@@ -25,7 +25,8 @@ echo "Refresh type:"
 echo "  1) all"
 echo "  2) specific spec"
 echo "  3) multiple specs (parallel)"
-read -rp "Choice [1/2/3]: " CHOICE
+echo "  4) all specs for a class (parallel)"
+read -rp "Choice [1/2/3/4]: " CHOICE
 
 if [ "$CHOICE" = "2" ]; then
   read -rp "Spec name (e.g. warrior_arms): " SPEC
@@ -34,12 +35,23 @@ if [ "$CHOICE" = "2" ]; then
     pause; exit 1
   fi
   SPEC_JSON="\"$SPEC\""
+  CLASS_JSON=""
+elif [ "$CHOICE" = "4" ]; then
+  read -rp "Class name (e.g. warrior): " CLASS_INPUT
+  if [ -z "$CLASS_INPUT" ]; then
+    echo "Error: class name cannot be empty." >&2
+    pause; exit 1
+  fi
+  CLASS_JSON="\"$CLASS_INPUT\""
+  SPEC="class:$CLASS_INPUT"
+  SPEC_JSON=""
 elif [ "$CHOICE" = "3" ]; then
   read -rp "Spec names comma-separated, or 'all' (e.g. warrior_arms,mage_fire): " SPEC_INPUT
   if [ -z "$SPEC_INPUT" ]; then
     echo "Error: spec list cannot be empty." >&2
     pause; exit 1
   fi
+  CLASS_JSON=""
   if [ "$SPEC_INPUT" = "all" ]; then
     SPEC="all"
     SPEC_JSON="\"all\""
@@ -59,6 +71,7 @@ elif [ "$CHOICE" = "3" ]; then
 else
   SPEC="all"
   SPEC_JSON="\"all\""
+  CLASS_JSON=""
 fi
 
 read -rp "Force regenerate (skip SHA check)? [y/N]: " FORCE_ANSWER
@@ -71,10 +84,16 @@ fi
 echo "Refreshing guides for spec: $SPEC (force=$FORCE)"
 echo "Target: $RAILWAY_URL"
 
+if [ -n "$CLASS_JSON" ]; then
+  BODY_JSON="{\"class\":$CLASS_JSON,\"force\":$FORCE}"
+else
+  BODY_JSON="{\"spec\":$SPEC_JSON,\"force\":$FORCE}"
+fi
+
 RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "$RAILWAY_URL/api/admin/refresh" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $ADMIN_SECRET" \
-  -d "{\"spec\":$SPEC_JSON,\"force\":$FORCE}")
+  -d "$BODY_JSON")
 
 BODY=$(echo "$RESPONSE" | head -n -1)
 STATUS=$(echo "$RESPONSE" | tail -n 1)

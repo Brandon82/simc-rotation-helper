@@ -4,7 +4,7 @@ import { config } from '../config.js';
 import * as db from '../db/client.js';
 import * as github from './githubService.js';
 import { generateGuide } from './llmService.js';
-import { getSpecInfo, getClassForSpec, ALL_SPECS } from '../data/specs.js';
+import { getSpecInfo, getClassForSpec, getClassInfo, ALL_SPECS } from '../data/specs.js';
 
 /**
  * Checks if the APL for a spec has changed since last generation.
@@ -80,6 +80,17 @@ export async function checkAndUpdateSpec(specName: string, force = false): Promi
     console.error(`[guideService] Error processing ${specName}:`, err);
     return 'error';
   }
+}
+
+/**
+ * Runs checkAndUpdateSpec for all specs in a class in parallel.
+ */
+export async function checkAndUpdateClass(className: string, force = false): Promise<Record<string, string>> {
+  const classInfo = getClassInfo(className);
+  if (!classInfo) throw new Error(`Unknown class: ${className}`);
+  const specNames = classInfo.specs.map(s => s.name);
+  console.log(`[guideService] Starting parallel update for class "${className}" (${specNames.length} specs, force=${force})`);
+  return checkAndUpdateMany(specNames, force);
 }
 
 /**

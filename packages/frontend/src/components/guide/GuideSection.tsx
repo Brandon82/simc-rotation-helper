@@ -1,5 +1,6 @@
 import type { GuideSection as GuideSectionType } from '../../types';
 import { PriorityList } from './PriorityList';
+import { InlineMarkdown } from './InlineMarkdown';
 
 interface GuideSectionProps {
   section: GuideSectionType;
@@ -32,14 +33,18 @@ export function GuideSection({ section }: GuideSectionProps) {
       <h2 className="text-lg font-bold text-white mb-2">{title}</h2>
 
       {section.content && (
-        <p className="text-gray-300 text-sm leading-relaxed">{section.content}</p>
+        <p className="text-gray-300 text-sm leading-relaxed">
+          <InlineMarkdown text={section.content} />
+        </p>
       )}
 
       {/* Ordered steps (precombat) */}
       {section.steps && section.steps.length > 0 && (
         <ol className="mt-3 space-y-1 list-decimal list-inside">
           {section.steps.map((step, i) => (
-            <li key={i} className="text-sm text-gray-300 pl-1">{step}</li>
+            <li key={i} className="text-sm text-gray-300 pl-1">
+              <InlineMarkdown text={step} />
+            </li>
           ))}
         </ol>
       )}

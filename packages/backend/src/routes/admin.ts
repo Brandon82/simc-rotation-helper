@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import type { Request, Response } from 'express';
 import { config } from '../config.js';
-import { checkAndUpdateSpec, checkAndUpdateMany, checkAndUpdateAll } from '../services/guideService.js';
-import { getSpecInfo } from '../data/specs.js';
+import { checkAndUpdateSpec, checkAndUpdateMany, checkAndUpdateClass, checkAndUpdateAll } from '../services/guideService.js';
+import { getSpecInfo, getClassInfo } from '../data/specs.js';
 
 const router = Router();
 
@@ -21,9 +21,21 @@ function requireAdminAuth(req: Request, res: Response): boolean {
 router.post('/refresh', async (req: Request, res: Response) => {
   if (!requireAdminAuth(req, res)) return;
 
-  const { spec, force } = req.body as { spec?: string | string[]; force?: boolean };
+  const { spec, class: className, force } = req.body as { spec?: string | string[]; class?: string; force?: boolean };
+
+  // Class refresh → all specs for that class in parallel
+  if (className) {
+    if (!getClassInfo(className)) {
+      res.status(400).json({ error: `Unknown class: ${className}` });
+      return;
+    }
+    const results = await checkAndUpdateClass(className, !!force);
+    res.json({ triggered: true, class: className, force: !!force, results });
+    return;
+  }
+
   if (!spec) {
-    res.status(400).json({ error: 'Missing "spec" field in request body' });
+    res.status(400).json({ error: 'Missing "spec" or "class" field in request body' });
     return;
   }
 
