@@ -20,8 +20,10 @@ export async function checkAndUpdateSpec(specName: string, force = false): Promi
       return 'error';
     }
 
+    const aplFileName = specInfo.aplName ?? specName;
+
     // 1. Get latest commit info from GitHub
-    const { sha, date } = await github.getLatestCommitInfo(specName);
+    const { sha, date } = await github.getLatestCommitInfo(aplFileName);
 
     // 2. Check if we already have a guide for this SHA (skip if force)
     const existing = await db.getCurrentGuide(specName);
@@ -36,7 +38,7 @@ export async function checkAndUpdateSpec(specName: string, force = false): Promi
     console.log(`[guideService] ${specName}: change detected (${existing?.apl_commit_sha?.slice(0, 8) ?? 'none'} → ${sha.slice(0, 8)})`);
 
     // 3. Fetch raw APL content
-    const aplContent = await github.fetchAplContent(specName);
+    const aplContent = await github.fetchAplContent(aplFileName);
 
     // 4. Store APL snapshot
     const snapshot: AplSnapshot = {
