@@ -14,10 +14,11 @@ const ROLE_LABELS: Record<string, string> = {
 };
 
 function toLabel(specName: string): string {
-  return specName
-    .split('_')
-    .map(w => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(' ');
+  const parts = specName.split('_');
+  const spec = parts[parts.length - 1];
+  const cls = parts.slice(0, -1);
+  const capitalize = (w: string) => w.charAt(0).toUpperCase() + w.slice(1);
+  return `${capitalize(spec)} ${cls.map(capitalize).join(' ')}`;
 }
 
 export function SpecPage() {
@@ -130,7 +131,7 @@ export function SpecPage() {
       {!loadingHistory && displayGuide && (
         <>
           <GuideMeta
-            specName={specName ?? ''}
+            aplFileName={displayGuide.aplFileName}
             aplCommitSha={displayGuide.aplCommitSha}
             aplCommitDate={displayGuide.aplCommitDate}
             generatedAt={displayGuide.generatedAt}

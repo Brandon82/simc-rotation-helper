@@ -5,6 +5,7 @@ import {
   getGuideHistory,
   getGuideById,
 } from '../db/client.js';
+import { getSpecInfo } from '../data/specs.js';
 import type { GuideApiResponse, GuideHistoryApiResponse } from '@simc-helper/shared';
 
 const router = Router();
@@ -19,10 +20,12 @@ router.get('/:specName', async (req: Request, res: Response) => {
       return;
     }
 
+    const specInfo = getSpecInfo(guide.spec_name);
     const response: GuideApiResponse = {
       id: guide.id,
       specName: guide.spec_name,
       className: guide.class_name,
+      aplFileName: specInfo?.aplName ?? guide.spec_name,
       aplCommitSha: guide.apl_commit_sha,
       aplCommitDate: guide.apl_commit_date,
       generatedAt: guide.generated_at,
@@ -69,10 +72,12 @@ router.get('/:specName/history/:id', async (req: Request, res: Response) => {
       return;
     }
 
+    const specInfo = getSpecInfo(guide.spec_name);
     const response: GuideApiResponse = {
       id: guide.id,
       specName: guide.spec_name,
       className: guide.class_name,
+      aplFileName: specInfo?.aplName ?? guide.spec_name,
       aplCommitSha: guide.apl_commit_sha,
       aplCommitDate: guide.apl_commit_date,
       generatedAt: guide.generated_at,
