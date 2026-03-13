@@ -77,6 +77,7 @@ export interface GuideApiResponse {
   id: string;
   specName: string;
   className: string;
+  aplFileName: string;
   aplCommitSha: string;
   aplCommitDate: string;
   generatedAt: string;

@@ -1,18 +1,18 @@
 interface GuideMetaProps {
-  specName: string;
+  aplFileName: string;
   aplCommitSha: string;
   aplCommitDate: string;
   generatedAt: string;
   modelUsed: string;
 }
 
-export function GuideMeta({ specName, aplCommitSha, aplCommitDate, generatedAt, modelUsed }: GuideMetaProps) {
+export function GuideMeta({ aplFileName, aplCommitSha, aplCommitDate, generatedAt, modelUsed }: GuideMetaProps) {
   const fmt = (iso: string) =>
     new Date(iso).toLocaleDateString('en-US', {
       year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
     });
 
-  const aplUrl = `https://github.com/simulationcraft/simc/blob/${aplCommitSha}/ActionPriorityLists/default/${specName}.simc`;
+  const aplUrl = `https://github.com/simulationcraft/simc/blob/${aplCommitSha}/ActionPriorityLists/default/${aplFileName}.simc`;
 
   return (
     <div className="flex flex-wrap gap-3 text-xs text-gray-500 bg-gray-900 rounded-lg px-4 py-2.5 border border-gray-800 mb-6">
