@@ -234,6 +234,25 @@ export function HomePage() {
           <span className="text-gray-600 group-hover:text-indigo-400 transition-colors text-lg">→</span>
         </Link>
 
+        {/* Guide History card */}
+        <Link
+          to="/history"
+          className="group flex items-center gap-4 bg-gray-900 border border-gray-800 hover:border-blue-500/50 rounded-2xl p-5 transition-all hover:bg-gray-800/60"
+        >
+          <div className="w-10 h-10 rounded-xl bg-blue-600/20 flex items-center justify-center text-xl flex-shrink-0 group-hover:bg-blue-600/30 transition-colors">
+            🗂
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-semibold text-white group-hover:text-blue-300 transition-colors">
+              Guide History
+            </p>
+            <p className="text-xs text-gray-500 mt-0.5">
+              Browse previously generated guides and track how rotations have changed over time.
+            </p>
+          </div>
+          <span className="text-gray-600 group-hover:text-blue-400 transition-colors text-lg">→</span>
+        </Link>
+
       </div>
     </div>
   );
