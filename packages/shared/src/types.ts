@@ -110,3 +110,20 @@ export interface RankingsApiResponse {
   singleTarget: RankingItem[];
   aoe: RankingItem[];
 }
+
+export interface GuideSummaryItem {
+  id: string;
+  specName: string;
+  specLabel: string;
+  className: string;
+  classLabel: string;
+  aplCommitSha: string;
+  aplCommitDate: string;
+  generatedAt: string;
+  isCurrent: boolean;
+  modelUsed: string;
+}
+
+export interface AllGuidesApiResponse {
+  guides: GuideSummaryItem[];
+}

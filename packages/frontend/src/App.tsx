@@ -5,6 +5,7 @@ import { HomePage } from './pages/HomePage';
 import { SpecPage } from './pages/SpecPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { RankingsPage } from './pages/RankingsPage';
+import { HistoryPage } from './pages/HistoryPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -24,6 +25,7 @@ function App() {
             <Route index element={<HomePage />} />
             <Route path="/guide/:specName" element={<SpecPage />} />
             <Route path="/rankings" element={<RankingsPage />} />
+            <Route path="/history" element={<HistoryPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>

@@ -159,6 +159,30 @@ export async function insertAplSnapshot(snapshot: AplSnapshot): Promise<void> {
     .run(snapshot);
 }
 
+export async function getAllGuideSummaries(): Promise<Omit<Guide, 'guide_content' | 'apl_content'>[]> {
+  const rows = getDb()
+    .prepare(`
+      SELECT id, spec_name, class_name, apl_commit_sha, apl_commit_date,
+             generated_at, is_current, model_used, prompt_version
+      FROM guides
+      ORDER BY generated_at DESC
+    `)
+    .all() as Record<string, unknown>[];
+  return rows.map(row => ({
+    id: row.id as string,
+    spec_name: row.spec_name as string,
+    class_name: row.class_name as string,
+    apl_content: '',
+    guide_content: { sections: [] },
+    apl_commit_sha: row.apl_commit_sha as string,
+    apl_commit_date: row.apl_commit_date as string,
+    generated_at: row.generated_at as string,
+    is_current: (row.is_current as number) === 1,
+    model_used: row.model_used as string,
+    prompt_version: row.prompt_version as string,
+  }));
+}
+
 export async function getSpecsWithGuides(): Promise<Set<string>> {
   const rows = getDb()
     .prepare('SELECT DISTINCT spec_name FROM guides WHERE is_current = 1')

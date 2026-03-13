@@ -4,11 +4,41 @@ import {
   getCurrentGuide,
   getGuideHistory,
   getGuideById,
+  getAllGuideSummaries,
 } from '../db/client.js';
-import { getSpecInfo } from '../data/specs.js';
-import type { GuideApiResponse, GuideHistoryApiResponse } from '@simc-helper/shared';
+import { getSpecInfo, getClassForSpec, getClassInfo } from '../data/specs.js';
+import type { GuideApiResponse, GuideHistoryApiResponse, AllGuidesApiResponse } from '@simc-helper/shared';
 
 const router = Router();
+
+// GET /api/guides — all guide entries (current + historical), metadata only
+router.get('/', async (_req: Request, res: Response) => {
+  try {
+    const summaries = await getAllGuideSummaries();
+    const response: AllGuidesApiResponse = {
+      guides: summaries.map(g => {
+        const specInfo = getSpecInfo(g.spec_name);
+        const classInfo = getClassInfo(g.class_name);
+        return {
+          id: g.id,
+          specName: g.spec_name,
+          specLabel: specInfo?.label ?? g.spec_name,
+          className: g.class_name,
+          classLabel: classInfo?.label ?? g.class_name,
+          aplCommitSha: g.apl_commit_sha,
+          aplCommitDate: g.apl_commit_date,
+          generatedAt: g.generated_at,
+          isCurrent: g.is_current,
+          modelUsed: g.model_used,
+        };
+      }),
+    };
+    res.json(response);
+  } catch (err) {
+    console.error('[GET /api/guides]', err);
+    res.status(500).json({ error: 'Failed to load guide list' });
+  }
+});
 
 // GET /api/guides/:specName
 router.get('/:specName', async (req: Request, res: Response) => {
