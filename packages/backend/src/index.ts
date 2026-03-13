@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
 import { config } from './config.js';
 import { getDb } from './db/client.js';
 import { startCron } from './services/cronService.js';
@@ -15,11 +16,30 @@ app.use(helmet());
 app.use(cors({ origin: config.corsOrigin }));
 app.use(express.json());
 
+// ── Rate Limiters ─────────────────────────────────────────────
+// General: 120 requests per minute per IP for public API
+const generalLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 120,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests, please slow down.' },
+});
+
+// Admin: 10 requests per minute per IP (auth-protected but still limit)
+const adminLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many admin requests.' },
+});
+
 // ── Routes ───────────────────────────────────────────────────
-app.use('/api/specs', specsRouter);
-app.use('/api/guides', guidesRouter);
-app.use('/api/admin', adminRouter);
-app.use('/api/rankings', rankingsRouter);
+app.use('/api/specs', generalLimiter, specsRouter);
+app.use('/api/guides', generalLimiter, guidesRouter);
+app.use('/api/admin', adminLimiter, adminRouter);
+app.use('/api/rankings', generalLimiter, rankingsRouter);
 
 app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', uptime: Math.floor(process.uptime()) });
