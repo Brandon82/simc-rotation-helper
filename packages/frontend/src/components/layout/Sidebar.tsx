@@ -103,7 +103,7 @@ export function Sidebar() {
           {data?.classes.map(cls => {
             const colors = CLASS_BORDER[cls.name] ?? 'border-gray-500 text-gray-300';
             const activeBg = CLASS_ACTIVE_BG[cls.name] ?? 'bg-gray-800/20';
-            const isOpen = !collapsed[cls.name];
+            const isOpen = !!collapsed[cls.name];
 
             return (
               <div key={cls.name}>
