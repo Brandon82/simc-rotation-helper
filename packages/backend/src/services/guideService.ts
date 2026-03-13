@@ -83,6 +83,18 @@ export async function checkAndUpdateSpec(specName: string, force = false): Promi
 }
 
 /**
+ * Runs checkAndUpdateSpec for a list of specs in parallel.
+ */
+export async function checkAndUpdateMany(specNames: string[], force = false): Promise<Record<string, string>> {
+  console.log(`[guideService] Starting parallel update for ${specNames.length} specs (force=${force})`);
+  const entries = await Promise.all(
+    specNames.map(async name => [name, await checkAndUpdateSpec(name, force)] as const)
+  );
+  console.log('[guideService] Parallel update complete');
+  return Object.fromEntries(entries);
+}
+
+/**
  * Runs checkAndUpdateSpec for all known specs sequentially.
  * Used by the daily cron job only — not exposed via the admin API.
  */

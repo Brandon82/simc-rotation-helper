@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import type { Request, Response } from 'express';
 import { config } from '../config.js';
-import { checkAndUpdateSpec, checkAndUpdateAll } from '../services/guideService.js';
+import { checkAndUpdateSpec, checkAndUpdateMany, checkAndUpdateAll } from '../services/guideService.js';
 import { getSpecInfo } from '../data/specs.js';
 
 const router = Router();
@@ -21,9 +21,21 @@ function requireAdminAuth(req: Request, res: Response): boolean {
 router.post('/refresh', async (req: Request, res: Response) => {
   if (!requireAdminAuth(req, res)) return;
 
-  const { spec, force } = req.body as { spec?: string; force?: boolean };
+  const { spec, force } = req.body as { spec?: string | string[]; force?: boolean };
   if (!spec) {
     res.status(400).json({ error: 'Missing "spec" field in request body' });
+    return;
+  }
+
+  // Array of specs → parallel execution
+  if (Array.isArray(spec)) {
+    const unknown = spec.filter(s => !getSpecInfo(s));
+    if (unknown.length) {
+      res.status(400).json({ error: `Unknown spec(s): ${unknown.join(', ')}` });
+      return;
+    }
+    const results = await checkAndUpdateMany(spec, !!force);
+    res.json({ triggered: true, spec, force: !!force, results });
     return;
   }
 
