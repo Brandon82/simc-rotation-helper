@@ -109,8 +109,10 @@ export function Sidebar() {
               <div key={cls.name}>
                 <button
                   onClick={() => toggleClass(cls.name)}
-                  className={`w-full text-left flex items-center justify-between px-2.5 py-1.5 rounded-md transition-all text-xs font-semibold border-l-2 ${colors} ${
-                    isOpen ? activeBg : 'border-transparent text-gray-400 hover:text-gray-200 hover:bg-gray-800/40'
+                  className={`w-full text-left flex items-center justify-between px-2.5 py-1.5 rounded-md transition-all text-xs font-semibold border-l-2 ${
+                    isOpen
+                      ? `${colors} ${activeBg}`
+                      : 'border-transparent text-gray-400 hover:text-gray-200 hover:bg-gray-800/40'
                   }`}
                 >
                   <span>{cls.label}</span>
