@@ -48,6 +48,17 @@ export function Sidebar() {
   return (
     <nav className="w-56 shrink-0 bg-gray-900 border-r border-gray-800 overflow-y-auto">
       <div className="p-2">
+        <NavLink
+          to="/rankings"
+          className={({ isActive }) =>
+            `flex items-center gap-2 px-2 py-1.5 rounded text-sm transition-colors mb-2 ${
+              isActive ? 'bg-gray-700 text-white' : 'text-gray-400 hover:text-gray-200 hover:bg-gray-800'
+            }`
+          }
+        >
+          <span className="text-xs">📊</span>
+          <span>Complexity Ranking</span>
+        </NavLink>
         <p className="text-xs text-gray-500 uppercase tracking-wider px-2 mb-2 mt-1">Classes</p>
         {data?.classes.map(cls => (
           <div key={cls.name}>

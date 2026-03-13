@@ -139,6 +139,13 @@ export async function getCurrentGuideShas(): Promise<Record<string, string>> {
   return result;
 }
 
+export async function getAllCurrentGuides(): Promise<Guide[]> {
+  const rows = getDb()
+    .prepare('SELECT * FROM guides WHERE is_current = 1')
+    .all() as Record<string, unknown>[];
+  return rows.map(rowToGuide);
+}
+
 // ── APL Snapshot helpers ─────────────────────────────────────
 
 export async function insertAplSnapshot(snapshot: AplSnapshot): Promise<void> {
