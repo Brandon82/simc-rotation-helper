@@ -12,6 +12,9 @@ import rankingsRouter from './routes/rankings.js';
 
 const app = express();
 
+// Trust first proxy hop (Railway, Vercel, etc.)
+app.set('trust proxy', 1);
+
 app.use(helmet());
 app.use(cors({ origin: config.corsOrigin }));
 app.use(express.json());
