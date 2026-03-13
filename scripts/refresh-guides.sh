@@ -24,7 +24,8 @@ fi
 echo "Refresh type:"
 echo "  1) all"
 echo "  2) specific spec"
-read -rp "Choice [1/2]: " CHOICE
+echo "  3) multiple specs (parallel)"
+read -rp "Choice [1/2/3]: " CHOICE
 
 if [ "$CHOICE" = "2" ]; then
   read -rp "Spec name (e.g. warrior_arms): " SPEC
@@ -32,8 +33,32 @@ if [ "$CHOICE" = "2" ]; then
     echo "Error: spec name cannot be empty." >&2
     pause; exit 1
   fi
+  SPEC_JSON="\"$SPEC\""
+elif [ "$CHOICE" = "3" ]; then
+  read -rp "Spec names comma-separated, or 'all' (e.g. warrior_arms,mage_fire): " SPEC_INPUT
+  if [ -z "$SPEC_INPUT" ]; then
+    echo "Error: spec list cannot be empty." >&2
+    pause; exit 1
+  fi
+  if [ "$SPEC_INPUT" = "all" ]; then
+    SPEC="all"
+    SPEC_JSON="\"all\""
+  else
+    # Build a JSON array from the comma-separated input
+    SPEC_JSON=$(echo "$SPEC_INPUT" | awk -F',' '{
+      printf "[";
+      for (i=1;i<=NF;i++) {
+        gsub(/^[ \t]+|[ \t]+$/, "", $i);
+        printf "\"%s\"", $i;
+        if (i<NF) printf ",";
+      }
+      printf "]"
+    }')
+    SPEC="multiple"
+  fi
 else
   SPEC="all"
+  SPEC_JSON="\"all\""
 fi
 
 read -rp "Force regenerate (skip SHA check)? [y/N]: " FORCE_ANSWER
@@ -49,7 +74,7 @@ echo "Target: $RAILWAY_URL"
 RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "$RAILWAY_URL/api/admin/refresh" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $ADMIN_SECRET" \
-  -d "{\"spec\":\"$SPEC\",\"force\":$FORCE}")
+  -d "{\"spec\":$SPEC_JSON,\"force\":$FORCE}")
 
 BODY=$(echo "$RESPONSE" | head -n -1)
 STATUS=$(echo "$RESPONSE" | tail -n 1)
