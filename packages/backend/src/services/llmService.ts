@@ -19,7 +19,7 @@ export async function generateGuide(
 
   console.log(`${tag} → sending request`);
   console.log(`${tag}   model        : ${config.anthropicModel}`);
-  console.log(`${tag}   max_tokens   : 8192`);
+  console.log(`${tag}   max_tokens   : 16000`);
   console.log(`${tag}   APL length   : ${aplContent.length} chars`);
   console.log(`${tag}   prompt length: ${userPrompt.length} chars`);
 
@@ -27,7 +27,7 @@ export async function generateGuide(
 
   const response = await client.messages.create({
     model: config.anthropicModel,
-    max_tokens: 8192,
+    max_tokens: 16000,
     system: SYSTEM_PROMPT,
     messages: [{ role: 'user', content: userPrompt }],
   });
