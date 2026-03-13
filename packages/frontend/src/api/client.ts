@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { SpecsApiResponse, GuideApiResponse, GuideHistoryApiResponse, RankingsApiResponse } from '../types';
+import type { SpecsApiResponse, GuideApiResponse, GuideHistoryApiResponse, RankingsApiResponse, AllGuidesApiResponse } from '../types';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL ? `${import.meta.env.VITE_API_BASE_URL}/api` : '/api',
@@ -27,5 +27,10 @@ export async function fetchHistoricalGuide(specName: string, id: string): Promis
 
 export async function fetchRankings(): Promise<RankingsApiResponse> {
   const res = await api.get<RankingsApiResponse>('/rankings');
+  return res.data;
+}
+
+export async function fetchAllGuides(): Promise<AllGuidesApiResponse> {
+  const res = await api.get<AllGuidesApiResponse>('/guides');
   return res.data;
 }
