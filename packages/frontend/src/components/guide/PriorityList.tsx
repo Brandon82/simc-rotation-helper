@@ -1,4 +1,5 @@
 import type { PriorityItem } from '../../types';
+import { InlineMarkdown } from './InlineMarkdown';
 
 interface PriorityListProps {
   items: PriorityItem[];
@@ -19,12 +20,16 @@ export function PriorityList({ items, compact = false }: PriorityListProps) {
 
           {/* Ability + condition */}
           <div className="flex-1 min-w-0">
-            <span className="font-semibold text-white">{item.ability}</span>
+            <InlineMarkdown text={item.ability} className="font-semibold text-white" />
             {item.condition && (
-              <span className="text-gray-400 text-sm ml-2 italic">{item.condition}</span>
+              <span className="text-gray-400 text-sm ml-2 italic">
+                <InlineMarkdown text={item.condition} />
+              </span>
             )}
             {item.note && (
-              <p className="text-xs text-gray-500 mt-0.5">{item.note}</p>
+              <p className="text-xs text-gray-500 mt-0.5">
+                <InlineMarkdown text={item.note} />
+              </p>
             )}
           </div>
         </li>

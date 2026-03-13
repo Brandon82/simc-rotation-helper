@@ -147,3 +147,7 @@ export function getSpecInfo(specName: string) {
 export function getClassForSpec(specName: string) {
   return CLASSES.find(c => c.specs.some(s => s.name === specName)) ?? null;
 }
+
+export function getClassInfo(className: string) {
+  return CLASSES.find(c => c.name === className) ?? null;
+}
