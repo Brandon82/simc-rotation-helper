@@ -8,9 +8,9 @@ export const CLASSES: ClassInfo[] = [
     label: 'Death Knight',
     color: '#C41E3A',
     specs: [
-      { name: 'death_knight_blood',  label: 'Blood',  role: 'tank' },
-      { name: 'death_knight_frost',  label: 'Frost',  role: 'dps'  },
-      { name: 'death_knight_unholy', label: 'Unholy', role: 'dps'  },
+      { name: 'death_knight_blood',  aplName: 'deathknight_blood',  label: 'Blood',  role: 'tank' },
+      { name: 'death_knight_frost',  aplName: 'deathknight_frost',  label: 'Frost',  role: 'dps'  },
+      { name: 'death_knight_unholy', aplName: 'deathknight_unholy', label: 'Unholy', role: 'dps'  },
     ],
   },
   {
@@ -18,8 +18,9 @@ export const CLASSES: ClassInfo[] = [
     label: 'Demon Hunter',
     color: '#A330C9',
     specs: [
-      { name: 'demon_hunter_havoc',      label: 'Havoc',      role: 'dps'  },
-      { name: 'demon_hunter_vengeance',  label: 'Vengeance',  role: 'tank' },
+      { name: 'demon_hunter_devourer',   aplName: 'demonhunter_devourer',   label: 'Devourer',   role: 'dps'  },
+      { name: 'demon_hunter_havoc',      aplName: 'demonhunter_havoc',      label: 'Havoc',      role: 'dps'  },
+      { name: 'demon_hunter_vengeance',  aplName: 'demonhunter_vengeance',  label: 'Vengeance',  role: 'tank' },
     ],
   },
   {

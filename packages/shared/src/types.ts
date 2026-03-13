@@ -54,7 +54,8 @@ export interface DbSchema {
 export type Role = 'dps' | 'healer' | 'tank';
 
 export interface SpecInfo {
-  name: string;       // e.g. "warrior_arms" (matches .simc filename without extension)
+  name: string;       // e.g. "warrior_arms" (used as API/DB key)
+  aplName?: string;   // overrides name for SimC .simc filename, e.g. "deathknight_blood"
   label: string;      // e.g. "Arms"
   role: Role;
 }
