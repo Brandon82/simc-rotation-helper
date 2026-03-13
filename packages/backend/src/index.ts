@@ -7,6 +7,7 @@ import { startCron } from './services/cronService.js';
 import specsRouter from './routes/specs.js';
 import guidesRouter from './routes/guides.js';
 import adminRouter from './routes/admin.js';
+import rankingsRouter from './routes/rankings.js';
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use(express.json());
 app.use('/api/specs', specsRouter);
 app.use('/api/guides', guidesRouter);
 app.use('/api/admin', adminRouter);
+app.use('/api/rankings', rankingsRouter);
 
 app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', uptime: Math.floor(process.uptime()) });

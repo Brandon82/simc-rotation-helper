@@ -94,3 +94,18 @@ export interface GuideHistoryItem {
 export interface GuideHistoryApiResponse {
   history: GuideHistoryItem[];
 }
+
+export interface RankingItem {
+  specName: string;    // e.g. "warrior_arms"
+  className: string;   // e.g. "warrior"
+  label: string;       // e.g. "Arms"
+  classLabel: string;  // e.g. "Warrior"
+  color: string;       // hex color e.g. "#C69B3A"
+  rank: number;
+  actionCount: number;
+}
+
+export interface RankingsApiResponse {
+  singleTarget: RankingItem[];
+  aoe: RankingItem[];
+}

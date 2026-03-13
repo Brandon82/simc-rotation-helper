@@ -12,4 +12,6 @@ export type {
   GuideApiResponse,
   GuideHistoryItem,
   GuideHistoryApiResponse,
+  RankingItem,
+  RankingsApiResponse,
 } from '../../../shared/src/types';
