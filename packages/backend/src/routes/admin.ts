@@ -3,6 +3,7 @@ import type { Request, Response } from 'express';
 import { config } from '../config.js';
 import { checkAndUpdateSpec, checkAndUpdateMany, checkAndUpdateClass, checkAndUpdateAll } from '../services/guideService.js';
 import { getSpecInfo, getClassInfo } from '../data/specs.js';
+import { deleteOldGuides } from '../db/client.js';
 
 const router = Router();
 
@@ -65,6 +66,22 @@ router.post('/refresh', async (req: Request, res: Response) => {
 
   const result = await checkAndUpdateSpec(spec, !!force);
   res.json({ triggered: true, spec, force: !!force, result });
+});
+
+// DELETE /api/admin/guides/history
+// Optional body: { "spec": "warrior_arms" } to limit to one spec
+router.delete('/guides/history', async (req: Request, res: Response) => {
+  if (!requireAdminAuth(req, res)) return;
+
+  const { spec } = req.body as { spec?: string };
+
+  if (spec && !getSpecInfo(spec)) {
+    res.status(400).json({ error: `Unknown spec: ${spec}` });
+    return;
+  }
+
+  const deleted = await deleteOldGuides(spec);
+  res.json({ deleted, spec: spec ?? 'all' });
 });
 
 export default router;
