@@ -154,7 +154,10 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                   </span>
                 </button>
 
-                {isOpen && (
+                <div
+                  className="overflow-hidden transition-all duration-200 ease-in-out"
+                  style={{ maxHeight: isOpen ? `${cls.specs.length * 32}px` : '0px', opacity: isOpen ? 1 : 0 }}
+                >
                   <div className="mt-0.5 mb-1 ml-2.5 space-y-0.5">
                     {cls.specs.map(spec => (
                       <NavLink
@@ -181,7 +184,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                       </NavLink>
                     ))}
                   </div>
-                )}
+                </div>
               </div>
             );
           })}

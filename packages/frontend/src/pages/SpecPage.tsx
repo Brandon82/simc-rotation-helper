@@ -170,8 +170,14 @@ export function SpecPage() {
 
           {displayGuide.guide.sections
             .filter(section => section.id !== 'opener')
-            .map(section => (
-              <GuideSection key={section.id} section={section} />
+            .map((section, i) => (
+              <div
+                key={section.id}
+                className="animate-fade-in-up"
+                style={{ animationDelay: `${i * 60}ms` }}
+              >
+                <GuideSection section={section} />
+              </div>
             ))}
         </>
       )}
