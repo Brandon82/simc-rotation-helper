@@ -61,7 +61,7 @@ export function HomePage() {
                 <span className="text-gray-900 dark:text-white"> Guides</span>
               </h1>
               <p className="text-gray-500 dark:text-gray-400 text-xs mt-0.5 leading-relaxed">
-                AI-generated guides from SimulationCraft APLs, auto-updated when APLs change.
+                AI-Generated World of Warcraft rotation guides from SimulationCraft APLs, auto-updated when APLs change.
               </p>
               {/* Badges + stats in one compact row */}
               <div className="flex items-center gap-2 mt-2 flex-wrap">
