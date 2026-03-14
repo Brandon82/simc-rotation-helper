@@ -53,13 +53,13 @@ export function SpecPage() {
   if (error || !guide) {
     return (
       <div className="flex flex-col items-center justify-center h-64 text-center">
-        <p className="text-gray-400 mb-2">
+        <p className="text-gray-600 dark:text-gray-400 mb-2">
           {error ? 'Failed to load guide.' : 'No guide available yet for this spec.'}
         </p>
-        <p className="text-gray-600 text-sm mb-4">
+        <p className="text-gray-500 text-sm mb-4">
           Guides are generated daily when APLs change on SimulationCraft GitHub.
         </p>
-        <Link to="/" className="text-sm text-blue-400 hover:underline">← Back to home</Link>
+        <Link to="/" className="text-sm text-blue-500 dark:text-blue-400 hover:underline">← Back to home</Link>
       </div>
     );
   }
@@ -81,14 +81,14 @@ export function SpecPage() {
             <img
               src={classIconUrl(className, 'medium')}
               alt=""
-              className="absolute -bottom-1.5 -right-1.5 w-5 h-5 rounded border-2 border-gray-950"
+              className="absolute -bottom-1.5 -right-1.5 w-5 h-5 rounded border-2 border-white dark:border-gray-950"
             />
           </div>
           <div>
-            <Link to="/" className="text-xs text-gray-500 hover:text-gray-300 transition-colors">
+            <Link to="/" className="text-xs text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
               ← All classes
             </Link>
-            <h1 className="text-2xl font-bold text-white mt-0.5">{specLabel}</h1>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white mt-0.5">{specLabel}</h1>
           </div>
         </div>
 
@@ -96,7 +96,7 @@ export function SpecPage() {
         {historyData && historyData.history.length > 1 && (
           <button
             onClick={() => setShowHistory(!showHistory)}
-            className="text-xs text-gray-400 hover:text-gray-200 border border-gray-700 rounded px-2 py-1 transition-colors"
+            className="text-xs text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 border border-gray-300 dark:border-gray-700 rounded px-2 py-1 transition-colors"
           >
             History ({historyData.history.length})
           </button>
@@ -105,7 +105,7 @@ export function SpecPage() {
 
       {/* History panel */}
       {showHistory && historyData && (
-        <div className="mb-6 bg-gray-900 rounded-lg border border-gray-700 p-3">
+        <div className="mb-6 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 p-3">
           <p className="text-xs text-gray-500 mb-2">Previously generated guides:</p>
           <div className="space-y-1">
             {historyData.history.map(h => (
@@ -120,13 +120,13 @@ export function SpecPage() {
                 }}
                 className={`w-full text-left flex items-center gap-3 px-3 py-1.5 rounded text-xs transition-colors ${
                   (historicalGuide?.id ?? guide.id) === h.id
-                    ? 'bg-gray-700 text-white'
-                    : 'text-gray-400 hover:bg-gray-800 hover:text-gray-200'
+                    ? 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white'
+                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-800 dark:hover:text-gray-200'
                 }`}
               >
-                <code className="text-yellow-600">{h.aplCommitSha.slice(0, 8)}</code>
+                <code className="text-yellow-600 dark:text-yellow-600">{h.aplCommitSha.slice(0, 8)}</code>
                 <span>{new Date(h.generatedAt).toLocaleDateString()}</span>
-                {h.id === guide.id && <span className="ml-auto text-green-500">current</span>}
+                {h.id === guide.id && <span className="ml-auto text-green-600 dark:text-green-500">current</span>}
               </button>
             ))}
           </div>
@@ -134,7 +134,7 @@ export function SpecPage() {
       )}
 
       {historicalGuide && (
-        <div className="mb-4 flex items-center gap-2 text-xs text-yellow-600 bg-yellow-900/20 border border-yellow-800/50 rounded px-3 py-2">
+        <div className="mb-4 flex items-center gap-2 text-xs text-yellow-700 dark:text-yellow-600 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800/50 rounded px-3 py-2">
           <span>⚠ Viewing historical guide.</span>
           <button
             onClick={() => setHistoricalGuide(null)}

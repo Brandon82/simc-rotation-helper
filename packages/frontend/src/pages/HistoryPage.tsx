@@ -3,22 +3,8 @@ import { Link } from 'react-router-dom';
 import { useAllGuides } from '../hooks/useAllGuides';
 import type { GuideSummaryItem } from '../types';
 import { classIconUrl, specIconUrl } from '../utils/wowIcons';
-
-const CLASS_COLORS: Record<string, string> = {
-  death_knight: '#C41E3A',
-  demon_hunter: '#A330C9',
-  druid:        '#FF7C0A',
-  evoker:       '#33937F',
-  hunter:       '#AAD372',
-  mage:         '#3FC7EB',
-  monk:         '#00FF98',
-  paladin:      '#F48CBA',
-  priest:       '#FFFFFF',
-  rogue:        '#FFF468',
-  shaman:       '#0070DD',
-  warlock:      '#8788EE',
-  warrior:      '#C69B3A',
-};
+import { useThemeStore } from '../store/themeStore';
+import { CLASS_COLORS_DARK, CLASS_COLORS_LIGHT } from '../utils/classColors';
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleString(undefined, {
@@ -35,6 +21,9 @@ type SortKey = 'generatedAt' | 'specLabel' | 'classLabel' | 'aplCommitDate';
 
 export function HistoryPage() {
   const { data, isLoading, error } = useAllGuides();
+  const isDark = useThemeStore((s) => s.isDark);
+  const CLASS_COLORS = isDark ? CLASS_COLORS_DARK : CLASS_COLORS_LIGHT;
+
   const [classFilter, setClassFilter] = useState<string>('');
   const [currentOnly, setCurrentOnly] = useState(false);
   const [search, setSearch] = useState('');
@@ -74,7 +63,7 @@ export function HistoryPage() {
   };
 
   const SortIcon = ({ k }: { k: SortKey }) => (
-    <span className="ml-1 text-gray-600 text-xs">
+    <span className="ml-1 text-gray-400 dark:text-gray-600 text-xs">
       {sortKey === k ? (sortAsc ? '▲' : '▼') : '⇅'}
     </span>
   );
@@ -82,10 +71,10 @@ export function HistoryPage() {
   return (
     <div className="pb-16">
       <div className="mb-6">
-        <Link to="/" className="text-xs text-gray-500 hover:text-gray-300 transition-colors">
+        <Link to="/" className="text-xs text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
           ← All classes
         </Link>
-        <h1 className="text-2xl font-bold text-white mb-1 mt-0.5">Guide History</h1>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1 mt-0.5">Guide History</h1>
         <p className="text-sm text-gray-500">
           All generated guides across every spec — current and historical.
         </p>
@@ -99,7 +88,7 @@ export function HistoryPage() {
           placeholder="Search spec, class, or SHA…"
           value={search}
           onChange={e => setSearch(e.target.value)}
-          className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-1.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 w-56"
+          className="bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-1.5 text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/40 w-56"
         />
 
         {/* Class filter chips */}
@@ -108,8 +97,8 @@ export function HistoryPage() {
             onClick={() => setClassFilter('')}
             className={`px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${
               !classFilter
-                ? 'bg-gray-600 text-white'
-                : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                ? 'bg-gray-500 dark:bg-gray-600 text-white'
+                : 'bg-gray-200 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-300 dark:hover:bg-gray-700'
             }`}
           >
             All classes
@@ -120,10 +109,10 @@ export function HistoryPage() {
               onClick={() => setClassFilter(f => f === name ? '' : name)}
               className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${
                 classFilter === name
-                  ? 'bg-gray-700 text-white ring-1'
-                  : 'bg-gray-800 text-gray-400 hover:bg-gray-700'
+                  ? 'bg-gray-300 dark:bg-gray-700 text-gray-900 dark:text-white ring-1'
+                  : 'bg-gray-200 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-300 dark:hover:bg-gray-700'
               }`}
-              style={classFilter === name ? { ringColor: CLASS_COLORS[name] ?? '#fff', color: CLASS_COLORS[name] ?? '#fff' } : {}}
+              style={classFilter === name ? { ringColor: CLASS_COLORS[name] ?? '#888', color: CLASS_COLORS[name] ?? '#888' } : {}}
             >
               <img src={classIconUrl(name, 'medium')} alt="" className="w-3.5 h-3.5 rounded-sm" />
               {label}
@@ -133,10 +122,10 @@ export function HistoryPage() {
 
         {/* Current-only toggle */}
         <label className="flex items-center gap-2 ml-auto cursor-pointer select-none">
-          <span className="text-xs text-gray-400">Current only</span>
+          <span className="text-xs text-gray-600 dark:text-gray-400">Current only</span>
           <div
             onClick={() => setCurrentOnly(p => !p)}
-            className={`w-8 h-4 rounded-full transition-colors relative ${currentOnly ? 'bg-indigo-600' : 'bg-gray-700'}`}
+            className={`w-8 h-4 rounded-full transition-colors relative ${currentOnly ? 'bg-indigo-600' : 'bg-gray-300 dark:bg-gray-700'}`}
           >
             <span className={`absolute top-0.5 w-3 h-3 rounded-full bg-white transition-transform ${currentOnly ? 'translate-x-4' : 'translate-x-0.5'}`} />
           </div>
@@ -145,7 +134,7 @@ export function HistoryPage() {
 
       {/* Stats bar */}
       {!isLoading && data && (
-        <p className="text-xs text-gray-600 mb-3">
+        <p className="text-xs text-gray-400 dark:text-gray-600 mb-3">
           Showing {filtered.length} of {data.guides.length} entries
         </p>
       )}
@@ -154,51 +143,51 @@ export function HistoryPage() {
       {isLoading ? (
         <div className="space-y-2">
           {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="h-10 bg-gray-800 rounded-lg animate-pulse" />
+            <div key={i} className="h-10 bg-gray-200 dark:bg-gray-800 rounded-lg animate-pulse" />
           ))}
         </div>
       ) : error ? (
-        <div className="text-red-400 text-sm bg-gray-900 border border-gray-800 rounded-xl p-4">
+        <div className="text-red-500 dark:text-red-400 text-sm bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4">
           Failed to load guide history.
         </div>
       ) : (
-        <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
+        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-gray-800 text-xs text-gray-500 uppercase tracking-wider">
+                <tr className="border-b border-gray-200 dark:border-gray-800 text-xs text-gray-500 uppercase tracking-wider">
                   <th
-                    className="text-left px-4 py-3 cursor-pointer hover:text-gray-300 select-none whitespace-nowrap"
+                    className="text-left px-4 py-3 cursor-pointer hover:text-gray-700 dark:hover:text-gray-300 select-none whitespace-nowrap"
                     onClick={() => handleSort('classLabel')}
                   >
                     Class <SortIcon k="classLabel" />
                   </th>
                   <th
-                    className="text-left px-4 py-3 cursor-pointer hover:text-gray-300 select-none whitespace-nowrap"
+                    className="text-left px-4 py-3 cursor-pointer hover:text-gray-700 dark:hover:text-gray-300 select-none whitespace-nowrap"
                     onClick={() => handleSort('specLabel')}
                   >
                     Spec <SortIcon k="specLabel" />
                   </th>
                   <th className="text-left px-4 py-3 whitespace-nowrap">Status</th>
                   <th
-                    className="text-left px-4 py-3 cursor-pointer hover:text-gray-300 select-none whitespace-nowrap"
+                    className="text-left px-4 py-3 cursor-pointer hover:text-gray-700 dark:hover:text-gray-300 select-none whitespace-nowrap"
                     onClick={() => handleSort('generatedAt')}
                   >
                     Generated <SortIcon k="generatedAt" />
                   </th>
                   <th
-                    className="text-left px-4 py-3 cursor-pointer hover:text-gray-300 select-none whitespace-nowrap"
+                    className="text-left px-4 py-3 cursor-pointer hover:text-gray-700 dark:hover:text-gray-300 select-none whitespace-nowrap"
                     onClick={() => handleSort('aplCommitDate')}
                   >
                     APL Commit <SortIcon k="aplCommitDate" />
                   </th>
-                  <th className="sticky right-0 bg-gray-900 px-4 py-3" />
+                  <th className="sticky right-0 bg-white dark:bg-gray-900 px-4 py-3" />
                 </tr>
               </thead>
               <tbody>
                 {filtered.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="text-center text-gray-600 py-10">
+                    <td colSpan={6} className="text-center text-gray-400 dark:text-gray-600 py-10">
                       No entries match your filters.
                     </td>
                   </tr>
@@ -206,8 +195,8 @@ export function HistoryPage() {
                   filtered.map((g, i) => (
                     <tr
                       key={g.id}
-                      className={`group border-b border-gray-800/60 hover:bg-gray-800/40 transition-colors ${
-                        i % 2 === 0 ? '' : 'bg-gray-900/50'
+                      className={`group border-b border-gray-200/60 dark:border-gray-800/60 hover:bg-gray-50 dark:hover:bg-gray-800/40 transition-colors ${
+                        i % 2 === 0 ? '' : 'bg-gray-50/50 dark:bg-gray-900/50'
                       }`}
                     >
                       {/* Class */}
@@ -221,7 +210,7 @@ export function HistoryPage() {
                           />
                           <span
                             className="font-medium text-xs"
-                            style={{ color: CLASS_COLORS[g.className] ?? '#fff' }}
+                            style={{ color: CLASS_COLORS[g.className] ?? (isDark ? '#fff' : '#111') }}
                           >
                             {g.classLabel}
                           </span>
@@ -237,44 +226,44 @@ export function HistoryPage() {
                             className="w-5 h-5 rounded"
                             loading="lazy"
                           />
-                          <span className="text-gray-200 font-medium">{g.specLabel}</span>
+                          <span className="text-gray-800 dark:text-gray-200 font-medium">{g.specLabel}</span>
                         </div>
                       </td>
 
                       {/* Status */}
                       <td className="px-4 py-2.5 whitespace-nowrap">
                         {g.isCurrent ? (
-                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-900/50 text-green-400 border border-green-800">
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-400 border border-green-300 dark:border-green-800">
                             Current
                           </span>
                         ) : (
-                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-800 text-gray-500 border border-gray-700">
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-500 border border-gray-300 dark:border-gray-700">
                             Historical
                           </span>
                         )}
                       </td>
 
                       {/* Generated At */}
-                      <td className="px-4 py-2.5 whitespace-nowrap text-gray-400 tabular-nums text-xs">
+                      <td className="px-4 py-2.5 whitespace-nowrap text-gray-500 dark:text-gray-400 tabular-nums text-xs">
                         {formatDate(g.generatedAt)}
                       </td>
 
                       {/* APL Commit */}
                       <td className="px-4 py-2.5 whitespace-nowrap">
                         <div className="flex flex-col gap-0.5">
-                          <span className="font-mono text-xs text-indigo-400">{shortSha(g.aplCommitSha)}</span>
-                          <span className="text-xs text-gray-600 tabular-nums">{formatDate(g.aplCommitDate)}</span>
+                          <span className="font-mono text-xs text-indigo-500 dark:text-indigo-400">{shortSha(g.aplCommitSha)}</span>
+                          <span className="text-xs text-gray-400 dark:text-gray-600 tabular-nums">{formatDate(g.aplCommitDate)}</span>
                         </div>
                       </td>
 
                       {/* Link */}
-                      <td className="sticky right-0 px-4 py-2.5 whitespace-nowrap text-right bg-gray-900 group-hover:bg-gray-800/40">
+                      <td className="sticky right-0 px-4 py-2.5 whitespace-nowrap text-right bg-white dark:bg-gray-900 group-hover:bg-gray-50 dark:group-hover:bg-gray-800/40">
                         <Link
                           to={`/guide/${g.specName}`}
                           className={`text-xs transition-colors ${
                             g.isCurrent
-                              ? 'text-indigo-400 hover:text-indigo-300'
-                              : 'text-gray-600 hover:text-gray-400'
+                              ? 'text-indigo-500 dark:text-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-300'
+                              : 'text-gray-400 dark:text-gray-600 hover:text-gray-600 dark:hover:text-gray-400'
                           }`}
                         >
                           View →

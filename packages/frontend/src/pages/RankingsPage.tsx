@@ -5,16 +5,16 @@ import { specIconUrl } from '../utils/wowIcons';
 
 function RankingTable({ title, items }: { title: string; items: RankingItem[] }) {
   return (
-    <div className="bg-gray-900 rounded-xl border border-gray-800 p-4">
-      <h2 className="text-base font-semibold text-white mb-3">{title}</h2>
+    <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-4">
+      <h2 className="text-base font-semibold text-gray-900 dark:text-white mb-3">{title}</h2>
       <div className="space-y-1">
         {items.map(item => (
           <Link
             key={item.specName}
             to={`/guide/${item.specName}`}
-            className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-800 hover:bg-gray-700 transition-colors text-sm"
+            className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-sm"
           >
-            <span className="text-gray-500 w-5 text-right text-xs shrink-0">{item.rank}</span>
+            <span className="text-gray-400 dark:text-gray-500 w-5 text-right text-xs shrink-0">{item.rank}</span>
             <img
               src={specIconUrl(item.specName, 'medium')}
               alt=""
@@ -22,7 +22,7 @@ function RankingTable({ title, items }: { title: string; items: RankingItem[] })
             />
             <span style={{ color: item.color }} className="font-medium flex-1 truncate">{item.label}</span>
             <span className="text-gray-500 text-xs shrink-0">{item.classLabel}</span>
-            <span className="ml-2 text-gray-400 text-xs tabular-nums shrink-0">{item.actionCount} actions</span>
+            <span className="ml-2 text-gray-500 dark:text-gray-400 text-xs tabular-nums shrink-0">{item.actionCount} actions</span>
           </Link>
         ))}
       </div>
@@ -37,15 +37,15 @@ export function RankingsPage() {
     return (
       <div>
         <div className="mb-6">
-          <div className="h-8 w-64 bg-gray-800 rounded animate-pulse mb-2" />
-          <div className="h-4 w-96 bg-gray-800 rounded animate-pulse" />
+          <div className="h-8 w-64 bg-gray-200 dark:bg-gray-800 rounded animate-pulse mb-2" />
+          <div className="h-4 w-96 bg-gray-200 dark:bg-gray-800 rounded animate-pulse" />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {[0, 1].map(i => (
-            <div key={i} className="bg-gray-900 rounded-xl border border-gray-800 p-4 space-y-2">
-              <div className="h-5 w-40 bg-gray-800 rounded animate-pulse" />
+            <div key={i} className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-4 space-y-2">
+              <div className="h-5 w-40 bg-gray-200 dark:bg-gray-800 rounded animate-pulse" />
               {Array.from({ length: 10 }).map((_, j) => (
-                <div key={j} className="h-8 bg-gray-800 rounded animate-pulse" />
+                <div key={j} className="h-8 bg-gray-200 dark:bg-gray-800 rounded animate-pulse" />
               ))}
             </div>
           ))}
@@ -57,8 +57,8 @@ export function RankingsPage() {
   if (error || !data) {
     return (
       <div className="flex flex-col items-center justify-center h-64 text-center">
-        <p className="text-gray-400 mb-2">Failed to load rankings.</p>
-        <Link to="/" className="text-sm text-blue-400 hover:underline">← Back to home</Link>
+        <p className="text-gray-600 dark:text-gray-400 mb-2">Failed to load rankings.</p>
+        <Link to="/" className="text-sm text-blue-500 dark:text-blue-400 hover:underline">← Back to home</Link>
       </div>
     );
   }
@@ -66,11 +66,11 @@ export function RankingsPage() {
   return (
     <div>
       <div className="mb-6">
-        <Link to="/" className="text-xs text-gray-500 hover:text-gray-300 transition-colors">
+        <Link to="/" className="text-xs text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
           ← All classes
         </Link>
-        <h1 className="text-3xl font-bold text-white mb-2 mt-0.5">Rotation Complexity</h1>
-        <p className="text-gray-400 text-sm">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2 mt-0.5">Rotation Complexity</h1>
+        <p className="text-gray-600 dark:text-gray-400 text-sm">
           Specs ranked by number of priority actions in their SimC APL rotation.
           Higher count = more complex rotation.
         </p>
