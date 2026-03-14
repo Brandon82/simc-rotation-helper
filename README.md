@@ -4,8 +4,6 @@
 
 AI-powered World of Warcraft rotation guides generated directly from [SimulationCraft](https://github.com/simulationcraft/simc) Action Priority Lists (APLs). Each guide is built by feeding the raw `.simc` APL file into Claude, producing a structured, human-readable rotation guide that stays automatically synchronized with the SimC `midnight` branch.
 
----
-
 ## Overview
 
 SimC APLs are the authoritative source for optimal rotation logic, but they are written in a domain-specific scripting language that is difficult to read. This app translates those APLs into clear, prioritized rotation guides using Claude.
@@ -23,34 +21,31 @@ Every spec across all 13 classes is tracked. When SimC's APL changes (detected v
 
 ## Architecture
 
-```
-  Browser
-    │
-    │  REST / JSON
-    ▼
-┌─────────────────────────────────────────────────────────────┐
-│  Backend  (Express + node-cron)                             │
-│                                                             │
-│  POST /admin/refresh                                        │
-│  Daily cron (3 AM UTC)                                      │
-│        │                                                    │
-│        ▼                                                    │
-│  ┌─────────────────┐    SHA unchanged?                      │
-│  │  GitHub Service │──────────────────────► skip            │
-│  │  simulationcraft│                                        │
-│  │  /simc (APL)    │  SHA changed / force                   │
-│  └────────┬────────┘        │                              │
-│           │ raw .simc       ▼                              │
-│           │         ┌──────────────┐                       │
-│           └────────►│  LLM Service │  claude-sonnet-4-6    │
-│                     │  (Anthropic) │                       │
-│                     └──────┬───────┘                       │
-│                            │ structured JSON               │
-│                            ▼                               │
-│                     ┌──────────────┐                       │
-│                     │   SQLite DB  │  guides + history      │
-│                     └──────────────┘                       │
-└─────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    Browser["Frontend\nReact · Vite · TanStack Query"]
+
+    subgraph backend ["Backend  (Express · better-sqlite3 · node-cron)"]
+        API["API Routes\nGET /api/*"]
+        GS["Guide Service"]
+        DB[("SQLite DB\nguides · history")]
+        Cron(["node-cron\n3 AM UTC"])
+    end
+
+    subgraph external ["External Services"]
+        GH["GitHub\nsimulationcraft/simc · branch: midnight"]
+        AI["Anthropic Claude API\nclaude-sonnet-4-6"]
+    end
+
+    Admin(["POST /admin/refresh"]) --> GS
+    Browser -->|REST / JSON| API
+    API <-->|read| DB
+    Cron --> GS
+    GS -->|"1 · fetch APL"| GH
+    GH -->|"2 · raw .simc"| GS
+    GS -->|"3 · generate guide"| AI
+    AI -->|"4 · structured JSON"| GS
+    GS -->|"5 · store"| DB
 ```
 
 ## Getting Started
@@ -101,7 +96,7 @@ npm run seed --workspace packages/backend
 
 > **Seeding cost:** Generating guides for all 44 specs makes one LLM call per spec. Estimated cost is $1–5 depending on APL length and model pricing.
 
-### Docker
+### Docker Deployment
 
 ```bash
 docker-compose up
@@ -110,8 +105,6 @@ docker-compose up
 - Backend: `http://localhost:3001`
 - Frontend: `http://localhost:5173`
 - Database persisted in a Docker volume at `/app/data`
-
----
 
 ## API Endpoints
 
@@ -153,16 +146,11 @@ docker-compose up
 
 Rate limiting: 120 req/min (general), 10 req/min (admin).
 
-
----
-
 ## Adding / Modifying Specs
 
 All spec definitions live in [packages/backend/src/data/specs.ts](packages/backend/src/data/specs.ts). Each entry defines a class with its specs, role, and Blizzard class color. An optional `aplName` field overrides the default `<class>_<spec>.simc` filename if the SimC file doesn't follow that convention.
 
 After adding a new spec, trigger its first guide generation via the admin API.
-
----
 
 ## Prompt Engineering
 
