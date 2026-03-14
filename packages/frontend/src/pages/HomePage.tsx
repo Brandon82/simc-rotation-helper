@@ -42,27 +42,25 @@ export function HomePage() {
     <div className="flex flex-col items-center pb-16 min-h-[60vh]">
 
       {/* Hero */}
-      <div className="w-full max-w-2xl mt-10 mb-8">
+      <div className="w-full max-w-2xl mt-10 mb-6">
         <div className="relative rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
-          {/* Background gradient layer */}
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-purple-50/40 to-orange-50/30 dark:from-blue-950/40 dark:via-purple-950/20 dark:to-orange-950/10 pointer-events-none" />
-          {/* Subtle grid pattern */}
-          <div
-            className="absolute inset-0 opacity-[0.03] dark:opacity-[0.06] pointer-events-none"
-            style={{ backgroundImage: 'radial-gradient(circle, currentColor 1px, transparent 1px)', backgroundSize: '24px 24px' }}
-          />
+          {/* Warm amber background tint */}
+          <div className="absolute inset-0 bg-gradient-to-br from-amber-50/70 via-yellow-50/30 to-transparent dark:from-amber-950/25 dark:via-yellow-950/10 dark:to-transparent pointer-events-none" />
 
           <div className="relative flex flex-col items-center text-center px-8 py-10 gap-5">
-            {/* Icon badge */}
-            <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 shadow-lg shadow-blue-500/25 dark:shadow-blue-500/15">
+            {/* Icon badge — amber/gold to match header */}
+            <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-yellow-400 to-amber-500 shadow-lg shadow-amber-500/30 dark:shadow-amber-500/20">
               <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.6}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
               </svg>
             </div>
 
             <div>
-              <h1 className="text-4xl font-extrabold tracking-tight mb-2 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 dark:from-blue-400 dark:via-purple-400 dark:to-indigo-400 bg-clip-text text-transparent">
-                SimC Rotation Guides
+              {/* Title matches header: "SimC" neutral, "Rotation" in amber */}
+              <h1 className="text-4xl font-extrabold tracking-tight mb-2">
+                <span className="text-gray-900 dark:text-white">SimC </span>
+                <span className="text-yellow-500 dark:text-yellow-400">Rotation</span>
+                <span className="text-gray-900 dark:text-white"> Guides</span>
               </h1>
               <p className="text-gray-600 dark:text-gray-400 text-base max-w-sm mx-auto leading-relaxed">
                 AI-generated guides built directly from SimulationCraft APLs,
@@ -70,39 +68,39 @@ export function HomePage() {
               </p>
             </div>
 
-            {/* Feature badges */}
+            {/* Feature badges — unified neutral style */}
             <div className="flex flex-wrap justify-center gap-2">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700">
                 <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" /></svg>
                 Auto-updated
               </span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700">
                 <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z" /></svg>
                 AI-powered
               </span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-orange-100 dark:bg-orange-900/40 text-orange-700 dark:text-orange-300 border border-orange-200 dark:border-orange-800">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700">
                 <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5" /></svg>
                 SimC APL source
               </span>
             </div>
+
+            {/* Stats — inside hero for cohesion */}
+            {!isLoading && data && (
+              <div className="flex items-center gap-8 pt-1 border-t border-gray-100 dark:border-gray-800 w-full justify-center">
+                <div className="text-center pt-4">
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">{data.classes.length}</p>
+                  <p className="text-xs text-gray-500 mt-0.5 uppercase tracking-wider">Classes</p>
+                </div>
+                <div className="w-px h-8 bg-gray-200 dark:bg-gray-700" />
+                <div className="text-center pt-4">
+                  <p className="text-2xl font-bold text-gray-900 dark:text-white">{totalSpecs}</p>
+                  <p className="text-xs text-gray-500 mt-0.5 uppercase tracking-wider">Spec Guides</p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
-
-      {/* Stats row */}
-      {!isLoading && data && (
-        <div className="flex gap-8 text-center mb-6">
-          <div>
-            <p className="text-2xl font-bold text-gray-900 dark:text-white">{data.classes.length}</p>
-            <p className="text-xs text-gray-500 mt-0.5 uppercase tracking-wider">Classes</p>
-          </div>
-          <div className="w-px bg-gray-200 dark:bg-gray-800" />
-          <div>
-            <p className="text-2xl font-bold text-gray-900 dark:text-white">{totalSpecs}</p>
-            <p className="text-xs text-gray-500 mt-0.5 uppercase tracking-wider">Specs</p>
-          </div>
-        </div>
-      )}
 
       <div className="w-full max-w-2xl space-y-4">
 
@@ -221,65 +219,66 @@ export function HomePage() {
           </div>
         )}
 
-        {/* Complexity Rankings card */}
-        <Link
-          to="/rankings"
-          className="group flex items-center gap-4 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-gray-400 dark:hover:border-gray-600 rounded-2xl p-5 transition-all hover:bg-gray-50 dark:hover:bg-gray-800/60"
-        >
-          <div className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-xl flex-shrink-0 group-hover:bg-gray-200 dark:group-hover:bg-gray-700 transition-colors">
-            📊
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors">
-              Rotation Complexity Ranking
-            </p>
-            <p className="text-xs text-gray-500 mt-0.5">
-              See which specs have the most complex APLs, ranked by action count.
-            </p>
-          </div>
-          <span className="text-gray-400 dark:text-gray-600 group-hover:text-gray-600 dark:group-hover:text-gray-400 transition-colors text-lg">→</span>
-        </Link>
+        {/* Navigation cards — 2-column grid with amber accent */}
+        <div className="grid grid-cols-2 gap-3">
+          <Link
+            to="/rankings"
+            className="group flex flex-col gap-3 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-amber-300 dark:hover:border-amber-700/50 rounded-2xl p-5 transition-all hover:bg-amber-50/40 dark:hover:bg-amber-950/10"
+          >
+            <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/40 flex items-center justify-center group-hover:bg-amber-100 dark:group-hover:bg-amber-900/30 transition-colors">
+              <svg className="w-5 h-5 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" />
+              </svg>
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-amber-700 dark:group-hover:text-amber-300 transition-colors">
+                Complexity Ranking
+              </p>
+              <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">
+                Specs ranked by APL action count.
+              </p>
+            </div>
+          </Link>
 
-        {/* Guide History card */}
-        <Link
-          to="/history"
-          className="group flex items-center gap-4 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-gray-400 dark:hover:border-gray-600 rounded-2xl p-5 transition-all hover:bg-gray-50 dark:hover:bg-gray-800/60"
-        >
-          <div className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-xl flex-shrink-0 group-hover:bg-gray-200 dark:group-hover:bg-gray-700 transition-colors">
-            🗂
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors">
-              Guide History
-            </p>
-            <p className="text-xs text-gray-500 mt-0.5">
-              Browse previously generated guides and track how rotations have changed over time.
-            </p>
-          </div>
-          <span className="text-gray-400 dark:text-gray-600 group-hover:text-gray-600 dark:group-hover:text-gray-400 transition-colors text-lg">→</span>
-        </Link>
+          <Link
+            to="/history"
+            className="group flex flex-col gap-3 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-amber-300 dark:hover:border-amber-700/50 rounded-2xl p-5 transition-all hover:bg-amber-50/40 dark:hover:bg-amber-950/10"
+          >
+            <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/40 flex items-center justify-center group-hover:bg-amber-100 dark:group-hover:bg-amber-900/30 transition-colors">
+              <svg className="w-5 h-5 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+              </svg>
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-amber-700 dark:group-hover:text-amber-300 transition-colors">
+                Guide History
+              </p>
+              <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">
+                Track how rotations changed over time.
+              </p>
+            </div>
+          </Link>
+        </div>
 
-        {/* GitHub link card */}
+        {/* GitHub link — full width, secondary treatment */}
         <a
           href="https://github.com/Brandon82/simc-rotation-helper"
           target="_blank"
           rel="noopener noreferrer"
-          className="group flex items-center gap-4 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-gray-400 dark:hover:border-gray-600 rounded-2xl p-5 transition-all hover:bg-gray-50 dark:hover:bg-gray-800/60"
+          className="group flex items-center gap-4 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-gray-400 dark:hover:border-gray-600 rounded-2xl p-4 transition-all hover:bg-gray-50 dark:hover:bg-gray-800/60"
         >
-          <div className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center flex-shrink-0 group-hover:bg-gray-200 dark:group-hover:bg-gray-700 transition-colors">
-            <svg className="w-5 h-5 text-gray-700 dark:text-gray-300" fill="currentColor" viewBox="0 0 24 24">
+          <div className="w-9 h-9 rounded-xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center shrink-0 group-hover:bg-gray-200 dark:group-hover:bg-gray-700 transition-colors">
+            <svg className="w-4.5 h-4.5 text-gray-700 dark:text-gray-300" fill="currentColor" viewBox="0 0 24 24">
               <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.756-1.333-1.756-1.09-.745.083-.729.083-.729 1.205.084 1.84 1.237 1.84 1.237 1.07 1.835 2.809 1.305 3.495.998.108-.776.418-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.468-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.3 1.23a11.5 11.5 0 0 1 3.003-.404c1.02.005 2.047.138 3.003.404 2.29-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.61-2.807 5.625-5.479 5.92.43.372.823 1.102.823 2.222 0 1.606-.015 2.898-.015 3.293 0 .322.216.694.825.576C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z" />
             </svg>
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors">
-              View on GitHub
-            </p>
-            <p className="text-xs text-gray-500 mt-0.5">
-              Browse the source code for this project.
-            </p>
+            <p className="text-sm font-semibold text-gray-900 dark:text-white">View on GitHub</p>
+            <p className="text-xs text-gray-500 mt-0.5">Browse the source code for this project.</p>
           </div>
-          <span className="text-gray-400 dark:text-gray-600 group-hover:text-gray-600 dark:group-hover:text-gray-400 transition-colors text-lg">→</span>
+          <svg className="w-4 h-4 text-gray-400 dark:text-gray-600 group-hover:text-gray-600 dark:group-hover:text-gray-400 transition-colors shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+          </svg>
         </a>
 
       </div>
