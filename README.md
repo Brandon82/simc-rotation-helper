@@ -21,32 +21,7 @@ Every spec across all 13 classes is tracked. When SimC's APL changes (detected v
 
 ## Architecture
 
-```mermaid
-flowchart TB
-    Browser["Frontend\nReact · Vite · TanStack Query"]
-
-    subgraph backend ["Backend  (Express · better-sqlite3 · node-cron)"]
-        API["API Routes\nGET /api/*"]
-        GS["Guide Service"]
-        DB[("SQLite DB\nguides · history")]
-        Cron(["node-cron\n3 AM UTC"])
-    end
-
-    subgraph external ["External Services"]
-        GH["GitHub\nsimulationcraft/simc · branch: midnight"]
-        AI["Anthropic Claude API\nclaude-sonnet-4-6"]
-    end
-
-    Admin(["POST /admin/refresh"]) --> GS
-    Browser -->|REST / JSON| API
-    API <-->|read| DB
-    Cron --> GS
-    GS -->|"1 · fetch APL"| GH
-    GH -->|"2 · raw .simc"| GS
-    GS -->|"3 · generate guide"| AI
-    AI -->|"4 · structured JSON"| GS
-    GS -->|"5 · store"| DB
-```
+![Architecture](docs/architecture.svg)
 
 ## Getting Started
 
