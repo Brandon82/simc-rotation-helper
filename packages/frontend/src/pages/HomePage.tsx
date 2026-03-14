@@ -193,39 +193,39 @@ export function HomePage() {
         {/* Complexity Rankings card */}
         <Link
           to="/rankings"
-          className="group flex items-center gap-4 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-indigo-500/50 rounded-2xl p-5 transition-all hover:bg-gray-50 dark:hover:bg-gray-800/60"
+          className="group flex items-center gap-4 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-gray-400 dark:hover:border-gray-600 rounded-2xl p-5 transition-all hover:bg-gray-50 dark:hover:bg-gray-800/60"
         >
-          <div className="w-10 h-10 rounded-xl bg-indigo-600/20 flex items-center justify-center text-xl flex-shrink-0 group-hover:bg-indigo-600/30 transition-colors">
+          <div className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-xl flex-shrink-0 group-hover:bg-gray-200 dark:group-hover:bg-gray-700 transition-colors">
             📊
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-300 transition-colors">
+            <p className="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors">
               Rotation Complexity Ranking
             </p>
             <p className="text-xs text-gray-500 mt-0.5">
               See which specs have the most complex APLs, ranked by action count.
             </p>
           </div>
-          <span className="text-gray-400 dark:text-gray-600 group-hover:text-indigo-500 dark:group-hover:text-indigo-400 transition-colors text-lg">→</span>
+          <span className="text-gray-400 dark:text-gray-600 group-hover:text-gray-600 dark:group-hover:text-gray-400 transition-colors text-lg">→</span>
         </Link>
 
         {/* Guide History card */}
         <Link
           to="/history"
-          className="group flex items-center gap-4 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-blue-500/50 rounded-2xl p-5 transition-all hover:bg-gray-50 dark:hover:bg-gray-800/60"
+          className="group flex items-center gap-4 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-gray-400 dark:hover:border-gray-600 rounded-2xl p-5 transition-all hover:bg-gray-50 dark:hover:bg-gray-800/60"
         >
-          <div className="w-10 h-10 rounded-xl bg-blue-600/20 flex items-center justify-center text-xl flex-shrink-0 group-hover:bg-blue-600/30 transition-colors">
+          <div className="w-10 h-10 rounded-xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-xl flex-shrink-0 group-hover:bg-gray-200 dark:group-hover:bg-gray-700 transition-colors">
             🗂
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-300 transition-colors">
+            <p className="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors">
               Guide History
             </p>
             <p className="text-xs text-gray-500 mt-0.5">
               Browse previously generated guides and track how rotations have changed over time.
             </p>
           </div>
-          <span className="text-gray-400 dark:text-gray-600 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors text-lg">→</span>
+          <span className="text-gray-400 dark:text-gray-600 group-hover:text-gray-600 dark:group-hover:text-gray-400 transition-colors text-lg">→</span>
         </Link>
 
         {/* GitHub link card */}
