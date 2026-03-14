@@ -66,7 +66,10 @@ export function RankingsPage() {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-white mb-2">Rotation Complexity</h1>
+        <Link to="/" className="text-xs text-gray-500 hover:text-gray-300 transition-colors">
+          ← All classes
+        </Link>
+        <h1 className="text-3xl font-bold text-white mb-2 mt-0.5">Rotation Complexity</h1>
         <p className="text-gray-400 text-sm">
           Specs ranked by number of priority actions in their SimC APL rotation.
           Higher count = more complex rotation.

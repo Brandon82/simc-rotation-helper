@@ -82,7 +82,10 @@ export function HistoryPage() {
   return (
     <div className="pb-16">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-white mb-1">Guide History</h1>
+        <Link to="/" className="text-xs text-gray-500 hover:text-gray-300 transition-colors">
+          ← All classes
+        </Link>
+        <h1 className="text-2xl font-bold text-white mb-1 mt-0.5">Guide History</h1>
         <p className="text-sm text-gray-500">
           All generated guides across every spec — current and historical.
         </p>
@@ -190,7 +193,7 @@ export function HistoryPage() {
                     APL Commit <SortIcon k="aplCommitDate" />
                   </th>
                   <th className="text-left px-4 py-3 whitespace-nowrap">Model</th>
-                  <th className="px-4 py-3" />
+                  <th className="sticky right-0 bg-gray-900 px-4 py-3" />
                 </tr>
               </thead>
               <tbody>
@@ -204,7 +207,7 @@ export function HistoryPage() {
                   filtered.map((g, i) => (
                     <tr
                       key={g.id}
-                      className={`border-b border-gray-800/60 hover:bg-gray-800/40 transition-colors ${
+                      className={`group border-b border-gray-800/60 hover:bg-gray-800/40 transition-colors ${
                         i % 2 === 0 ? '' : 'bg-gray-900/50'
                       }`}
                     >
@@ -271,7 +274,7 @@ export function HistoryPage() {
                       </td>
 
                       {/* Link */}
-                      <td className="px-4 py-2.5 whitespace-nowrap text-right">
+                      <td className="sticky right-0 px-4 py-2.5 whitespace-nowrap text-right bg-gray-900 group-hover:bg-gray-800/40">
                         <Link
                           to={`/guide/${g.specName}`}
                           className={`text-xs transition-colors ${
