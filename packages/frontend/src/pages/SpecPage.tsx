@@ -9,18 +9,29 @@ import type { GuideApiResponse } from '../types';
 import { specIconUrl, classIconUrl } from '../utils/wowIcons';
 
 function toLabel(specName: string): string {
+  const capitalize = (w: string) => w.charAt(0).toUpperCase() + w.slice(1);
+  const knownTwoWordSpecs = ['beast_mastery'];
+  for (const spec of knownTwoWordSpecs) {
+    if (specName.endsWith('_' + spec)) {
+      const cls = specName.slice(0, -(spec.length + 1));
+      return `${spec.split('_').map(capitalize).join(' ')} ${cls.split('_').map(capitalize).join(' ')}`;
+    }
+  }
   const parts = specName.split('_');
   const spec = parts[parts.length - 1];
   const cls = parts.slice(0, -1);
-  const capitalize = (w: string) => w.charAt(0).toUpperCase() + w.slice(1);
   return `${capitalize(spec)} ${cls.map(capitalize).join(' ')}`;
 }
 
 function getClassName(specName: string): string {
   // e.g. "warrior_arms" → "warrior", "death_knight_blood" → "death_knight"
-  const knownTwoWord = ['death_knight', 'demon_hunter', 'beast_mastery'];
-  for (const prefix of knownTwoWord) {
+  const knownTwoWordClasses = ['death_knight', 'demon_hunter'];
+  for (const prefix of knownTwoWordClasses) {
     if (specName.startsWith(prefix + '_')) return prefix;
+  }
+  const knownTwoWordSpecs = ['beast_mastery'];
+  for (const spec of knownTwoWordSpecs) {
+    if (specName.endsWith('_' + spec)) return specName.slice(0, -(spec.length + 1));
   }
   return specName.split('_').slice(0, -1).join('_');
 }
