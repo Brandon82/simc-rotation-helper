@@ -19,3 +19,10 @@ packages/frontend/dist/
 
 # TypeScript
 *.tsbuildinfo
+
+# Editor
+.vscode/
+.idea/
+
+# SQLite database
+packages/backend/data/
