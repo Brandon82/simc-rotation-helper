@@ -85,11 +85,13 @@ export function Header({ onToggleSidebar }: HeaderProps) {
           {/* Theme toggle */}
           <button
             onClick={toggle}
-            className="p-1.5 rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            className="p-1.5 rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors hover:scale-110 active:scale-95 transition-transform"
             aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
             title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
           >
-            {isDark ? <SunIcon /> : <MoonIcon />}
+            <span key={String(isDark)} className="block animate-fade-in">
+              {isDark ? <SunIcon /> : <MoonIcon />}
+            </span>
           </button>
         </div>
       </div>
