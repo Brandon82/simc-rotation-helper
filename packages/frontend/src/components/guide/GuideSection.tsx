@@ -25,15 +25,15 @@ const SECTION_ACCENTS: Record<string, string> = {
 };
 
 export function GuideSection({ section }: GuideSectionProps) {
-  const accentBorder = SECTION_ACCENTS[section.id] ?? 'border-gray-500';
+  const accentBorder = SECTION_ACCENTS[section.id] ?? 'border-gray-400 dark:border-gray-500';
   const title = SECTION_TITLES[section.id] ?? section.title;
 
   return (
     <section className={`mb-6 pl-4 border-l-2 ${accentBorder}`}>
-      <h2 className="text-lg font-bold text-white mb-2">{title}</h2>
+      <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-2">{title}</h2>
 
       {section.content && (
-        <p className="text-gray-300 text-sm leading-relaxed">
+        <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">
           <InlineMarkdown text={section.content} />
         </p>
       )}
@@ -42,7 +42,7 @@ export function GuideSection({ section }: GuideSectionProps) {
       {section.steps && section.steps.length > 0 && (
         <ol className="mt-3 space-y-1 list-decimal list-inside">
           {section.steps.map((step, i) => (
-            <li key={i} className="text-sm text-gray-300 pl-1">
+            <li key={i} className="text-sm text-gray-700 dark:text-gray-300 pl-1">
               <InlineMarkdown text={step} />
             </li>
           ))}

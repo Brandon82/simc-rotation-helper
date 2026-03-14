@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Layout } from './components/layout/Layout';
@@ -6,6 +7,7 @@ import { SpecPage } from './pages/SpecPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { RankingsPage } from './pages/RankingsPage';
 import { HistoryPage } from './pages/HistoryPage';
+import { useThemeStore } from './store/themeStore';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -17,6 +19,13 @@ const queryClient = new QueryClient({
 });
 
 function App() {
+  const isDark = useThemeStore((s) => s.isDark);
+
+  // Sync class on initial mount (the inline script handles the very first paint)
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', isDark);
+  }, [isDark]);
+
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
