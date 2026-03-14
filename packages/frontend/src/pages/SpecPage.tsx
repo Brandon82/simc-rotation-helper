@@ -68,7 +68,7 @@ export function SpecPage() {
   const className = getClassName(specName ?? '');
 
   return (
-    <div>
+    <div className="pb-8">
       {/* Spec header */}
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-start gap-3">
