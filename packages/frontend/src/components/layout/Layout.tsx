@@ -24,7 +24,7 @@ export function Layout() {
           />
         )}
         <Sidebar isOpen={sidebarOpen} onClose={closeSidebar} />
-        <main className="flex-1 overflow-y-auto p-6 pb-16 flex justify-center">
+        <main className="flex-1 overflow-y-auto p-6 pb-24 flex justify-center">
           <div className="w-full max-w-3xl">
             <Outlet />
           </div>
