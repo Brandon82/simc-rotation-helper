@@ -36,26 +36,62 @@ export function HomePage() {
     if (hasGuide) navigate(`/guide/${specName}`);
   };
 
-  const totalGuides = data?.classes.reduce((n, c) => n + c.specs.filter(s => s.hasGuide).length, 0) ?? 0;
-  const totalSpecs  = data?.classes.reduce((n, c) => n + c.specs.length, 0) ?? 0;
+  const totalSpecs = data?.classes.reduce((n, c) => n + c.specs.filter(s => s.hasGuide).length, 0) ?? 0;
 
   return (
     <div className="flex flex-col items-center pb-16 min-h-[60vh]">
 
       {/* Hero */}
-      <div className="text-center mt-10 mb-8">
-        <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-3">
-          WoW Rotation Guides
-        </h1>
-        <p className="text-gray-600 dark:text-gray-400 text-base max-w-md mx-auto leading-relaxed">
-          AI-generated guides built directly from SimulationCraft APLs,
-          updated automatically when APLs change.
-        </p>
+      <div className="w-full max-w-2xl mt-10 mb-8">
+        <div className="relative rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
+          {/* Background gradient layer */}
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-purple-50/40 to-orange-50/30 dark:from-blue-950/40 dark:via-purple-950/20 dark:to-orange-950/10 pointer-events-none" />
+          {/* Subtle grid pattern */}
+          <div
+            className="absolute inset-0 opacity-[0.03] dark:opacity-[0.06] pointer-events-none"
+            style={{ backgroundImage: 'radial-gradient(circle, currentColor 1px, transparent 1px)', backgroundSize: '24px 24px' }}
+          />
+
+          <div className="relative flex flex-col items-center text-center px-8 py-10 gap-5">
+            {/* Icon badge */}
+            <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 shadow-lg shadow-blue-500/25 dark:shadow-blue-500/15">
+              <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.6}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+              </svg>
+            </div>
+
+            <div>
+              <h1 className="text-4xl font-extrabold tracking-tight mb-2 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 dark:from-blue-400 dark:via-purple-400 dark:to-indigo-400 bg-clip-text text-transparent">
+                SimC Rotation Guides
+              </h1>
+              <p className="text-gray-600 dark:text-gray-400 text-base max-w-sm mx-auto leading-relaxed">
+                AI-generated guides built directly from SimulationCraft APLs,
+                updated automatically when APLs change.
+              </p>
+            </div>
+
+            {/* Feature badges */}
+            <div className="flex flex-wrap justify-center gap-2">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
+                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" /></svg>
+                Auto-updated
+              </span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800">
+                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z" /></svg>
+                AI-powered
+              </span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-orange-100 dark:bg-orange-900/40 text-orange-700 dark:text-orange-300 border border-orange-200 dark:border-orange-800">
+                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5" /></svg>
+                SimC APL source
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Stats row */}
       {!isLoading && data && (
-        <div className="flex gap-8 text-center mb-8">
+        <div className="flex gap-8 text-center mb-6">
           <div>
             <p className="text-2xl font-bold text-gray-900 dark:text-white">{data.classes.length}</p>
             <p className="text-xs text-gray-500 mt-0.5 uppercase tracking-wider">Classes</p>
@@ -64,11 +100,6 @@ export function HomePage() {
           <div>
             <p className="text-2xl font-bold text-gray-900 dark:text-white">{totalSpecs}</p>
             <p className="text-xs text-gray-500 mt-0.5 uppercase tracking-wider">Specs</p>
-          </div>
-          <div className="w-px bg-gray-200 dark:bg-gray-800" />
-          <div>
-            <p className="text-2xl font-bold text-gray-900 dark:text-white">{totalGuides}</p>
-            <p className="text-xs text-gray-500 mt-0.5 uppercase tracking-wider">Guides Ready</p>
           </div>
         </div>
       )}
