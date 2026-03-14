@@ -1,9 +1,24 @@
 import { Link } from 'react-router-dom';
 
-export function Header() {
+interface HeaderProps {
+  onToggleSidebar: () => void;
+}
+
+export function Header({ onToggleSidebar }: HeaderProps) {
   return (
     <header className="sticky top-0 z-50 bg-gray-950 border-b border-gray-800/60 shadow-lg shadow-black/30">
       <div className="flex items-center gap-4 px-5 h-14">
+        {/* Hamburger (mobile only) */}
+        <button
+          onClick={onToggleSidebar}
+          className="md:hidden text-gray-400 hover:text-white transition-colors p-1 -ml-1"
+          aria-label="Toggle sidebar"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2.5 group">
           <div className="w-7 h-7 rounded bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center group-hover:bg-yellow-500/20 transition-colors">

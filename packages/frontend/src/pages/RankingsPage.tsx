@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useRankings } from '../hooks/useRankings';
 import type { RankingItem } from '../types';
+import { specIconUrl } from '../utils/wowIcons';
 
 function RankingTable({ title, items }: { title: string; items: RankingItem[] }) {
   return (
@@ -13,10 +14,15 @@ function RankingTable({ title, items }: { title: string; items: RankingItem[] })
             to={`/guide/${item.specName}`}
             className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-800 hover:bg-gray-700 transition-colors text-sm"
           >
-            <span className="text-gray-500 w-5 text-right text-xs">{item.rank}</span>
-            <span style={{ color: item.color }} className="font-medium flex-1">{item.label}</span>
-            <span className="text-gray-500 text-xs">{item.classLabel}</span>
-            <span className="ml-2 text-gray-400 text-xs tabular-nums">{item.actionCount} actions</span>
+            <span className="text-gray-500 w-5 text-right text-xs shrink-0">{item.rank}</span>
+            <img
+              src={specIconUrl(item.specName, 'medium')}
+              alt=""
+              className="w-5 h-5 rounded shrink-0"
+            />
+            <span style={{ color: item.color }} className="font-medium flex-1 truncate">{item.label}</span>
+            <span className="text-gray-500 text-xs shrink-0">{item.classLabel}</span>
+            <span className="ml-2 text-gray-400 text-xs tabular-nums shrink-0">{item.actionCount} actions</span>
           </Link>
         ))}
       </div>
