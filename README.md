@@ -14,9 +14,9 @@ Every spec across all 13 classes is tracked. When SimC's APL changes (detected v
 
 - **44 WoW specs** across all 13 classes
 - **AI-generated guides** from live SimC APLs using `claude-sonnet-4-6`
-- **Auto-sync** — daily cron detects APL changes via GitHub commit SHA and regenerates only what changed
-- **Guide history** — every generated version is archived with its APL commit SHA, generation date, and model used
-- **Complexity rankings** — specs ranked by APL action count for single-target and AoE
+- **Auto-sync** - daily cron detects APL changes via GitHub commit SHA and regenerates only what changed
+- **Guide history** - every generated version is archived with its APL commit SHA, generation date, and model used
+- **Complexity rankings** -specs ranked by APL action count for single-target and AoE
 - **Responsive UI** with class-colored sidebar, role badges, and priority list rendering
 
 ## Architecture
@@ -54,7 +54,7 @@ flowchart TB
 
 - **Node.js** 20+
 - **npm** 10+
-- **Anthropic API key** — [console.anthropic.com](https://console.anthropic.com)
+- **Anthropic API key** - [console.anthropic.com](https://console.anthropic.com)
 - *(Optional)* GitHub personal access token for higher API rate limits
 
 ### Environment Variables
@@ -67,13 +67,13 @@ cp .env.example .env
 
 | Variable | Required | Default | Description |
 |---|---|---|---|
-| `ANTHROPIC_API_KEY` | Yes | — | Anthropic API key for Claude |
-| `ADMIN_SECRET` | Yes | — | Bearer token for admin endpoints |
+| `ANTHROPIC_API_KEY` | Yes | -| Anthropic API key for Claude |
+| `ADMIN_SECRET` | Yes | -| Bearer token for admin endpoints |
 | `PORT` | No | `3001` | Backend HTTP port |
 | `DB_PATH` | No | `./data/db.sqlite` | Path to SQLite database file |
 | `ANTHROPIC_MODEL` | No | `claude-sonnet-4-6` | Claude model to use |
 | `PROMPT_VERSION` | No | `1.0.0` | Logged alongside generated guides |
-| `GITHUB_TOKEN` | No | — | GitHub PAT (avoids 60 req/hr rate limit) |
+| `GITHUB_TOKEN` | No | -| GitHub PAT (avoids 60 req/hr rate limit) |
 | `CRON_SCHEDULE` | No | `0 3 * * *` | Cron schedule (default: 3 AM UTC daily) |
 | `CORS_ORIGIN` | No | `*` | Allowed CORS origins |
 | `VITE_API_BASE_URL` | Frontend | `/api` | Full backend URL for Vercel deployment |
