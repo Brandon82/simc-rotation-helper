@@ -192,14 +192,13 @@ export function HistoryPage() {
                   >
                     APL Commit <SortIcon k="aplCommitDate" />
                   </th>
-                  <th className="text-left px-4 py-3 whitespace-nowrap">Model</th>
                   <th className="sticky right-0 bg-gray-900 px-4 py-3" />
                 </tr>
               </thead>
               <tbody>
                 {filtered.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="text-center text-gray-600 py-10">
+                    <td colSpan={6} className="text-center text-gray-600 py-10">
                       No entries match your filters.
                     </td>
                   </tr>
@@ -266,11 +265,6 @@ export function HistoryPage() {
                           <span className="font-mono text-xs text-indigo-400">{shortSha(g.aplCommitSha)}</span>
                           <span className="text-xs text-gray-600 tabular-nums">{formatDate(g.aplCommitDate)}</span>
                         </div>
-                      </td>
-
-                      {/* Model */}
-                      <td className="px-4 py-2.5 whitespace-nowrap text-gray-500 text-xs font-mono">
-                        {g.modelUsed.replace('claude-', '').replace(/-\d{8}$/, '')}
                       </td>
 
                       {/* Link */}
