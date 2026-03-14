@@ -42,62 +42,51 @@ export function HomePage() {
     <div className="flex flex-col items-center pb-16 min-h-[60vh]">
 
       {/* Hero */}
-      <div className="w-full max-w-2xl mt-10 mb-6">
+      <div className="w-full max-w-2xl mt-6 mb-4">
         <div className="relative rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
-          {/* Warm amber background tint */}
           <div className="absolute inset-0 bg-gradient-to-br from-amber-50/70 via-yellow-50/30 to-transparent dark:from-amber-950/25 dark:via-yellow-950/10 dark:to-transparent pointer-events-none" />
 
-          <div className="relative flex flex-col items-center text-center px-8 py-10 gap-5">
-            {/* Icon badge — amber/gold to match header */}
-            <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-yellow-400 to-amber-500 shadow-lg shadow-amber-500/30 dark:shadow-amber-500/20">
-              <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.6}>
+          <div className="relative flex items-center gap-4 px-5 py-4">
+            {/* Icon badge */}
+            <div className="flex items-center justify-center w-11 h-11 rounded-xl bg-gradient-to-br from-yellow-400 to-amber-500 shadow-md shadow-amber-500/25 dark:shadow-amber-500/15 shrink-0">
+              <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.6}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
               </svg>
             </div>
 
-            <div>
-              {/* Title matches header: "SimC" neutral, "Rotation" in amber */}
-              <h1 className="text-4xl font-extrabold tracking-tight mb-2">
+            <div className="flex-1 min-w-0">
+              <h1 className="text-xl font-bold tracking-tight leading-tight">
                 <span className="text-gray-900 dark:text-white">SimC </span>
                 <span className="text-yellow-500 dark:text-yellow-400">Rotation</span>
                 <span className="text-gray-900 dark:text-white"> Guides</span>
               </h1>
-              <p className="text-gray-600 dark:text-gray-400 text-base max-w-sm mx-auto leading-relaxed">
-                AI-generated guides built directly from SimulationCraft APLs,
-                updated automatically when APLs change.
+              <p className="text-gray-500 dark:text-gray-400 text-xs mt-0.5 leading-relaxed">
+                AI-generated guides from SimulationCraft APLs, auto-updated when APLs change.
               </p>
-            </div>
-
-            {/* Feature badges — unified neutral style */}
-            <div className="flex flex-wrap justify-center gap-2">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700">
-                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" /></svg>
-                Auto-updated
-              </span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700">
-                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z" /></svg>
-                AI-powered
-              </span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 border border-gray-200 dark:border-gray-700">
-                <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5" /></svg>
-                SimC APL source
-              </span>
-            </div>
-
-            {/* Stats — inside hero for cohesion */}
-            {!isLoading && data && (
-              <div className="flex items-center gap-8 pt-1 border-t border-gray-100 dark:border-gray-800 w-full justify-center">
-                <div className="text-center pt-4">
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white">{data.classes.length}</p>
-                  <p className="text-xs text-gray-500 mt-0.5 uppercase tracking-wider">Classes</p>
-                </div>
-                <div className="w-px h-8 bg-gray-200 dark:bg-gray-700" />
-                <div className="text-center pt-4">
-                  <p className="text-2xl font-bold text-gray-900 dark:text-white">{totalSpecs}</p>
-                  <p className="text-xs text-gray-500 mt-0.5 uppercase tracking-wider">Spec Guides</p>
-                </div>
+              {/* Badges + stats in one compact row */}
+              <div className="flex items-center gap-2 mt-2 flex-wrap">
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-700">
+                  <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" /></svg>
+                  Auto-updated
+                </span>
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-700">
+                  <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z" /></svg>
+                  AI-powered
+                </span>
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-700">
+                  <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5" /></svg>
+                  SimC APL source
+                </span>
+                {!isLoading && data && (
+                  <>
+                    <span className="text-gray-300 dark:text-gray-700 select-none">·</span>
+                    <span className="text-[11px] text-gray-400 dark:text-gray-500">{data.classes.length} classes</span>
+                    <span className="text-gray-300 dark:text-gray-700 select-none">·</span>
+                    <span className="text-[11px] text-gray-400 dark:text-gray-500">{totalSpecs} guides</span>
+                  </>
+                )}
               </div>
-            )}
+            </div>
           </div>
         </div>
       </div>
