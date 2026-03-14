@@ -1,25 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useSpecs } from '../hooks/useSpecs';
-
-// Wowhead icon CDN — class names must be lowercase, no underscores
-const WH_BASE = 'https://wow.zamimg.com/images/wow/icons/medium';
-
-const CLASS_ICON: Record<string, string> = {
-  death_knight: `${WH_BASE}/classicon_deathknight.jpg`,
-  demon_hunter: `${WH_BASE}/classicon_demonhunter.jpg`,
-  druid:        `${WH_BASE}/classicon_druid.jpg`,
-  evoker:       `${WH_BASE}/classicon_evoker.jpg`,
-  hunter:       `${WH_BASE}/classicon_hunter.jpg`,
-  mage:         `${WH_BASE}/classicon_mage.jpg`,
-  monk:         `${WH_BASE}/classicon_monk.jpg`,
-  paladin:      `${WH_BASE}/classicon_paladin.jpg`,
-  priest:       `${WH_BASE}/classicon_priest.jpg`,
-  rogue:        `${WH_BASE}/classicon_rogue.jpg`,
-  shaman:       `${WH_BASE}/classicon_shaman.jpg`,
-  warlock:      `${WH_BASE}/classicon_warlock.jpg`,
-  warrior:      `${WH_BASE}/classicon_warrior.jpg`,
-};
+import { classIconUrl, specIconUrl } from '../utils/wowIcons';
 
 const CLASS_COLORS: Record<string, string> = {
   death_knight: '#C41E3A',
@@ -37,10 +19,10 @@ const CLASS_COLORS: Record<string, string> = {
   warrior:      '#C69B3A',
 };
 
-const ROLE_ICONS: Record<string, string> = {
-  dps: '⚔',
-  tank: '🛡',
-  healer: '✚',
+const ROLE_LABELS: Record<string, string> = {
+  dps: 'DPS',
+  tank: 'Tank',
+  healer: 'Healer',
 };
 
 const ROLE_COLORS: Record<string, string> = {
@@ -142,7 +124,7 @@ export function HomePage() {
                       style={{ '--cls-color': color } as React.CSSProperties}
                     >
                       <img
-                        src={CLASS_ICON[cls.name]}
+                        src={classIconUrl(cls.name)}
                         alt={cls.label}
                         className="w-full h-full object-cover"
                         loading="lazy"
@@ -169,7 +151,7 @@ export function HomePage() {
           >
             <div className="flex items-center gap-2.5 mb-4">
               <img
-                src={CLASS_ICON[selectedClass]}
+                src={classIconUrl(selectedClass)}
                 alt={selectedClassData.label}
                 className="w-7 h-7 rounded-md"
               />
@@ -197,17 +179,21 @@ export function HomePage() {
                       : 'bg-gray-800/40 cursor-not-allowed opacity-50'}
                   `}
                 >
-                  <span
-                    className={`text-base ${ROLE_COLORS[spec.role] ?? 'text-gray-400'}`}
-                    title={spec.role}
-                  >
-                    {ROLE_ICONS[spec.role]}
-                  </span>
-                  <span className="text-sm font-medium text-white flex-1">{spec.label}</span>
+                  <img
+                    src={specIconUrl(spec.name)}
+                    alt={spec.label}
+                    className="w-8 h-8 rounded-md shrink-0"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-white">{spec.label}</p>
+                    <p className={`text-xs ${ROLE_COLORS[spec.role] ?? 'text-gray-400'}`}>
+                      {ROLE_LABELS[spec.role] ?? spec.role}
+                    </p>
+                  </div>
                   {spec.hasGuide ? (
-                    <span className="text-xs text-gray-500">View →</span>
+                    <span className="text-xs text-gray-500 shrink-0">View →</span>
                   ) : (
-                    <span className="text-xs text-gray-600">Pending</span>
+                    <span className="text-xs text-gray-600 shrink-0">Pending</span>
                   )}
                 </button>
               ))}

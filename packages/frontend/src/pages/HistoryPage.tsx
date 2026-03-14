@@ -2,24 +2,7 @@ import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useAllGuides } from '../hooks/useAllGuides';
 import type { GuideSummaryItem } from '../types';
-
-const WH_BASE = 'https://wow.zamimg.com/images/wow/icons/small';
-
-const CLASS_ICON: Record<string, string> = {
-  death_knight: `${WH_BASE}/classicon_deathknight.jpg`,
-  demon_hunter: `${WH_BASE}/classicon_demonhunter.jpg`,
-  druid:        `${WH_BASE}/classicon_druid.jpg`,
-  evoker:       `${WH_BASE}/classicon_evoker.jpg`,
-  hunter:       `${WH_BASE}/classicon_hunter.jpg`,
-  mage:         `${WH_BASE}/classicon_mage.jpg`,
-  monk:         `${WH_BASE}/classicon_monk.jpg`,
-  paladin:      `${WH_BASE}/classicon_paladin.jpg`,
-  priest:       `${WH_BASE}/classicon_priest.jpg`,
-  rogue:        `${WH_BASE}/classicon_rogue.jpg`,
-  shaman:       `${WH_BASE}/classicon_shaman.jpg`,
-  warlock:      `${WH_BASE}/classicon_warlock.jpg`,
-  warrior:      `${WH_BASE}/classicon_warrior.jpg`,
-};
+import { classIconUrl, specIconUrl } from '../utils/wowIcons';
 
 const CLASS_COLORS: Record<string, string> = {
   death_knight: '#C41E3A',
@@ -139,7 +122,7 @@ export function HistoryPage() {
               }`}
               style={classFilter === name ? { ringColor: CLASS_COLORS[name] ?? '#fff', color: CLASS_COLORS[name] ?? '#fff' } : {}}
             >
-              <img src={CLASS_ICON[name]} alt="" className="w-3.5 h-3.5 rounded-sm" />
+              <img src={classIconUrl(name, 'medium')} alt="" className="w-3.5 h-3.5 rounded-sm" />
               {label}
             </button>
           ))}
@@ -229,7 +212,7 @@ export function HistoryPage() {
                       <td className="px-4 py-2.5 whitespace-nowrap">
                         <div className="flex items-center gap-2">
                           <img
-                            src={CLASS_ICON[g.className]}
+                            src={classIconUrl(g.className, 'medium')}
                             alt={g.classLabel}
                             className="w-5 h-5 rounded"
                             loading="lazy"
@@ -244,8 +227,16 @@ export function HistoryPage() {
                       </td>
 
                       {/* Spec */}
-                      <td className="px-4 py-2.5 whitespace-nowrap text-gray-200 font-medium">
-                        {g.specLabel}
+                      <td className="px-4 py-2.5 whitespace-nowrap">
+                        <div className="flex items-center gap-2">
+                          <img
+                            src={specIconUrl(g.specName, 'medium')}
+                            alt={g.specLabel}
+                            className="w-5 h-5 rounded"
+                            loading="lazy"
+                          />
+                          <span className="text-gray-200 font-medium">{g.specLabel}</span>
+                        </div>
                       </td>
 
                       {/* Status */}

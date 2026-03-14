@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import { useSpecs } from '../../hooks/useSpecs';
 import { useState } from 'react';
+import { specIconUrl } from '../../utils/wowIcons';
 
 // WoW class colors as border/glow accents
 const CLASS_BORDER: Record<string, string> = {
@@ -51,13 +52,13 @@ const CLASS_ACTIVE_BG: Record<string, string> = {
   warrior: 'bg-yellow-900/20',
 };
 
-const ROLE_ICONS: Record<string, { icon: string; color: string }> = {
-  dps: { icon: '⚔', color: 'text-red-400' },
-  tank: { icon: '🛡', color: 'text-blue-400' },
-  healer: { icon: '✚', color: 'text-green-400' },
-};
 
-export function Sidebar() {
+interface SidebarProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const { data, isLoading } = useSpecs();
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
 
@@ -65,9 +66,18 @@ export function Sidebar() {
     setCollapsed(prev => ({ ...prev, [className]: !prev[className] }));
   };
 
+  const navClass = [
+    'w-52 shrink-0 bg-gray-950 border-r border-gray-800/60 overflow-y-auto',
+    // Mobile: fixed overlay, slide in/out
+    'fixed top-14 left-0 bottom-0 z-40 transition-transform duration-200',
+    isOpen ? 'translate-x-0' : '-translate-x-full',
+    // Desktop: static, always visible
+    'md:static md:translate-x-0 md:top-auto md:z-auto md:transition-none',
+  ].join(' ');
+
   if (isLoading) {
     return (
-      <nav className="w-52 shrink-0 bg-gray-950 border-r border-gray-800/60 overflow-y-auto">
+      <nav className={navClass}>
         <div className="p-3 space-y-2">
           {Array.from({ length: 13 }).map((_, i) => (
             <div key={i} className="h-6 bg-gray-800/60 rounded animate-pulse" />
@@ -78,11 +88,12 @@ export function Sidebar() {
   }
 
   return (
-    <nav className="w-52 shrink-0 bg-gray-950 border-r border-gray-800/60 overflow-y-auto flex flex-col">
+    <nav className={`${navClass} flex flex-col`}>
       {/* Top nav links */}
       <div className="px-2 pt-3 pb-2 border-b border-gray-800/60 space-y-0.5">
         <NavLink
           to="/rankings"
+          onClick={onClose}
           className={({ isActive }) =>
             `flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-all ${
               isActive
@@ -96,6 +107,7 @@ export function Sidebar() {
         </NavLink>
         <NavLink
           to="/history"
+          onClick={onClose}
           className={({ isActive }) =>
             `flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-all ${
               isActive
@@ -140,30 +152,30 @@ export function Sidebar() {
 
                 {isOpen && (
                   <div className="mt-0.5 mb-1 ml-2.5 space-y-0.5">
-                    {cls.specs.map(spec => {
-                      const role = ROLE_ICONS[spec.role] ?? { icon: '?', color: 'text-gray-400' };
-                      return (
-                        <NavLink
-                          key={spec.name}
-                          to={`/guide/${spec.name}`}
-                          className={({ isActive }) =>
-                            `flex items-center gap-2 px-2 py-1 rounded text-xs transition-all ${
-                              isActive
-                                ? 'bg-gray-700/80 text-white font-medium'
-                                : `text-gray-400 hover:text-gray-200 hover:bg-gray-800/50 ${!spec.hasGuide ? 'opacity-40' : ''}`
-                            }`
-                          }
-                        >
-                          <span className={`${role.color} text-[10px] w-3 text-center shrink-0`}>
-                            {role.icon}
-                          </span>
-                          <span className="truncate">{spec.label}</span>
-                          {!spec.hasGuide && (
-                            <span className="ml-auto text-[10px] text-gray-700 shrink-0">—</span>
-                          )}
-                        </NavLink>
-                      );
-                    })}
+                    {cls.specs.map(spec => (
+                      <NavLink
+                        key={spec.name}
+                        to={`/guide/${spec.name}`}
+                        onClick={onClose}
+                        className={({ isActive }) =>
+                          `flex items-center gap-2 px-2 py-1 rounded text-xs transition-all ${
+                            isActive
+                              ? 'bg-gray-700/80 text-white font-medium'
+                              : `text-gray-400 hover:text-gray-200 hover:bg-gray-800/50 ${!spec.hasGuide ? 'opacity-40' : ''}`
+                          }`
+                        }
+                      >
+                        <img
+                          src={specIconUrl(spec.name, 'medium')}
+                          alt=""
+                          className="w-4 h-4 rounded-sm shrink-0 object-cover"
+                        />
+                        <span className="truncate">{spec.label}</span>
+                        {!spec.hasGuide && (
+                          <span className="ml-auto text-[10px] text-gray-700 shrink-0">—</span>
+                        )}
+                      </NavLink>
+                    ))}
                   </div>
                 )}
               </div>

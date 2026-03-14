@@ -6,12 +6,7 @@ import { GuideSkeleton } from '../components/guide/GuideSkeleton';
 import { useState } from 'react';
 import { fetchHistoricalGuide } from '../api/client';
 import type { GuideApiResponse } from '../types';
-
-const ROLE_LABELS: Record<string, string> = {
-  dps: 'DPS',
-  tank: 'Tank',
-  healer: 'Healer',
-};
+import { specIconUrl, classIconUrl } from '../utils/wowIcons';
 
 function toLabel(specName: string): string {
   const parts = specName.split('_');
@@ -19,6 +14,15 @@ function toLabel(specName: string): string {
   const cls = parts.slice(0, -1);
   const capitalize = (w: string) => w.charAt(0).toUpperCase() + w.slice(1);
   return `${capitalize(spec)} ${cls.map(capitalize).join(' ')}`;
+}
+
+function getClassName(specName: string): string {
+  // e.g. "warrior_arms" → "warrior", "death_knight_blood" → "death_knight"
+  const knownTwoWord = ['death_knight', 'demon_hunter', 'beast_mastery'];
+  for (const prefix of knownTwoWord) {
+    if (specName.startsWith(prefix + '_')) return prefix;
+  }
+  return specName.split('_').slice(0, -1).join('_');
 }
 
 export function SpecPage() {
@@ -61,16 +65,31 @@ export function SpecPage() {
   }
 
   const specLabel = toLabel(specName ?? '');
+  const className = getClassName(specName ?? '');
 
   return (
     <div>
       {/* Spec header */}
       <div className="flex items-start justify-between mb-4">
-        <div>
-          <Link to="/" className="text-xs text-gray-500 hover:text-gray-300 transition-colors">
-            ← All classes
-          </Link>
-          <h1 className="text-2xl font-bold text-white mt-1">{specLabel}</h1>
+        <div className="flex items-start gap-3">
+          <div className="relative shrink-0 mt-1">
+            <img
+              src={specIconUrl(specName ?? '', 'large')}
+              alt={specLabel}
+              className="w-12 h-12 rounded-lg"
+            />
+            <img
+              src={classIconUrl(className, 'medium')}
+              alt=""
+              className="absolute -bottom-1.5 -right-1.5 w-5 h-5 rounded border-2 border-gray-950"
+            />
+          </div>
+          <div>
+            <Link to="/" className="text-xs text-gray-500 hover:text-gray-300 transition-colors">
+              ← All classes
+            </Link>
+            <h1 className="text-2xl font-bold text-white mt-0.5">{specLabel}</h1>
+          </div>
         </div>
 
         {/* History toggle */}
