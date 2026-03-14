@@ -61,7 +61,24 @@ export function Header({ onToggleSidebar }: HeaderProps) {
         {/* Right side */}
         <div className="ml-auto flex items-center gap-3">
           <span className="text-gray-400 dark:text-gray-600 text-xs hidden md:block">
-            Powered by SimulationCraft + Claude AI
+            Powered by{' '}
+            <a
+              href="https://www.simulationcraft.org"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-gray-600 dark:hover:text-gray-400 transition-colors underline underline-offset-2"
+            >
+              SimulationCraft
+            </a>
+            {' + '}
+            <a
+              href="https://www.anthropic.com/claude"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-gray-600 dark:hover:text-gray-400 transition-colors underline underline-offset-2"
+            >
+              Claude AI
+            </a>
           </span>
           <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-sm shadow-emerald-500/50" title="Live" />
 
