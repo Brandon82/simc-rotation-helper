@@ -169,6 +169,8 @@ export function SpecPage() {
             modelUsed={displayGuide.modelUsed}
           />
 
+          <QAPanel specName={specName ?? ''} />
+
           {displayGuide.guide.sections
             .filter(section => section.id !== 'opener')
             .map((section, i) => (
@@ -180,8 +182,6 @@ export function SpecPage() {
                 <GuideSection section={section} />
               </div>
             ))}
-
-          <QAPanel specName={specName ?? ''} />
         </>
       )}
     </div>
