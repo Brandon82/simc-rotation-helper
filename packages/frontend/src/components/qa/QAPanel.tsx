@@ -62,20 +62,20 @@ export function QAPanel({ specName }: { specName: string }) {
   };
 
   return (
-    <div className="mt-8 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+    <div className="mb-6 border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden bg-gray-50 dark:bg-gray-900">
       {/* Toggle header */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-left"
+        className="w-full flex items-center justify-between px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-left"
       >
         <div className="flex items-center gap-2">
-          <svg className="w-4 h-4 text-purple-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <svg className="w-3.5 h-3.5 text-purple-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
           </svg>
-          <span className="text-sm font-medium text-gray-900 dark:text-white">Ask AI About This Rotation</span>
+          <span className="text-xs text-gray-600 dark:text-gray-400">Ask AI About This Rotation</span>
         </div>
         <svg
-          className={`w-4 h-4 text-gray-500 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+          className={`w-3.5 h-3.5 text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`}
           viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
         >
           <polyline points="6 9 12 15 18 9" />
@@ -83,11 +83,11 @@ export function QAPanel({ specName }: { specName: string }) {
       </button>
 
       {isOpen && (
-        <div className="p-4 bg-white dark:bg-gray-950">
+        <div className="px-4 pb-3 pt-1">
           {/* Key entry gate */}
           {!qaKey ? (
-            <div className="space-y-3">
-              <p className="text-sm text-gray-600 dark:text-gray-400">
+            <div className="space-y-2">
+              <p className="text-xs text-gray-500 dark:text-gray-400">
                 Enter your API key to ask questions about this rotation.
               </p>
               <div className="flex gap-2">
@@ -97,12 +97,12 @@ export function QAPanel({ specName }: { specName: string }) {
                   onChange={e => { setKeyInput(e.target.value); setKeyError(''); }}
                   onKeyDown={e => e.key === 'Enter' && handleValidateKey()}
                   placeholder="qa_..."
-                  className="flex-1 px-3 py-2 text-sm rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                  className="flex-1 px-3 py-1.5 text-xs rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 />
                 <button
                   onClick={handleValidateKey}
                   disabled={validatingKey || !keyInput.trim()}
-                  className="px-4 py-2 text-sm font-medium rounded bg-purple-600 text-white hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="px-3 py-1.5 text-xs font-medium rounded bg-purple-600 text-white hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   {validatingKey ? 'Checking...' : 'Unlock'}
                 </button>
@@ -113,11 +113,11 @@ export function QAPanel({ specName }: { specName: string }) {
             <>
               {/* Messages */}
               {messages.length > 0 && (
-                <div className="mb-4 space-y-3 max-h-96 overflow-y-auto">
+                <div className="mb-3 space-y-2 max-h-96 overflow-y-auto">
                   {messages.map((msg, i) => (
                     <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                       <div
-                        className={`max-w-[85%] rounded-lg px-3 py-2 text-sm ${
+                        className={`max-w-[85%] rounded-lg px-3 py-2 text-xs ${
                           msg.role === 'user'
                             ? 'bg-purple-600 text-white'
                             : 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100'
@@ -139,7 +139,7 @@ export function QAPanel({ specName }: { specName: string }) {
                   ))}
                   {loading && (
                     <div className="flex justify-start">
-                      <div className="bg-gray-100 dark:bg-gray-800 rounded-lg px-3 py-2 text-sm text-gray-500">
+                      <div className="bg-gray-100 dark:bg-gray-800 rounded-lg px-3 py-2 text-xs text-gray-500">
                         <span className="inline-flex gap-1">
                           <span className="animate-bounce" style={{ animationDelay: '0ms' }}>.</span>
                           <span className="animate-bounce" style={{ animationDelay: '150ms' }}>.</span>
@@ -162,12 +162,12 @@ export function QAPanel({ specName }: { specName: string }) {
                   placeholder="Ask about this rotation..."
                   disabled={loading}
                   maxLength={1000}
-                  className="flex-1 px-3 py-2 text-sm rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent disabled:opacity-50"
+                  className="flex-1 px-3 py-1.5 text-xs rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent disabled:opacity-50"
                 />
                 <button
                   onClick={handleAsk}
                   disabled={loading || !question.trim()}
-                  className="px-4 py-2 text-sm font-medium rounded bg-purple-600 text-white hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className="px-3 py-1.5 text-xs font-medium rounded bg-purple-600 text-white hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
                   Ask
                 </button>

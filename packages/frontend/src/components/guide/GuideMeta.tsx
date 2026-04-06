@@ -15,7 +15,7 @@ export function GuideMeta({ aplFileName, aplCommitSha, aplCommitDate, generatedA
   const aplUrl = `https://github.com/simulationcraft/simc/blob/${aplCommitSha}/ActionPriorityLists/default/${aplFileName}.simc`;
 
   return (
-    <div className="flex flex-wrap gap-3 text-xs text-gray-500 bg-gray-50 dark:bg-gray-900 rounded-lg px-4 py-2.5 border border-gray-200 dark:border-gray-800 mb-6">
+    <div className="flex flex-wrap gap-3 text-xs text-gray-500 bg-gray-50 dark:bg-gray-900 rounded-lg px-4 py-2.5 border border-gray-200 dark:border-gray-800 mb-2">
       <span>
         <span className="text-gray-600 dark:text-gray-400">APL commit:</span>{' '}
         <a
