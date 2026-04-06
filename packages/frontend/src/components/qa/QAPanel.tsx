@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useQaKeyStore } from '../../store/qaKeyStore';
 import { askQuestion, validateQaKey } from '../../api/client';
-import { InlineMarkdown } from '../guide/InlineMarkdown';
+import { Markdown } from './Markdown';
 
 interface Message {
   role: 'user' | 'ai';
@@ -124,13 +124,7 @@ export function QAPanel({ specName }: { specName: string }) {
                         }`}
                       >
                         {msg.role === 'ai' ? (
-                          <div className="space-y-2">
-                            {msg.text.split('\n\n').map((paragraph, pi) => (
-                              <p key={pi}>
-                                <InlineMarkdown text={paragraph} />
-                              </p>
-                            ))}
-                          </div>
+                          <Markdown text={msg.text} />
                         ) : (
                           msg.text
                         )}
