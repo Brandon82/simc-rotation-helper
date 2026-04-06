@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useThemeStore } from '../../store/themeStore';
+import { SwordsIcon } from '../icons/SwordsIcon';
 
 interface HeaderProps {
   onToggleSidebar: () => void;
@@ -42,7 +43,7 @@ export function Header({ onToggleSidebar }: HeaderProps) {
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2.5 group">
           <div className="w-7 h-7 rounded bg-yellow-500/10 border border-yellow-500/30 flex items-center justify-center group-hover:bg-yellow-500/20 transition-colors">
-            <span className="text-yellow-500 dark:text-yellow-400 text-sm">⚔</span>
+            <SwordsIcon className="w-4 h-4 text-yellow-500 dark:text-yellow-400" />
           </div>
           <div className="flex items-baseline gap-1">
             <span className="text-gray-900 dark:text-white font-bold text-base tracking-tight leading-none">SimC</span>

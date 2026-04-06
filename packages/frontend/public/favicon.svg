@@ -1,16 +1,28 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
   <!-- Background circle -->
-  <circle cx="24" cy="24" r="24" fill="#1a0a2e"/>
-  <!-- Sword blade -->
-  <line x1="24" y1="6" x2="24" y2="36" stroke="#a855f7" stroke-width="3" stroke-linecap="round"/>
-  <!-- Sword tip -->
-  <polygon points="24,4 21,12 27,12" fill="#a855f7"/>
-  <!-- Crossguard -->
-  <line x1="14" y1="28" x2="34" y2="28" stroke="#c084fc" stroke-width="3" stroke-linecap="round"/>
-  <!-- Grip -->
-  <line x1="24" y1="28" x2="24" y2="38" stroke="#7e22ce" stroke-width="4" stroke-linecap="round"/>
-  <!-- Pommel -->
-  <circle cx="24" cy="40" r="3.5" fill="#9333ea" stroke="#c084fc" stroke-width="1.5"/>
-  <!-- Blade shine -->
-  <line x1="22" y1="10" x2="22" y2="26" stroke="#e9d5ff" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+  <circle cx="24" cy="24" r="24" fill="#1a1a2e"/>
+
+  <g stroke="#eab308" stroke-linecap="round" stroke-linejoin="round" transform="translate(6, 4)">
+    <!-- Left sword: blade from top-left to center -->
+    <line x1="8" y1="6" x2="20.5" y2="18.5" stroke-width="3"/>
+    <!-- Left sword: blade tip -->
+    <polygon points="5,3 7,9 11,5" fill="#eab308" stroke="none"/>
+    <!-- Left sword: crossguard -->
+    <line x1="15" y1="19.5" x2="21.5" y2="13" stroke-width="2.8"/>
+    <!-- Left sword: grip to pommel -->
+    <line x1="20.5" y1="18.5" x2="27" y2="25" stroke-width="4"/>
+    <!-- Left pommel -->
+    <circle cx="28.5" cy="26.5" r="2" fill="#eab308" stroke="none"/>
+
+    <!-- Right sword: blade from top-right to center -->
+    <line x1="28" y1="6" x2="15.5" y2="18.5" stroke-width="3"/>
+    <!-- Right sword: blade tip -->
+    <polygon points="31,3 29,9 25,5" fill="#eab308" stroke="none"/>
+    <!-- Right sword: crossguard -->
+    <line x1="14.5" y1="13" x2="21" y2="19.5" stroke-width="2.8"/>
+    <!-- Right sword: grip to pommel -->
+    <line x1="15.5" y1="18.5" x2="9" y2="25" stroke-width="4"/>
+    <!-- Right pommel -->
+    <circle cx="7.5" cy="26.5" r="2" fill="#eab308" stroke="none"/>
+  </g>
 </svg>

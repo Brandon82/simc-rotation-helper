@@ -4,6 +4,7 @@ import { useSpecs } from '../hooks/useSpecs';
 import { classIconUrl, specIconUrl } from '../utils/wowIcons';
 import { useThemeStore } from '../store/themeStore';
 import { CLASS_COLORS_DARK, CLASS_COLORS_LIGHT } from '../utils/classColors';
+import { SwordsIcon } from '../components/icons/SwordsIcon';
 
 const ROLE_LABELS: Record<string, string> = {
   dps: 'DPS',
@@ -49,9 +50,7 @@ export function HomePage() {
           <div className="relative flex items-center gap-4 px-5 py-4">
             {/* Icon badge */}
             <div className="flex items-center justify-center w-11 h-11 rounded-xl bg-gradient-to-br from-yellow-400 to-amber-500 shadow-md shadow-amber-500/25 dark:shadow-amber-500/15 shrink-0">
-              <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.6}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
-              </svg>
+              <SwordsIcon className="w-6 h-6 text-white" />
             </div>
 
             <div className="flex-1 min-w-0">
