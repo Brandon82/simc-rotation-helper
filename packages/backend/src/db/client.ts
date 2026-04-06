@@ -50,6 +50,18 @@ export function getDb(): Database.Database {
 
     CREATE INDEX IF NOT EXISTS idx_snapshots_spec
       ON apl_snapshots (spec_name);
+
+    CREATE TABLE IF NOT EXISTS qa_api_keys (
+      id TEXT PRIMARY KEY,
+      api_key TEXT NOT NULL UNIQUE,
+      label TEXT NOT NULL,
+      is_active INTEGER NOT NULL DEFAULT 1,
+      created_at TEXT NOT NULL,
+      last_used_at TEXT
+    );
+
+    CREATE UNIQUE INDEX IF NOT EXISTS idx_qa_api_key
+      ON qa_api_keys (api_key);
   `);
 
   return db;
@@ -196,4 +208,45 @@ export async function getSpecsWithGuides(): Promise<Set<string>> {
     .prepare('SELECT DISTINCT spec_name FROM guides WHERE is_current = 1')
     .all() as { spec_name: string }[];
   return new Set(rows.map(r => r.spec_name));
+}
+
+// ── QA API Key helpers ──────────────────────────────────────
+
+export function validateQaApiKey(apiKey: string): boolean {
+  const row = getDb()
+    .prepare('SELECT id FROM qa_api_keys WHERE api_key = ? AND is_active = 1')
+    .get(apiKey) as { id: string } | undefined;
+  if (row) {
+    getDb()
+      .prepare('UPDATE qa_api_keys SET last_used_at = ? WHERE id = ?')
+      .run(new Date().toISOString(), row.id);
+  }
+  return !!row;
+}
+
+export function insertQaApiKey(id: string, apiKey: string, label: string): void {
+  getDb()
+    .prepare('INSERT INTO qa_api_keys (id, api_key, label, is_active, created_at) VALUES (?, ?, ?, 1, ?)')
+    .run(id, apiKey, label, new Date().toISOString());
+}
+
+export function listQaApiKeys(): Array<{ id: string; api_key: string; label: string; is_active: boolean; created_at: string; last_used_at: string | null }> {
+  const rows = getDb()
+    .prepare('SELECT * FROM qa_api_keys ORDER BY created_at DESC')
+    .all() as Array<Record<string, unknown>>;
+  return rows.map(r => ({
+    id: r.id as string,
+    api_key: r.api_key as string,
+    label: r.label as string,
+    is_active: (r.is_active as number) === 1,
+    created_at: r.created_at as string,
+    last_used_at: (r.last_used_at as string | null),
+  }));
+}
+
+export function deactivateQaApiKey(id: string): boolean {
+  const result = getDb()
+    .prepare('UPDATE qa_api_keys SET is_active = 0 WHERE id = ?')
+    .run(id);
+  return result.changes > 0;
 }

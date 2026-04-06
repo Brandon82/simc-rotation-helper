@@ -9,6 +9,7 @@ import specsRouter from './routes/specs.js';
 import guidesRouter from './routes/guides.js';
 import adminRouter from './routes/admin.js';
 import rankingsRouter from './routes/rankings.js';
+import qaRouter from './routes/qa.js';
 
 const app = express();
 
@@ -38,11 +39,21 @@ const adminLimiter = rateLimit({
   message: { error: 'Too many admin requests.' },
 });
 
+// QA: 5 requests per minute per IP (each request triggers a Claude call)
+const qaLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many Q&A requests, please slow down.' },
+});
+
 // ── Routes ───────────────────────────────────────────────────
 app.use('/api/specs', generalLimiter, specsRouter);
 app.use('/api/guides', generalLimiter, guidesRouter);
 app.use('/api/admin', adminLimiter, adminRouter);
 app.use('/api/rankings', generalLimiter, rankingsRouter);
+app.use('/api/qa', qaLimiter, qaRouter);
 
 app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', uptime: Math.floor(process.uptime()) });

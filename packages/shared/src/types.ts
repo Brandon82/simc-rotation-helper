@@ -127,3 +127,28 @@ export interface GuideSummaryItem {
 export interface AllGuidesApiResponse {
   guides: GuideSummaryItem[];
 }
+
+// ── Q&A Types ───────────────────────────────────────────────
+
+export interface QARequest {
+  specName: string;
+  question: string;
+}
+
+export interface QAResponse {
+  answer: string;
+  specName: string;
+}
+
+export interface QAValidateResponse {
+  valid: boolean;
+}
+
+export interface QAKeyInfo {
+  id: string;
+  label: string;
+  api_key: string;
+  is_active: boolean;
+  created_at: string;
+  last_used_at: string | null;
+}

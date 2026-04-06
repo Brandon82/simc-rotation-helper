@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { fetchHistoricalGuide } from '../api/client';
 import type { GuideApiResponse } from '../types';
 import { specIconUrl, classIconUrl } from '../utils/wowIcons';
+import { QAPanel } from '../components/qa/QAPanel';
 
 function toLabel(specName: string): string {
   const capitalize = (w: string) => w.charAt(0).toUpperCase() + w.slice(1);
@@ -179,6 +180,8 @@ export function SpecPage() {
                 <GuideSection section={section} />
               </div>
             ))}
+
+          <QAPanel specName={specName ?? ''} />
         </>
       )}
     </div>

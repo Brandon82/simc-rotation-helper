@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { SpecsApiResponse, GuideApiResponse, GuideHistoryApiResponse, RankingsApiResponse, AllGuidesApiResponse } from '../types';
+import type { SpecsApiResponse, GuideApiResponse, GuideHistoryApiResponse, RankingsApiResponse, AllGuidesApiResponse, QAResponse, QAValidateResponse } from '../types';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL ? `${import.meta.env.VITE_API_BASE_URL}/api` : '/api',
@@ -32,5 +32,19 @@ export async function fetchRankings(): Promise<RankingsApiResponse> {
 
 export async function fetchAllGuides(): Promise<AllGuidesApiResponse> {
   const res = await api.get<AllGuidesApiResponse>('/guides');
+  return res.data;
+}
+
+export async function askQuestion(specName: string, question: string, qaKey: string): Promise<QAResponse> {
+  const res = await api.post<QAResponse>('/qa/ask', { specName, question }, {
+    headers: { 'X-QA-Key': qaKey },
+  });
+  return res.data;
+}
+
+export async function validateQaKey(qaKey: string): Promise<QAValidateResponse> {
+  const res = await api.get<QAValidateResponse>('/qa/validate', {
+    headers: { 'X-QA-Key': qaKey },
+  });
   return res.data;
 }

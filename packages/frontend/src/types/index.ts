@@ -14,4 +14,7 @@ export type {
   GuideHistoryApiResponse,
   RankingItem,
   RankingsApiResponse,
+  QARequest,
+  QAResponse,
+  QAValidateResponse,
 } from '../../../shared/src/types';

@@ -2,6 +2,7 @@ import Anthropic from '@anthropic-ai/sdk';
 import type { GuideContent } from '@simc-helper/shared';
 import { config } from '../config.js';
 import { SYSTEM_PROMPT, buildUserPrompt } from '../prompts/guidePrompt.js';
+import { QA_SYSTEM_PROMPT, buildQaUserPrompt } from '../prompts/qaPrompt.js';
 
 const client = new Anthropic({ apiKey: config.anthropicApiKey });
 
@@ -69,4 +70,49 @@ export async function generateGuide(
   console.log(`${tag} ✓ parsed ${parsed.sections.length} sections: ${parsed.sections.map(s => s.id).join(', ')}`);
 
   return parsed;
+}
+
+/**
+ * Calls Claude to answer a user's question about a spec's rotation/APL.
+ * Returns the answer as plain text (with inline markdown).
+ */
+export async function answerQuestion(
+  specLabel: string,
+  className: string,
+  guideContent: GuideContent,
+  aplContent: string,
+  question: string,
+): Promise<string> {
+  const tag = `[qa] ${className} ${specLabel}`;
+  const userPrompt = buildQaUserPrompt(
+    specLabel,
+    className,
+    JSON.stringify(guideContent),
+    aplContent,
+    question,
+  );
+
+  console.log(`${tag} → sending Q&A request`);
+  console.log(`${tag}   question: ${question.slice(0, 100)}`);
+
+  const started = Date.now();
+
+  const response = await client.messages.create({
+    model: config.anthropicModel,
+    max_tokens: 4096,
+    system: QA_SYSTEM_PROMPT,
+    messages: [{ role: 'user', content: userPrompt }],
+  });
+
+  const elapsed = ((Date.now() - started) / 1000).toFixed(1);
+  console.log(`${tag} ← response received (${elapsed}s)`);
+  console.log(`${tag}   input tokens : ${response.usage.input_tokens}`);
+  console.log(`${tag}   output tokens: ${response.usage.output_tokens}`);
+
+  const textBlock = response.content.find(b => b.type === 'text');
+  if (!textBlock || textBlock.type !== 'text') {
+    throw new Error('LLM returned no text content');
+  }
+
+  return textBlock.text.trim();
 }

@@ -1,9 +1,10 @@
 import { Router } from 'express';
 import type { Request, Response } from 'express';
+import crypto from 'crypto';
 import { config } from '../config.js';
 import { checkAndUpdateSpec, checkAndUpdateMany, checkAndUpdateClass, checkAndUpdateAll } from '../services/guideService.js';
 import { getSpecInfo, getClassInfo } from '../data/specs.js';
-import { deleteOldGuides } from '../db/client.js';
+import { deleteOldGuides, insertQaApiKey, listQaApiKeys, deactivateQaApiKey } from '../db/client.js';
 
 const router = Router();
 
@@ -82,6 +83,42 @@ router.delete('/guides/history', async (req: Request, res: Response) => {
 
   const deleted = await deleteOldGuides(spec);
   res.json({ deleted, spec: spec ?? 'all' });
+});
+
+// ── QA API Key management ───────────────────────────────────
+
+// POST /api/admin/qa-keys  { "label": "Brandon" }
+router.post('/qa-keys', (req: Request, res: Response) => {
+  if (!requireAdminAuth(req, res)) return;
+
+  const { label } = req.body as { label?: string };
+  if (!label) {
+    res.status(400).json({ error: 'Missing "label" field' });
+    return;
+  }
+
+  const id = crypto.randomUUID();
+  const apiKey = `qa_${crypto.randomBytes(24).toString('hex')}`;
+  insertQaApiKey(id, apiKey, label);
+  res.json({ id, apiKey, label });
+});
+
+// GET /api/admin/qa-keys
+router.get('/qa-keys', (req: Request, res: Response) => {
+  if (!requireAdminAuth(req, res)) return;
+  res.json({ keys: listQaApiKeys() });
+});
+
+// DELETE /api/admin/qa-keys/:id
+router.delete('/qa-keys/:id', (req: Request, res: Response) => {
+  if (!requireAdminAuth(req, res)) return;
+
+  const found = deactivateQaApiKey(req.params.id);
+  if (!found) {
+    res.status(404).json({ error: 'Key not found' });
+    return;
+  }
+  res.json({ deactivated: true });
 });
 
 export default router;
