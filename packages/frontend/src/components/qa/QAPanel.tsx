@@ -18,6 +18,16 @@ export function QAPanel({ specName }: { specName: string }) {
   const [question, setQuestion] = useState('');
   const [loading, setLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const prevSpecRef = useRef(specName);
+
+  // Reset chat when switching to a different spec
+  useEffect(() => {
+    if (prevSpecRef.current !== specName) {
+      setMessages([]);
+      setQuestion('');
+      prevSpecRef.current = specName;
+    }
+  }, [specName]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -170,12 +180,22 @@ export function QAPanel({ specName }: { specName: string }) {
               {/* Footer */}
               <div className="mt-2 flex justify-between items-center">
                 <p className="text-xs text-gray-400">Answers are AI-generated from the APL data</p>
-                <button
-                  onClick={clearKey}
-                  className="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
-                >
-                  Disconnect
-                </button>
+                <div className="flex items-center gap-3">
+                  {messages.length > 0 && (
+                    <button
+                      onClick={() => setMessages([])}
+                      className="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                    >
+                      New chat
+                    </button>
+                  )}
+                  <button
+                    onClick={clearKey}
+                    className="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                  >
+                    Disconnect
+                  </button>
+                </div>
               </div>
             </>
           )}
