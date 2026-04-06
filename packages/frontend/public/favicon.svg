@@ -1,28 +1,4 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
-  <!-- Background circle -->
   <circle cx="24" cy="24" r="24" fill="#1a1a2e"/>
-
-  <g stroke="#eab308" stroke-linecap="round" stroke-linejoin="round" transform="translate(6, 4)">
-    <!-- Left sword: blade from top-left to center -->
-    <line x1="8" y1="6" x2="20.5" y2="18.5" stroke-width="3"/>
-    <!-- Left sword: blade tip -->
-    <polygon points="5,3 7,9 11,5" fill="#eab308" stroke="none"/>
-    <!-- Left sword: crossguard -->
-    <line x1="15" y1="19.5" x2="21.5" y2="13" stroke-width="2.8"/>
-    <!-- Left sword: grip to pommel -->
-    <line x1="20.5" y1="18.5" x2="27" y2="25" stroke-width="4"/>
-    <!-- Left pommel -->
-    <circle cx="28.5" cy="26.5" r="2" fill="#eab308" stroke="none"/>
-
-    <!-- Right sword: blade from top-right to center -->
-    <line x1="28" y1="6" x2="15.5" y2="18.5" stroke-width="3"/>
-    <!-- Right sword: blade tip -->
-    <polygon points="31,3 29,9 25,5" fill="#eab308" stroke="none"/>
-    <!-- Right sword: crossguard -->
-    <line x1="14.5" y1="13" x2="21" y2="19.5" stroke-width="2.8"/>
-    <!-- Right sword: grip to pommel -->
-    <line x1="15.5" y1="18.5" x2="9" y2="25" stroke-width="4"/>
-    <!-- Right pommel -->
-    <circle cx="7.5" cy="26.5" r="2" fill="#eab308" stroke="none"/>
-  </g>
+  <path d="M24 40s12-6 12-15V13l-12-5-12 5v12c0 9 12 15 12 15z" stroke="#eab308" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
 </svg>
