@@ -198,9 +198,10 @@ export function HistoryPage() {
                   filtered.map((g, i) => (
                     <Fragment key={g.id}>
                     <tr
+                      onClick={() => g.changelog?.items?.length && setExpandedId(expandedId === g.id ? null : g.id)}
                       className={`group border-b border-gray-200/60 dark:border-gray-800/60 hover:bg-gray-50 dark:hover:bg-gray-800/40 transition-colors ${
-                        i % 2 === 0 ? '' : 'bg-gray-50/50 dark:bg-gray-900/50'
-                      }`}
+                        g.changelog?.items?.length ? 'cursor-pointer' : ''
+                      } ${i % 2 === 0 ? '' : 'bg-gray-50/50 dark:bg-gray-900/50'}`}
                     >
                       {/* Expand toggle */}
                       <td className="w-4 pl-2 pr-0 py-2.5">
@@ -281,6 +282,7 @@ export function HistoryPage() {
                       <td className="sticky right-0 px-4 py-2.5 whitespace-nowrap text-right bg-white dark:bg-gray-900 group-hover:bg-gray-50 dark:group-hover:bg-gray-800/40">
                         <Link
                           to={`/guide/${g.specName}`}
+                          onClick={e => e.stopPropagation()}
                           className={`text-xs transition-colors ${
                             g.isCurrent
                               ? 'text-indigo-500 dark:text-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-300'
