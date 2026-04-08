@@ -183,14 +183,13 @@ export function HistoryPage() {
                   >
                     APL Commit <SortIcon k="aplCommitDate" />
                   </th>
-                  <th className="text-left px-4 py-3 whitespace-nowrap">Changes</th>
                   <th className="sticky right-0 bg-white dark:bg-gray-900 px-4 py-3" />
                 </tr>
               </thead>
               <tbody>
                 {filtered.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="text-center text-gray-400 dark:text-gray-600 py-10">
+                    <td colSpan={6} className="text-center text-gray-400 dark:text-gray-600 py-10">
                       No entries match your filters.
                     </td>
                   </tr>
@@ -235,15 +234,32 @@ export function HistoryPage() {
 
                       {/* Status */}
                       <td className="px-4 py-2.5 whitespace-nowrap">
-                        {g.isCurrent ? (
-                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-400 border border-green-300 dark:border-green-800">
-                            Current
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-500 border border-gray-300 dark:border-gray-700">
-                            Historical
-                          </span>
-                        )}
+                        <div className="flex items-center gap-1.5">
+                          {g.isCurrent ? (
+                            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-400 border border-green-300 dark:border-green-800">
+                              Current
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-800 text-gray-500 border border-gray-300 dark:border-gray-700">
+                              Historical
+                            </span>
+                          )}
+                          {g.changelog?.items?.length ? (
+                            <button
+                              onClick={() => setExpandedId(expandedId === g.id ? null : g.id)}
+                              className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400 border border-amber-300 dark:border-amber-800 hover:bg-amber-200 dark:hover:bg-amber-900/60 transition-colors"
+                              title={`${g.changelog.items.length} change${g.changelog.items.length > 1 ? 's' : ''}`}
+                            >
+                              {g.changelog.items.length}
+                              <svg
+                                className={`w-2.5 h-2.5 transition-transform ${expandedId === g.id ? 'rotate-180' : ''}`}
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
+                              >
+                                <polyline points="6 9 12 15 18 9" />
+                              </svg>
+                            </button>
+                          ) : null}
+                        </div>
                       </td>
 
                       {/* Generated At */}
@@ -257,26 +273,6 @@ export function HistoryPage() {
                           <span className="font-mono text-xs text-indigo-500 dark:text-indigo-400">{shortSha(g.aplCommitSha)}</span>
                           <span className="text-xs text-gray-400 dark:text-gray-600 tabular-nums">{formatDate(g.aplCommitDate)}</span>
                         </div>
-                      </td>
-
-                      {/* Changes */}
-                      <td className="px-4 py-2.5 whitespace-nowrap">
-                        {g.changelog?.items?.length ? (
-                          <button
-                            onClick={() => setExpandedId(expandedId === g.id ? null : g.id)}
-                            className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400 border border-amber-300 dark:border-amber-800 hover:bg-amber-200 dark:hover:bg-amber-900/60 transition-colors"
-                          >
-                            {g.changelog.items.length} change{g.changelog.items.length > 1 ? 's' : ''}
-                            <svg
-                              className={`w-3 h-3 transition-transform ${expandedId === g.id ? 'rotate-180' : ''}`}
-                              viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-                            >
-                              <polyline points="6 9 12 15 18 9" />
-                            </svg>
-                          </button>
-                        ) : (
-                          <span className="text-xs text-gray-400 dark:text-gray-600">—</span>
-                        )}
                       </td>
 
                       {/* Link */}
@@ -297,7 +293,7 @@ export function HistoryPage() {
                     {/* Expanded changelog row */}
                     {expandedId === g.id && g.changelog?.items && (
                       <tr className="bg-amber-50/50 dark:bg-amber-950/20">
-                        <td colSpan={7} className="px-6 py-3">
+                        <td colSpan={6} className="px-6 py-3">
                           <div className="text-xs text-gray-500 dark:text-gray-500 mb-1.5">
                             vs. APL commit{' '}
                             <a
