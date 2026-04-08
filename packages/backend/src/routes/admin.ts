@@ -4,7 +4,7 @@ import crypto from 'crypto';
 import { config } from '../config.js';
 import { checkAndUpdateSpec, checkAndUpdateMany, checkAndUpdateClass, checkAndUpdateAll } from '../services/guideService.js';
 import { getSpecInfo, getClassInfo, getClassForSpec } from '../data/specs.js';
-import { deleteOldGuides, insertQaApiKey, listQaApiKeys, deactivateQaApiKey, getCurrentGuide, getGuideHistory, updateGuideChangelog } from '../db/client.js';
+import { deleteOldGuides, insertQaApiKey, listQaApiKeys, deactivateQaApiKey, getCurrentGuide, getGuideHistory, updateGuideChangelog, clearAllChangelogs } from '../db/client.js';
 import { generateChangelog } from '../services/llmService.js';
 
 const router = Router();
@@ -134,6 +134,15 @@ router.post('/backfill-changelog', async (req: Request, res: Response) => {
   await updateGuideChangelog(current.id, changelog);
 
   res.json({ updated: true, spec, changelog });
+});
+
+// DELETE /api/admin/changelogs
+// Clears all changelogs from every guide.
+router.delete('/changelogs', async (req: Request, res: Response) => {
+  if (!requireAdminAuth(req, res)) return;
+
+  const cleared = await clearAllChangelogs();
+  res.json({ cleared });
 });
 
 // ── QA API Key management ───────────────────────────────────

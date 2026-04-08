@@ -219,6 +219,13 @@ export async function updateGuideChangelog(id: string, changelog: Changelog): Pr
     .run(JSON.stringify(changelog), id);
 }
 
+export async function clearAllChangelogs(): Promise<number> {
+  const result = getDb()
+    .prepare('UPDATE guides SET changelog = NULL WHERE changelog IS NOT NULL')
+    .run();
+  return result.changes;
+}
+
 export async function getSpecsWithGuides(): Promise<Set<string>> {
   const rows = getDb()
     .prepare('SELECT DISTINCT spec_name FROM guides WHERE is_current = 1')
