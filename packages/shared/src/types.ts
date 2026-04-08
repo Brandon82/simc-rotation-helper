@@ -19,6 +19,15 @@ export interface GuideContent {
   sections: GuideSection[];
 }
 
+// ── Changelog Types ─────────────────────────────────────────
+
+export interface Changelog {
+  items: string[];
+  previousCommitSha: string;
+  previousCommitDate: string;
+  previousGeneratedAt: string;
+}
+
 // ── Database Record Types ────────────────────────────────────
 
 export interface Guide {
@@ -33,7 +42,7 @@ export interface Guide {
   is_current: boolean;
   model_used: string;
   prompt_version: string;
-  changelog: string[] | null;
+  changelog: Changelog | null;
 }
 
 export interface AplSnapshot {
@@ -84,7 +93,7 @@ export interface GuideApiResponse {
   generatedAt: string;
   modelUsed: string;
   guide: GuideContent;
-  changelog: string[] | null;
+  changelog: Changelog | null;
 }
 
 export interface GuideHistoryItem {

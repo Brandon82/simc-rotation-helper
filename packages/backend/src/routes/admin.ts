@@ -124,7 +124,13 @@ router.post('/backfill-changelog', async (req: Request, res: Response) => {
   }
 
   const className = classInfo.label;
-  const changelog = await generateChangelog(specInfo.label, className, previous.guide_content, current.guide_content);
+  const items = await generateChangelog(specInfo.label, className, previous.guide_content, current.guide_content);
+  const changelog = {
+    items,
+    previousCommitSha: previous.apl_commit_sha,
+    previousCommitDate: previous.apl_commit_date,
+    previousGeneratedAt: previous.generated_at,
+  };
   await updateGuideChangelog(current.id, changelog);
 
   res.json({ updated: true, spec, changelog });

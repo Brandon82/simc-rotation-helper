@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import type { Guide, AplSnapshot } from '@simc-helper/shared';
+import type { Guide, AplSnapshot, Changelog } from '@simc-helper/shared';
 import { config } from '../config.js';
 import * as db from '../db/client.js';
 import * as github from './githubService.js';
@@ -56,12 +56,18 @@ export async function checkAndUpdateSpec(specName: string, force = false): Promi
     const guideContent = await generateGuide(specInfo.label, classInfo.label, aplContent);
 
     // 5b. Generate changelog by comparing with previous guide
-    let changelog: string[] | null = null;
+    let changelog: Changelog | null = null;
     if (existing) {
       try {
         console.log(`[guideService] ${specName}: generating changelog...`);
-        changelog = await generateChangelog(specInfo.label, classInfo.label, existing.guide_content, guideContent);
-        console.log(`[guideService] ${specName}: changelog has ${changelog.length} items`);
+        const items = await generateChangelog(specInfo.label, classInfo.label, existing.guide_content, guideContent);
+        changelog = {
+          items,
+          previousCommitSha: existing.apl_commit_sha,
+          previousCommitDate: existing.apl_commit_date,
+          previousGeneratedAt: existing.generated_at,
+        };
+        console.log(`[guideService] ${specName}: changelog has ${items.length} items`);
       } catch (err) {
         console.error(`[guideService] ${specName}: changelog generation failed, continuing without:`, err);
       }

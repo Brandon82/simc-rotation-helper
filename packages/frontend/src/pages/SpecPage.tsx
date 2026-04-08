@@ -171,7 +171,7 @@ export function SpecPage() {
             modelUsed={displayGuide.modelUsed}
           />
 
-          {displayGuide.changelog && displayGuide.changelog.length > 0 && (
+          {displayGuide.changelog && displayGuide.changelog.items.length > 0 && (
             <div className="mb-2 border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden bg-gray-50 dark:bg-gray-900 animate-fade-in-up">
               <button
                 onClick={() => setShowChangelog(!showChangelog)}
@@ -192,8 +192,20 @@ export function SpecPage() {
               </button>
               {showChangelog && (
                 <div className="px-4 pb-3 pt-1">
+                  <p className="text-xs text-gray-500 dark:text-gray-500 mb-2">
+                    Changes from previous guide (APL commit{' '}
+                    <a
+                      href={`https://github.com/simulationcraft/simc/commit/${displayGuide.changelog.previousCommitSha}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-yellow-600 dark:text-yellow-600 hover:underline font-mono"
+                    >
+                      {displayGuide.changelog.previousCommitSha.slice(0, 8)}
+                    </a>
+                    {', '}generated {new Date(displayGuide.changelog.previousGeneratedAt).toLocaleDateString()})
+                  </p>
                   <ul className="space-y-1">
-                    {displayGuide.changelog.map((item, i) => (
+                    {displayGuide.changelog.items.map((item, i) => (
                       <li key={i} className="text-sm text-gray-700 dark:text-gray-300 flex items-start gap-2">
                         <span className="text-amber-500 mt-0.5 shrink-0">-</span>
                         <InlineMarkdown text={item} />

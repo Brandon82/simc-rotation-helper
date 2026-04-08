@@ -2,7 +2,7 @@ import Database from 'better-sqlite3';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
-import type { Guide, AplSnapshot } from '@simc-helper/shared';
+import type { Guide, AplSnapshot, Changelog } from '@simc-helper/shared';
 import { config } from '../config.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -213,7 +213,7 @@ export async function deleteOldGuides(specName?: string): Promise<number> {
   return result.changes;
 }
 
-export async function updateGuideChangelog(id: string, changelog: string[]): Promise<void> {
+export async function updateGuideChangelog(id: string, changelog: Changelog): Promise<void> {
   getDb()
     .prepare('UPDATE guides SET changelog = ? WHERE id = ?')
     .run(JSON.stringify(changelog), id);
