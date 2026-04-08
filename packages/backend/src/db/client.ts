@@ -184,7 +184,7 @@ export async function getAllGuideSummaries(): Promise<Omit<Guide, 'guide_content
   const rows = getDb()
     .prepare(`
       SELECT id, spec_name, class_name, apl_commit_sha, apl_commit_date,
-             generated_at, is_current, model_used, prompt_version
+             generated_at, is_current, model_used, prompt_version, changelog
       FROM guides
       ORDER BY generated_at DESC
     `)
@@ -201,7 +201,7 @@ export async function getAllGuideSummaries(): Promise<Omit<Guide, 'guide_content
     is_current: (row.is_current as number) === 1,
     model_used: row.model_used as string,
     prompt_version: row.prompt_version as string,
-    changelog: null,
+    changelog: row.changelog ? JSON.parse(row.changelog as string) : null,
   }));
 }
 

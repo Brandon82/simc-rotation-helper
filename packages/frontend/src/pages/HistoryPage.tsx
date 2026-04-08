@@ -1,10 +1,11 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import { useAllGuides } from '../hooks/useAllGuides';
 import type { GuideSummaryItem } from '../types';
 import { classIconUrl, specIconUrl } from '../utils/wowIcons';
 import { useThemeStore } from '../store/themeStore';
 import { CLASS_COLORS_DARK, CLASS_COLORS_LIGHT } from '../utils/classColors';
+import { InlineMarkdown } from '../components/guide/InlineMarkdown';
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleString(undefined, {
@@ -29,6 +30,7 @@ export function HistoryPage() {
   const [search, setSearch] = useState('');
   const [sortKey, setSortKey] = useState<SortKey>('generatedAt');
   const [sortAsc, setSortAsc] = useState(false);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const classes = useMemo(() => {
     if (!data) return [];
@@ -181,20 +183,21 @@ export function HistoryPage() {
                   >
                     APL Commit <SortIcon k="aplCommitDate" />
                   </th>
+                  <th className="text-left px-4 py-3 whitespace-nowrap">Changes</th>
                   <th className="sticky right-0 bg-white dark:bg-gray-900 px-4 py-3" />
                 </tr>
               </thead>
               <tbody>
                 {filtered.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="text-center text-gray-400 dark:text-gray-600 py-10">
+                    <td colSpan={7} className="text-center text-gray-400 dark:text-gray-600 py-10">
                       No entries match your filters.
                     </td>
                   </tr>
                 ) : (
                   filtered.map((g, i) => (
+                    <Fragment key={g.id}>
                     <tr
-                      key={g.id}
                       className={`group border-b border-gray-200/60 dark:border-gray-800/60 hover:bg-gray-50 dark:hover:bg-gray-800/40 transition-colors ${
                         i % 2 === 0 ? '' : 'bg-gray-50/50 dark:bg-gray-900/50'
                       }`}
@@ -256,6 +259,26 @@ export function HistoryPage() {
                         </div>
                       </td>
 
+                      {/* Changes */}
+                      <td className="px-4 py-2.5 whitespace-nowrap">
+                        {g.changelog?.items?.length ? (
+                          <button
+                            onClick={() => setExpandedId(expandedId === g.id ? null : g.id)}
+                            className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400 border border-amber-300 dark:border-amber-800 hover:bg-amber-200 dark:hover:bg-amber-900/60 transition-colors"
+                          >
+                            {g.changelog.items.length} change{g.changelog.items.length > 1 ? 's' : ''}
+                            <svg
+                              className={`w-3 h-3 transition-transform ${expandedId === g.id ? 'rotate-180' : ''}`}
+                              viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+                            >
+                              <polyline points="6 9 12 15 18 9" />
+                            </svg>
+                          </button>
+                        ) : (
+                          <span className="text-xs text-gray-400 dark:text-gray-600">—</span>
+                        )}
+                      </td>
+
                       {/* Link */}
                       <td className="sticky right-0 px-4 py-2.5 whitespace-nowrap text-right bg-white dark:bg-gray-900 group-hover:bg-gray-50 dark:group-hover:bg-gray-800/40">
                         <Link
@@ -270,6 +293,35 @@ export function HistoryPage() {
                         </Link>
                       </td>
                     </tr>
+
+                    {/* Expanded changelog row */}
+                    {expandedId === g.id && g.changelog?.items && (
+                      <tr className="bg-amber-50/50 dark:bg-amber-950/20">
+                        <td colSpan={7} className="px-6 py-3">
+                          <div className="text-xs text-gray-500 dark:text-gray-500 mb-1.5">
+                            vs. APL commit{' '}
+                            <a
+                              href={`https://github.com/simulationcraft/simc/commit/${g.changelog.previousCommitSha}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-yellow-600 dark:text-yellow-600 hover:underline font-mono"
+                            >
+                              {g.changelog.previousCommitSha.slice(0, 7)}
+                            </a>
+                            {' '}({new Date(g.changelog.previousGeneratedAt).toLocaleDateString()})
+                          </div>
+                          <ul className="space-y-0.5">
+                            {g.changelog.items.map((item: string, j: number) => (
+                              <li key={j} className="text-xs text-gray-700 dark:text-gray-300 flex items-start gap-1.5">
+                                <span className="text-amber-500 mt-px shrink-0">-</span>
+                                <InlineMarkdown text={item} />
+                              </li>
+                            ))}
+                          </ul>
+                        </td>
+                      </tr>
+                    )}
+                    </Fragment>
                   ))
                 )}
               </tbody>

@@ -30,6 +30,7 @@ router.get('/', async (_req: Request, res: Response) => {
           generatedAt: g.generated_at,
           isCurrent: g.is_current,
           modelUsed: g.model_used,
+          changelog: g.changelog,
         };
       }),
     };

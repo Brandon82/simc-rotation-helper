@@ -133,6 +133,7 @@ export interface GuideSummaryItem {
   generatedAt: string;
   isCurrent: boolean;
   modelUsed: string;
+  changelog: Changelog | null;
 }
 
 export interface AllGuidesApiResponse {
