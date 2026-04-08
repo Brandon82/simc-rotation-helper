@@ -158,7 +158,7 @@ export function HistoryPage() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-gray-200 dark:border-gray-800 text-xs text-gray-500 uppercase tracking-wider">
-                  <th className="w-4 pl-2 pr-0 py-3" />
+                  <th className="w-4 px-1 py-3" />
                   <th
                     className="text-left px-4 py-3 cursor-pointer hover:text-gray-700 dark:hover:text-gray-300 select-none whitespace-nowrap"
                     onClick={() => handleSort('classLabel')}
@@ -203,7 +203,7 @@ export function HistoryPage() {
                       }`}
                     >
                       {/* Expand toggle */}
-                      <td className="w-4 pl-2 pr-0 py-2.5">
+                      <td className="w-4 px-1 py-2.5">
                         {g.changelog?.items?.length ? (
                           <button
                             onClick={() => setExpandedId(expandedId === g.id ? null : g.id)}
