@@ -182,8 +182,8 @@ export function SpecPage() {
                     <path d="M12 20h9" /><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
                   </svg>
                   <span className="text-xs text-gray-600 dark:text-gray-400">What Changed?</span>
-                  <span className="text-xs text-gray-400 dark:text-gray-600">
-                    Previous commit{' '}
+                  <span className="text-xs text-gray-500">
+                    previous commit{' '}
                     <span className="font-mono text-yellow-600 dark:text-yellow-600">
                       {displayGuide.changelog.previousCommitSha.slice(0, 7)}
                     </span>
