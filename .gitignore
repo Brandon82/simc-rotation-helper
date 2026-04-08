@@ -26,3 +26,4 @@ packages/frontend/dist/
 
 # SQLite database
 packages/backend/data/
+/.claude
