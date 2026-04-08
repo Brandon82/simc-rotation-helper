@@ -30,7 +30,7 @@ export function HistoryPage() {
   const [search, setSearch] = useState('');
   const [sortKey, setSortKey] = useState<SortKey>('generatedAt');
   const [sortAsc, setSortAsc] = useState(false);
-  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
 
   const classes = useMemo(() => {
     if (!data) return [];
@@ -198,7 +198,7 @@ export function HistoryPage() {
                   filtered.map((g, i) => (
                     <Fragment key={g.id}>
                     <tr
-                      onClick={() => g.changelog?.items?.length && setExpandedId(expandedId === g.id ? null : g.id)}
+                      onClick={() => g.changelog?.items?.length && setExpandedIds(prev => { const next = new Set(prev); next.has(g.id) ? next.delete(g.id) : next.add(g.id); return next; })}
                       className={`group border-b border-gray-200/60 dark:border-gray-800/60 hover:bg-gray-50 dark:hover:bg-gray-800/40 transition-colors ${
                         g.changelog?.items?.length ? 'cursor-pointer' : ''
                       } ${i % 2 === 0 ? '' : 'bg-gray-50/50 dark:bg-gray-900/50'}`}
@@ -207,12 +207,12 @@ export function HistoryPage() {
                       <td className="w-4 pl-2 pr-0 py-2.5">
                         {g.changelog?.items?.length ? (
                           <button
-                            onClick={() => setExpandedId(expandedId === g.id ? null : g.id)}
+                            onClick={() => setExpandedIds(prev => { const next = new Set(prev); next.has(g.id) ? next.delete(g.id) : next.add(g.id); return next; })}
                             className="p-0.5 text-amber-500 hover:text-amber-600 dark:hover:text-amber-400 transition-colors"
                             title={`${g.changelog.items.length} change${g.changelog.items.length > 1 ? 's' : ''}`}
                           >
                             <svg
-                              className={`w-3.5 h-3.5 transition-transform ${expandedId === g.id ? 'rotate-180' : ''}`}
+                              className={`w-3.5 h-3.5 transition-transform ${expandedIds.has(g.id) ? 'rotate-180' : ''}`}
                               viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
                             >
                               <polyline points="6 9 12 15 18 9" />
@@ -295,7 +295,7 @@ export function HistoryPage() {
                     </tr>
 
                     {/* Expanded changelog row */}
-                    {expandedId === g.id && g.changelog?.items && (
+                    {expandedIds.has(g.id) && g.changelog?.items && (
                       <tr className="bg-amber-50/50 dark:bg-amber-950/20">
                         <td colSpan={7} className="px-6 py-3">
                           <div className="text-xs text-gray-500 dark:text-gray-500 mb-1.5">
