@@ -45,6 +45,7 @@ export function SpecPage() {
   const [showHistory, setShowHistory] = useState(false);
   const [historicalGuide, setHistoricalGuide] = useState<GuideApiResponse | null>(null);
   const [loadingHistory, setLoadingHistory] = useState(false);
+  const [showChangelog, setShowChangelog] = useState(false);
 
   const displayGuide = historicalGuide ?? guide;
 
@@ -173,16 +174,36 @@ export function SpecPage() {
           <QAPanel specName={specName ?? ''} />
 
           {displayGuide.changelog && displayGuide.changelog.length > 0 && (
-            <div className="mb-6 pl-4 border-l-2 border-amber-500 animate-fade-in-up">
-              <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-2">What Changed</h2>
-              <ul className="space-y-1">
-                {displayGuide.changelog.map((item, i) => (
-                  <li key={i} className="text-sm text-gray-700 dark:text-gray-300 flex items-start gap-2">
-                    <span className="text-amber-500 mt-0.5 shrink-0">-</span>
-                    <InlineMarkdown text={item} />
-                  </li>
-                ))}
-              </ul>
+            <div className="mb-6 border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden bg-gray-50 dark:bg-gray-900 animate-fade-in-up">
+              <button
+                onClick={() => setShowChangelog(!showChangelog)}
+                className="w-full flex items-center justify-between px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-left"
+              >
+                <div className="flex items-center gap-2">
+                  <svg className="w-3.5 h-3.5 text-amber-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 20h9" /><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                  </svg>
+                  <span className="text-xs text-gray-600 dark:text-gray-400">What Changed</span>
+                </div>
+                <svg
+                  className={`w-3.5 h-3.5 text-gray-400 transition-transform ${showChangelog ? 'rotate-180' : ''}`}
+                  viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
+                >
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </button>
+              {showChangelog && (
+                <div className="px-4 pb-3 pt-1">
+                  <ul className="space-y-1">
+                    {displayGuide.changelog.map((item, i) => (
+                      <li key={i} className="text-sm text-gray-700 dark:text-gray-300 flex items-start gap-2">
+                        <span className="text-amber-500 mt-0.5 shrink-0">-</span>
+                        <InlineMarkdown text={item} />
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           )}
 
