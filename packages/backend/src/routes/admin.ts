@@ -3,7 +3,7 @@ import type { Request, Response } from 'express';
 import crypto from 'crypto';
 import { config } from '../config.js';
 import { checkAndUpdateSpec, checkAndUpdateMany, checkAndUpdateClass, checkAndUpdateAll } from '../services/guideService.js';
-import { getSpecInfo, getClassInfo, getClassForSpec } from '../data/specs.js';
+import { getSpecInfo, getClassInfo, getClassForSpec, ALL_SPECS } from '../data/specs.js';
 import { deleteOldGuides, insertQaApiKey, listQaApiKeys, deactivateQaApiKey, getCurrentGuide, getGuideHistory, updateGuideChangelog, clearAllChangelogs } from '../db/client.js';
 import { generateChangelog } from '../services/llmService.js';
 
@@ -87,53 +87,77 @@ router.delete('/guides/history', async (req: Request, res: Response) => {
 });
 
 // POST /api/admin/backfill-changelog
-// Body: { "spec": "warrior_arms" }
-// Generates changelog for the current guide if it doesn't have one and a previous guide exists.
+// Body: { "spec": "warrior_arms" | "all", "mode": "current" | "all" }
+// mode "current" (default): only backfill the current guide for each spec
+// mode "all": backfill every guide in history that doesn't have a changelog
+// Skips guides that already have a changelog or have no previous guide to compare against.
 router.post('/backfill-changelog', async (req: Request, res: Response) => {
   if (!requireAdminAuth(req, res)) return;
 
-  const { spec } = req.body as { spec?: string };
+  const { spec, mode = 'current' } = req.body as { spec?: string; mode?: 'current' | 'all' };
   if (!spec) {
     res.status(400).json({ error: 'Missing "spec" field' });
     return;
   }
 
-  const specInfo = getSpecInfo(spec);
-  const classInfo = getClassForSpec(spec);
-  if (!specInfo || !classInfo) {
-    res.status(400).json({ error: `Unknown spec: ${spec}` });
-    return;
+  const specNames = spec === 'all'
+    ? ALL_SPECS.map(s => s.name)
+    : [spec];
+
+  if (spec !== 'all') {
+    const specInfo = getSpecInfo(spec);
+    if (!specInfo) {
+      res.status(400).json({ error: `Unknown spec: ${spec}` });
+      return;
+    }
   }
 
-  const current = await getCurrentGuide(spec);
-  if (!current) {
-    res.status(404).json({ error: `No current guide for ${spec}` });
-    return;
+  const results: Record<string, { updated: number; skipped: number }> = {};
+
+  for (const specName of specNames) {
+    const specInfo = getSpecInfo(specName);
+    const classInfo = getClassForSpec(specName);
+    if (!specInfo || !classInfo) continue;
+
+    const history = await getGuideHistory(specName);
+    if (history.length < 2) {
+      results[specName] = { updated: 0, skipped: history.length };
+      continue;
+    }
+
+    // history is ordered by generated_at DESC (newest first)
+    const guidesToProcess = mode === 'all' ? history : [history[0]];
+    let updated = 0;
+    let skipped = 0;
+
+    for (const guide of guidesToProcess) {
+      if (guide.changelog) { skipped++; continue; }
+
+      // Find the next older guide in history
+      const guideIdx = history.findIndex(g => g.id === guide.id);
+      const previous = history[guideIdx + 1];
+      if (!previous) { skipped++; continue; }
+
+      try {
+        const items = await generateChangelog(specInfo.label, classInfo.label, previous.guide_content, guide.guide_content);
+        await updateGuideChangelog(guide.id, {
+          items,
+          previousCommitSha: previous.apl_commit_sha,
+          previousCommitDate: previous.apl_commit_date,
+          previousGeneratedAt: previous.generated_at,
+        });
+        updated++;
+        console.log(`[backfill] ${specName} guide ${guide.id.slice(0, 8)}: changelog generated (${items.length} items)`);
+      } catch (err) {
+        console.error(`[backfill] ${specName} guide ${guide.id.slice(0, 8)}: failed`, err);
+        skipped++;
+      }
+    }
+
+    results[specName] = { updated, skipped };
   }
 
-  if (current.changelog) {
-    res.json({ skipped: true, reason: 'Guide already has a changelog' });
-    return;
-  }
-
-  const history = await getGuideHistory(spec);
-  const previous = history.find(g => g.id !== current.id);
-  if (!previous) {
-    res.json({ skipped: true, reason: 'No previous guide to compare against' });
-    return;
-  }
-
-  const className = classInfo.label;
-  const items = await generateChangelog(specInfo.label, className, previous.guide_content, current.guide_content);
-  const changelog = {
-    items,
-    previousCommitSha: previous.apl_commit_sha,
-    previousCommitDate: previous.apl_commit_date,
-    previousGeneratedAt: previous.generated_at,
-  };
-  await updateGuideChangelog(current.id, changelog);
-
-  res.json({ updated: true, spec, changelog });
+  res.json({ results });
 });
 
 // DELETE /api/admin/changelogs

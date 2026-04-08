@@ -22,10 +22,11 @@ fi
 
 echo "Action:"
 echo "  1) Backfill changelog for a spec"
-echo "  2) Delete all changelogs"
-read -rp "Choice [1/2]: " ACTION
+echo "  2) Backfill changelog for all specs"
+echo "  3) Delete all changelogs"
+read -rp "Choice [1/2/3]: " ACTION
 
-if [ "$ACTION" = "2" ]; then
+if [ "$ACTION" = "3" ]; then
   read -rp "Are you sure you want to delete ALL changelogs? [y/N]: " CONFIRM
   if [[ "${CONFIRM,,}" != "y" ]]; then
     echo "Cancelled."
@@ -53,19 +54,36 @@ if [ "$ACTION" = "2" ]; then
   pause; exit 0
 fi
 
-read -rp "Spec name (e.g. warrior_arms): " SPEC
-if [ -z "$SPEC" ]; then
-  echo "Error: spec name cannot be empty." >&2
-  pause; exit 1
+# Determine spec
+if [ "$ACTION" = "2" ]; then
+  SPEC="all"
+else
+  read -rp "Spec name (e.g. warrior_arms): " SPEC
+  if [ -z "$SPEC" ]; then
+    echo "Error: spec name cannot be empty." >&2
+    pause; exit 1
+  fi
 fi
 
-echo "Backfilling changelog for: $SPEC"
+# Determine mode
+echo "Mode:"
+echo "  1) Current guide only"
+echo "  2) All guides in history"
+read -rp "Choice [1/2]: " MODE_CHOICE
+
+if [ "$MODE_CHOICE" = "2" ]; then
+  MODE="all"
+else
+  MODE="current"
+fi
+
+echo "Backfilling changelog for: $SPEC (mode=$MODE)"
 echo "Target: $RAILWAY_URL"
 
 RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "$RAILWAY_URL/api/admin/backfill-changelog" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $ADMIN_SECRET" \
-  -d "{\"spec\":\"$SPEC\"}")
+  -d "{\"spec\":\"$SPEC\",\"mode\":\"$MODE\"}")
 
 BODY=$(echo "$RESPONSE" | head -n -1)
 STATUS=$(echo "$RESPONSE" | tail -n 1)
