@@ -19,6 +19,60 @@ function requireAdminAuth(req: Request, res: Response): boolean {
   return true;
 }
 
+async function backfillChangelogs(
+  specNames: string[],
+  mode: 'current' | 'all',
+): Promise<Record<string, { updated: number; skipped: number; errors: number }>> {
+  const results: Record<string, { updated: number; skipped: number; errors: number }> = {};
+
+  for (const specName of specNames) {
+    const specInfo = getSpecInfo(specName);
+    const classInfo = getClassForSpec(specName);
+    if (!specInfo || !classInfo) continue;
+
+    const history = await getGuideHistory(specName);
+    if (history.length < 2) {
+      results[specName] = { updated: 0, skipped: history.length, errors: 0 };
+      continue;
+    }
+
+    // history is ordered by generated_at DESC (newest first)
+    const guidesToProcess = mode === 'all' ? history : [history[0]];
+    let updated = 0;
+    let skipped = 0;
+    let errors = 0;
+
+    for (const guide of guidesToProcess) {
+      if (guide.changelog) { skipped++; continue; }
+
+      // Find the next older guide in history
+      const guideIdx = history.findIndex(g => g.id === guide.id);
+      const previous = history[guideIdx + 1];
+      if (!previous) { skipped++; continue; }
+
+      try {
+        const items = await generateChangelog(specInfo.label, classInfo.label, previous.guide_content, guide.guide_content);
+        await updateGuideChangelog(guide.id, {
+          items,
+          previousCommitSha: previous.apl_commit_sha,
+          previousCommitDate: previous.apl_commit_date,
+          previousGeneratedAt: previous.generated_at,
+        });
+        updated++;
+        console.log(`[backfill] ${specName} guide ${guide.id.slice(0, 8)}: changelog generated (${items.length} items)`);
+      } catch (err) {
+        console.error(`[backfill] ${specName} guide ${guide.id.slice(0, 8)}: failed`, err);
+        errors++;
+      }
+    }
+
+    results[specName] = { updated, skipped, errors };
+  }
+
+  console.log('[backfill] complete:', JSON.stringify(results));
+  return results;
+}
+
 // POST /api/admin/refresh
 // Body: { "spec": "warrior_arms" }
 router.post('/refresh', async (req: Request, res: Response) => {
@@ -91,6 +145,7 @@ router.delete('/guides/history', async (req: Request, res: Response) => {
 // mode "current" (default): only backfill the current guide for each spec
 // mode "all": backfill every guide in history that doesn't have a changelog
 // Skips guides that already have a changelog or have no previous guide to compare against.
+// For "all" specs: runs in the background to avoid request timeouts.
 router.post('/backfill-changelog', async (req: Request, res: Response) => {
   if (!requireAdminAuth(req, res)) return;
 
@@ -112,51 +167,17 @@ router.post('/backfill-changelog', async (req: Request, res: Response) => {
     }
   }
 
-  const results: Record<string, { updated: number; skipped: number }> = {};
-
-  for (const specName of specNames) {
-    const specInfo = getSpecInfo(specName);
-    const classInfo = getClassForSpec(specName);
-    if (!specInfo || !classInfo) continue;
-
-    const history = await getGuideHistory(specName);
-    if (history.length < 2) {
-      results[specName] = { updated: 0, skipped: history.length };
-      continue;
-    }
-
-    // history is ordered by generated_at DESC (newest first)
-    const guidesToProcess = mode === 'all' ? history : [history[0]];
-    let updated = 0;
-    let skipped = 0;
-
-    for (const guide of guidesToProcess) {
-      if (guide.changelog) { skipped++; continue; }
-
-      // Find the next older guide in history
-      const guideIdx = history.findIndex(g => g.id === guide.id);
-      const previous = history[guideIdx + 1];
-      if (!previous) { skipped++; continue; }
-
-      try {
-        const items = await generateChangelog(specInfo.label, classInfo.label, previous.guide_content, guide.guide_content);
-        await updateGuideChangelog(guide.id, {
-          items,
-          previousCommitSha: previous.apl_commit_sha,
-          previousCommitDate: previous.apl_commit_date,
-          previousGeneratedAt: previous.generated_at,
-        });
-        updated++;
-        console.log(`[backfill] ${specName} guide ${guide.id.slice(0, 8)}: changelog generated (${items.length} items)`);
-      } catch (err) {
-        console.error(`[backfill] ${specName} guide ${guide.id.slice(0, 8)}: failed`, err);
-        skipped++;
-      }
-    }
-
-    results[specName] = { updated, skipped };
+  // For multiple specs, run in background to avoid timeout
+  if (specNames.length > 1) {
+    res.json({ accepted: true, message: `Backfilling ${specNames.length} specs in background (mode=${mode}). Check server logs for progress.` });
+    backfillChangelogs(specNames, mode).catch(err =>
+      console.error('[backfill] background job failed:', err)
+    );
+    return;
   }
 
+  // Single spec: run inline and return results
+  const results = await backfillChangelogs(specNames, mode);
   res.json({ results });
 });
 
