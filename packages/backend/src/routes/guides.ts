@@ -61,6 +61,7 @@ router.get('/:specName', async (req: Request, res: Response) => {
       generatedAt: guide.generated_at,
       modelUsed: guide.model_used,
       guide: guide.guide_content,
+      changelog: guide.changelog,
     };
 
     res.json(response);
@@ -113,6 +114,7 @@ router.get('/:specName/history/:id', async (req: Request, res: Response) => {
       generatedAt: guide.generated_at,
       modelUsed: guide.model_used,
       guide: guide.guide_content,
+      changelog: guide.changelog,
     };
 
     res.json(response);

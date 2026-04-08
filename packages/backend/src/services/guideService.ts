@@ -3,7 +3,7 @@ import type { Guide, AplSnapshot } from '@simc-helper/shared';
 import { config } from '../config.js';
 import * as db from '../db/client.js';
 import * as github from './githubService.js';
-import { generateGuide } from './llmService.js';
+import { generateGuide, generateChangelog } from './llmService.js';
 import { getSpecInfo, getClassForSpec, getClassInfo, ALL_SPECS } from '../data/specs.js';
 
 /**
@@ -55,6 +55,18 @@ export async function checkAndUpdateSpec(specName: string, force = false): Promi
     console.log(`[guideService] ${specName}: generating guide...`);
     const guideContent = await generateGuide(specInfo.label, classInfo.label, aplContent);
 
+    // 5b. Generate changelog by comparing with previous guide
+    let changelog: string[] | null = null;
+    if (existing) {
+      try {
+        console.log(`[guideService] ${specName}: generating changelog...`);
+        changelog = await generateChangelog(specInfo.label, classInfo.label, existing.guide_content, guideContent);
+        console.log(`[guideService] ${specName}: changelog has ${changelog.length} items`);
+      } catch (err) {
+        console.error(`[guideService] ${specName}: changelog generation failed, continuing without:`, err);
+      }
+    }
+
     // 6. Mark old guides as not current
     await db.markGuidesNotCurrent(specName);
 
@@ -71,6 +83,7 @@ export async function checkAndUpdateSpec(specName: string, force = false): Promi
       is_current: true,
       model_used: config.anthropicModel,
       prompt_version: config.promptVersion,
+      changelog,
     };
     await db.insertGuide(guide);
 

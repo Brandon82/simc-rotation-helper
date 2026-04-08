@@ -64,6 +64,13 @@ export function getDb(): Database.Database {
       ON qa_api_keys (api_key);
   `);
 
+  // Add changelog column if not present (safe for existing DBs)
+  try {
+    db.exec('ALTER TABLE guides ADD COLUMN changelog TEXT');
+  } catch {
+    // Column already exists — ignore
+  }
+
   return db;
 }
 
@@ -82,6 +89,7 @@ function rowToGuide(row: Record<string, unknown>): Guide {
     is_current: (row.is_current as number) === 1,
     model_used: row.model_used as string,
     prompt_version: row.prompt_version as string,
+    changelog: row.changelog ? JSON.parse(row.changelog as string) : null,
   };
 }
 
@@ -130,15 +138,16 @@ export async function insertGuide(guide: Guide): Promise<void> {
     .prepare(`
       INSERT INTO guides
         (id, spec_name, class_name, apl_content, guide_content, apl_commit_sha,
-         apl_commit_date, generated_at, is_current, model_used, prompt_version)
+         apl_commit_date, generated_at, is_current, model_used, prompt_version, changelog)
       VALUES
         (@id, @spec_name, @class_name, @apl_content, @guide_content, @apl_commit_sha,
-         @apl_commit_date, @generated_at, @is_current, @model_used, @prompt_version)
+         @apl_commit_date, @generated_at, @is_current, @model_used, @prompt_version, @changelog)
     `)
     .run({
       ...guide,
       guide_content: JSON.stringify(guide.guide_content),
       is_current: guide.is_current ? 1 : 0,
+      changelog: guide.changelog ? JSON.stringify(guide.changelog) : null,
     });
 }
 
@@ -192,6 +201,7 @@ export async function getAllGuideSummaries(): Promise<Omit<Guide, 'guide_content
     is_current: (row.is_current as number) === 1,
     model_used: row.model_used as string,
     prompt_version: row.prompt_version as string,
+    changelog: null,
   }));
 }
 

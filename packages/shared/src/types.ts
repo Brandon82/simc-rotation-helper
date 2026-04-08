@@ -33,6 +33,7 @@ export interface Guide {
   is_current: boolean;
   model_used: string;
   prompt_version: string;
+  changelog: string[] | null;
 }
 
 export interface AplSnapshot {
@@ -83,6 +84,7 @@ export interface GuideApiResponse {
   generatedAt: string;
   modelUsed: string;
   guide: GuideContent;
+  changelog: string[] | null;
 }
 
 export interface GuideHistoryItem {

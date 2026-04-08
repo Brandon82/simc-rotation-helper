@@ -3,6 +3,7 @@ import type { GuideContent } from '@simc-helper/shared';
 import { config } from '../config.js';
 import { SYSTEM_PROMPT, buildUserPrompt } from '../prompts/guidePrompt.js';
 import { QA_SYSTEM_PROMPT, buildQaUserPrompt } from '../prompts/qaPrompt.js';
+import { CHANGELOG_SYSTEM_PROMPT, buildChangelogUserPrompt } from '../prompts/changelogPrompt.js';
 
 const client = new Anthropic({ apiKey: config.anthropicApiKey });
 
@@ -115,4 +116,56 @@ export async function answerQuestion(
   }
 
   return textBlock.text.trim();
+}
+
+/**
+ * Calls Claude to compare two guide versions and produce a concise changelog.
+ * Returns an array of bullet-point strings describing what changed.
+ */
+export async function generateChangelog(
+  specLabel: string,
+  className: string,
+  oldGuide: GuideContent,
+  newGuide: GuideContent,
+): Promise<string[]> {
+  const tag = `[changelog] ${className} ${specLabel}`;
+  const userPrompt = buildChangelogUserPrompt(
+    specLabel,
+    className,
+    JSON.stringify(oldGuide),
+    JSON.stringify(newGuide),
+  );
+
+  console.log(`${tag} → sending request`);
+  const started = Date.now();
+
+  const response = await client.messages.create({
+    model: config.anthropicModel,
+    max_tokens: 2000,
+    system: CHANGELOG_SYSTEM_PROMPT,
+    messages: [{ role: 'user', content: userPrompt }],
+  });
+
+  const elapsed = ((Date.now() - started) / 1000).toFixed(1);
+  console.log(`${tag} ← response received (${elapsed}s)`);
+  console.log(`${tag}   input tokens : ${response.usage.input_tokens}`);
+  console.log(`${tag}   output tokens: ${response.usage.output_tokens}`);
+
+  const textBlock = response.content.find(b => b.type === 'text');
+  if (!textBlock || textBlock.type !== 'text') {
+    throw new Error('LLM returned no text content for changelog');
+  }
+
+  let jsonText = textBlock.text.trim();
+  if (jsonText.startsWith('```')) {
+    jsonText = jsonText.replace(/^```(?:json)?\n?/, '').replace(/\n?```$/, '');
+  }
+
+  const parsed = JSON.parse(jsonText) as string[];
+  if (!Array.isArray(parsed)) {
+    throw new Error('Changelog response is not an array');
+  }
+
+  console.log(`${tag} ✓ ${parsed.length} changelog items`);
+  return parsed;
 }

@@ -2,6 +2,7 @@ import { useParams, Link } from 'react-router-dom';
 import { useGuide, useGuideHistory } from '../hooks/useGuide';
 import { GuideMeta } from '../components/guide/GuideMeta';
 import { GuideSection } from '../components/guide/GuideSection';
+import { InlineMarkdown } from '../components/guide/InlineMarkdown';
 import { GuideSkeleton } from '../components/guide/GuideSkeleton';
 import { useState } from 'react';
 import { fetchHistoricalGuide } from '../api/client';
@@ -170,6 +171,20 @@ export function SpecPage() {
           />
 
           <QAPanel specName={specName ?? ''} />
+
+          {displayGuide.changelog && displayGuide.changelog.length > 0 && (
+            <div className="mb-6 pl-4 border-l-2 border-amber-500 animate-fade-in-up">
+              <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-2">What Changed</h2>
+              <ul className="space-y-1">
+                {displayGuide.changelog.map((item, i) => (
+                  <li key={i} className="text-sm text-gray-700 dark:text-gray-300 flex items-start gap-2">
+                    <span className="text-amber-500 mt-0.5 shrink-0">-</span>
+                    <InlineMarkdown text={item} />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           {displayGuide.guide.sections
             .filter(section => section.id !== 'opener')
