@@ -3,8 +3,9 @@ import type { Request, Response } from 'express';
 import crypto from 'crypto';
 import { config } from '../config.js';
 import { checkAndUpdateSpec, checkAndUpdateMany, checkAndUpdateClass, checkAndUpdateAll } from '../services/guideService.js';
-import { getSpecInfo, getClassInfo } from '../data/specs.js';
-import { deleteOldGuides, insertQaApiKey, listQaApiKeys, deactivateQaApiKey } from '../db/client.js';
+import { getSpecInfo, getClassInfo, getClassForSpec } from '../data/specs.js';
+import { deleteOldGuides, insertQaApiKey, listQaApiKeys, deactivateQaApiKey, getCurrentGuide, getGuideHistory, updateGuideChangelog } from '../db/client.js';
+import { generateChangelog } from '../services/llmService.js';
 
 const router = Router();
 
@@ -83,6 +84,50 @@ router.delete('/guides/history', async (req: Request, res: Response) => {
 
   const deleted = await deleteOldGuides(spec);
   res.json({ deleted, spec: spec ?? 'all' });
+});
+
+// POST /api/admin/backfill-changelog
+// Body: { "spec": "warrior_arms" }
+// Generates changelog for the current guide if it doesn't have one and a previous guide exists.
+router.post('/backfill-changelog', async (req: Request, res: Response) => {
+  if (!requireAdminAuth(req, res)) return;
+
+  const { spec } = req.body as { spec?: string };
+  if (!spec) {
+    res.status(400).json({ error: 'Missing "spec" field' });
+    return;
+  }
+
+  const specInfo = getSpecInfo(spec);
+  const classInfo = getClassForSpec(spec);
+  if (!specInfo || !classInfo) {
+    res.status(400).json({ error: `Unknown spec: ${spec}` });
+    return;
+  }
+
+  const current = await getCurrentGuide(spec);
+  if (!current) {
+    res.status(404).json({ error: `No current guide for ${spec}` });
+    return;
+  }
+
+  if (current.changelog) {
+    res.json({ skipped: true, reason: 'Guide already has a changelog' });
+    return;
+  }
+
+  const history = await getGuideHistory(spec);
+  const previous = history.find(g => g.id !== current.id);
+  if (!previous) {
+    res.json({ skipped: true, reason: 'No previous guide to compare against' });
+    return;
+  }
+
+  const className = classInfo.label;
+  const changelog = await generateChangelog(specInfo.label, className, previous.guide_content, current.guide_content);
+  await updateGuideChangelog(current.id, changelog);
+
+  res.json({ updated: true, spec, changelog });
 });
 
 // ── QA API Key management ───────────────────────────────────

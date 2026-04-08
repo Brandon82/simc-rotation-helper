@@ -213,6 +213,12 @@ export async function deleteOldGuides(specName?: string): Promise<number> {
   return result.changes;
 }
 
+export async function updateGuideChangelog(id: string, changelog: string[]): Promise<void> {
+  getDb()
+    .prepare('UPDATE guides SET changelog = ? WHERE id = ?')
+    .run(JSON.stringify(changelog), id);
+}
+
 export async function getSpecsWithGuides(): Promise<Set<string>> {
   const rows = getDb()
     .prepare('SELECT DISTINCT spec_name FROM guides WHERE is_current = 1')
