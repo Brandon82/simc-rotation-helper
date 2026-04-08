@@ -178,10 +178,17 @@ export function SpecPage() {
                 className="w-full flex items-center justify-between px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-left"
               >
                 <div className="flex items-center gap-2">
-                  <svg className="w-3.5 h-3.5 text-amber-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <svg className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M12 20h9" /><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
                   </svg>
                   <span className="text-xs text-gray-600 dark:text-gray-400">What Changed?</span>
+                  <span className="text-xs text-gray-400 dark:text-gray-600">
+                    — vs.{' '}
+                    <span className="font-mono text-yellow-600 dark:text-yellow-600">
+                      {displayGuide.changelog.previousCommitSha.slice(0, 7)}
+                    </span>
+                    {' · '}{new Date(displayGuide.changelog.previousGeneratedAt).toLocaleDateString()}
+                  </span>
                 </div>
                 <svg
                   className={`w-3.5 h-3.5 text-gray-400 transition-transform ${showChangelog ? 'rotate-180' : ''}`}
@@ -191,23 +198,11 @@ export function SpecPage() {
                 </svg>
               </button>
               {showChangelog && (
-                <div className="px-4 pb-3 pt-1">
-                  <p className="text-xs text-gray-500 dark:text-gray-500 mb-2">
-                    Changes from previous guide (APL commit{' '}
-                    <a
-                      href={`https://github.com/simulationcraft/simc/commit/${displayGuide.changelog.previousCommitSha}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-yellow-600 dark:text-yellow-600 hover:underline font-mono"
-                    >
-                      {displayGuide.changelog.previousCommitSha.slice(0, 8)}
-                    </a>
-                    {', '}generated {new Date(displayGuide.changelog.previousGeneratedAt).toLocaleDateString()})
-                  </p>
-                  <ul className="space-y-1">
+                <div className="px-4 pb-3 pt-2">
+                  <ul className="space-y-1.5">
                     {displayGuide.changelog.items.map((item, i) => (
-                      <li key={i} className="text-sm text-gray-700 dark:text-gray-300 flex items-start gap-2">
-                        <span className="text-amber-500 mt-0.5 shrink-0">-</span>
+                      <li key={i} className="text-xs text-gray-700 dark:text-gray-300 flex items-start gap-2">
+                        <span className="text-gray-300 dark:text-gray-600 mt-px shrink-0">•</span>
                         <InlineMarkdown text={item} />
                       </li>
                     ))}
