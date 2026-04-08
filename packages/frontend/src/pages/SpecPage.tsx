@@ -171,7 +171,7 @@ export function SpecPage() {
             modelUsed={displayGuide.modelUsed}
           />
 
-          {displayGuide.changelog && displayGuide.changelog.items.length > 0 && (
+          {displayGuide.changelog && displayGuide.changelog.items?.length > 0 && (
             <div className="mb-2 border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden bg-gray-50 dark:bg-gray-900 animate-fade-in-up">
               <button
                 onClick={() => setShowChangelog(!showChangelog)}
