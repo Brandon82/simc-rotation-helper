@@ -210,7 +210,7 @@ export function HomePage() {
         )}
 
         {/* Navigation cards — 2-column grid with amber accent */}
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <Link
             to="/rankings"
             className="group flex flex-col gap-3 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-amber-300 dark:hover:border-amber-700/50 rounded-2xl p-5 transition-all hover:bg-amber-50/40 dark:hover:bg-amber-950/10"
@@ -245,6 +245,25 @@ export function HomePage() {
               </p>
               <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">
                 Track how rotations changed over time.
+              </p>
+            </div>
+          </Link>
+
+          <Link
+            to="/ask-ai"
+            className="group flex flex-col gap-3 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-purple-300 dark:hover:border-purple-700/50 rounded-2xl p-5 transition-all hover:bg-purple-50/40 dark:hover:bg-purple-950/10"
+          >
+            <div className="w-10 h-10 rounded-xl bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800/40 flex items-center justify-center group-hover:bg-purple-100 dark:group-hover:bg-purple-900/30 transition-colors">
+              <svg className="w-5 h-5 text-purple-600 dark:text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+              </svg>
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-purple-700 dark:group-hover:text-purple-300 transition-colors">
+                Ask AI
+              </p>
+              <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">
+                Ask questions about any spec's rotation.
               </p>
             </div>
           </Link>
