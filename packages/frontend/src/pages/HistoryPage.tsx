@@ -208,7 +208,7 @@ export function HistoryPage() {
                         {g.changelog?.items?.length ? (
                           <button
                             onClick={() => setExpandedIds(prev => { const next = new Set(prev); next.has(g.id) ? next.delete(g.id) : next.add(g.id); return next; })}
-                            className="p-0.5 text-indigo-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+                            className="p-0.5 text-gray-400 hover:text-gray-600 dark:text-gray-600 dark:hover:text-gray-400 transition-colors"
                             title={`${g.changelog.items.length} change${g.changelog.items.length > 1 ? 's' : ''}`}
                           >
                             <svg
@@ -296,7 +296,7 @@ export function HistoryPage() {
 
                     {/* Expanded changelog row */}
                     {expandedIds.has(g.id) && g.changelog?.items && (
-                      <tr className="bg-indigo-50/50 dark:bg-indigo-950/20">
+                      <tr className="bg-gray-50 dark:bg-gray-800/40">
                         <td colSpan={7} className="px-6 py-3">
                           <div className="text-xs text-gray-500 dark:text-gray-500 mb-1.5">
                             vs. APL commit{' '}
@@ -313,7 +313,7 @@ export function HistoryPage() {
                           <ul className="space-y-0.5">
                             {g.changelog.items.map((item: string, j: number) => (
                               <li key={j} className="text-xs text-gray-700 dark:text-gray-300 flex items-start gap-1.5">
-                                <span className="text-indigo-500 dark:text-indigo-400 mt-px shrink-0">-</span>
+                                <span className="text-gray-400 dark:text-gray-600 mt-px shrink-0">-</span>
                                 <InlineMarkdown text={item} />
                               </li>
                             ))}
