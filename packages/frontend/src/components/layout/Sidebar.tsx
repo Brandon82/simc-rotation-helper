@@ -124,22 +124,6 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
           <span>Guide History</span>
         </NavLink>
         <NavLink
-          to="/ask-ai"
-          onClick={onClose}
-          className={({ isActive }) =>
-            `flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-all ${
-              isActive
-                ? 'bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white'
-                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800/60'
-            }`
-          }
-        >
-          <svg className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-          </svg>
-          <span>Ask AI</span>
-        </NavLink>
-        <NavLink
           to="/changelog"
           onClick={onClose}
           className={({ isActive }) =>
@@ -154,6 +138,22 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2m-6 9 2 2 4-4" />
           </svg>
           <span>Project Changelog</span>
+        </NavLink>
+        <NavLink
+          to="/ask-ai"
+          onClick={onClose}
+          className={({ isActive }) =>
+            `flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-all ${
+              isActive
+                ? 'bg-gray-200 dark:bg-gray-800 text-gray-900 dark:text-white'
+                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800/60'
+            }`
+          }
+        >
+          <svg className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+          </svg>
+          <span>Ask AI</span>
         </NavLink>
       </div>
 
