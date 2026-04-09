@@ -26,6 +26,7 @@ export function HistoryPage() {
   const CLASS_COLORS = isDark ? CLASS_COLORS_DARK : CLASS_COLORS_LIGHT;
 
   const [classFilter, setClassFilter] = useState<string>('');
+  const [specFilter, setSpecFilter] = useState<string>('');
   const [currentOnly, setCurrentOnly] = useState(false);
   const [search, setSearch] = useState('');
   const [sortKey, setSortKey] = useState<SortKey>('generatedAt');
@@ -41,10 +42,23 @@ export function HistoryPage() {
     return [...seen.entries()].sort((a, b) => a[1].localeCompare(b[1]));
   }, [data]);
 
+  const specs = useMemo(() => {
+    if (!data || !classFilter) return [];
+    const seen = new Map<string, string>();
+    for (const g of data.guides) {
+      if (g.className === classFilter) seen.set(g.specName, g.specLabel);
+    }
+    return [...seen.entries()].sort((a, b) => a[1].localeCompare(b[1]));
+  }, [data, classFilter]);
+
+  // Reset spec filter when class changes
+  useEffect(() => { setSpecFilter(''); }, [classFilter]);
+
   const filtered = useMemo(() => {
     if (!data) return [];
     let rows: GuideSummaryItem[] = data.guides;
     if (classFilter) rows = rows.filter(g => g.className === classFilter);
+    if (specFilter) rows = rows.filter(g => g.specName === specFilter);
     if (currentOnly) rows = rows.filter(g => g.isCurrent);
     if (search.trim()) {
       const q = search.trim().toLowerCase();
@@ -59,10 +73,10 @@ export function HistoryPage() {
       const vb = b[sortKey] as string;
       return sortAsc ? va.localeCompare(vb) : vb.localeCompare(va);
     });
-  }, [data, classFilter, currentOnly, search, sortKey, sortAsc]);
+  }, [data, classFilter, specFilter, currentOnly, search, sortKey, sortAsc]);
 
   // Reset to page 1 when filters change
-  useEffect(() => { setPage(1); }, [classFilter, currentOnly, search, sortKey, sortAsc]);
+  useEffect(() => { setPage(1); }, [classFilter, specFilter, currentOnly, search, sortKey, sortAsc]);
 
   const totalPages = Math.ceil(filtered.length / perPage);
   const safePage = Math.min(page, Math.max(totalPages, 1));
@@ -129,6 +143,45 @@ export function HistoryPage() {
               {label}
             </button>
           ))}
+        </div>
+
+        {/* Spec filter chips */}
+        <div
+          className="grid transition-[grid-template-rows,opacity] duration-200 ease-in-out w-full"
+          style={{
+            gridTemplateRows: classFilter && specs.length > 1 ? '1fr' : '0fr',
+            opacity: classFilter && specs.length > 1 ? 1 : 0,
+          }}
+        >
+          <div className="overflow-hidden">
+            <div className="flex flex-wrap gap-1.5 pb-1">
+              <button
+                onClick={() => setSpecFilter('')}
+                className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${
+                  !specFilter
+                    ? 'bg-gray-500 dark:bg-gray-600 text-white'
+                    : 'bg-gray-200 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-300 dark:hover:bg-gray-700'
+                }`}
+              >
+                All specs
+              </button>
+              {specs.map(([name, label]) => (
+                <button
+                  key={name}
+                  onClick={() => setSpecFilter(f => f === name ? '' : name)}
+                  className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${
+                    specFilter === name
+                      ? 'bg-gray-300 dark:bg-gray-700 text-gray-900 dark:text-white ring-1'
+                      : 'bg-gray-200 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-300 dark:hover:bg-gray-700'
+                  }`}
+                  style={specFilter === name ? { ringColor: CLASS_COLORS[classFilter] ?? '#888', color: CLASS_COLORS[classFilter] ?? '#888' } : {}}
+                >
+                  <img src={specIconUrl(name, 'medium')} alt="" className="w-3.5 h-3.5 rounded-sm" />
+                  {label}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
         {/* Current-only toggle */}
