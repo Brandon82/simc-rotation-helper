@@ -156,10 +156,35 @@ export function ChangelogPage() {
                                 }}
                               >
                                 <div className="overflow-hidden">
-                                  <div className="px-4 py-3 ml-6">
-                                    <p className="text-xs text-gray-600 dark:text-gray-400 whitespace-pre-line leading-relaxed">
-                                      {body}
-                                    </p>
+                                  <div className="p-3">
+                                    <div className="rounded-lg border border-gray-200 dark:border-gray-700/60 bg-white dark:bg-gray-800/60 overflow-hidden">
+                                      <div className="flex items-center gap-2 px-3 py-2 border-b border-gray-200 dark:border-gray-700/60 bg-gray-50 dark:bg-gray-800/80">
+                                        <svg className="w-3 h-3 text-gray-400 dark:text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                          <path d="M12 20h9" /><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                                        </svg>
+                                        <span className="text-xs text-gray-500 dark:text-gray-400">
+                                          Details for{' '}
+                                          <a
+                                            href={commit.url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            onClick={e => e.stopPropagation()}
+                                            className="text-indigo-500 dark:text-indigo-400 hover:underline font-mono"
+                                          >
+                                            {commit.shortSha}
+                                          </a>
+                                          {' \u00b7 '}{new Date(commit.date).toLocaleDateString()}
+                                        </span>
+                                      </div>
+                                      <ul className="px-3 py-2 space-y-1">
+                                        {body.split('\n').filter(l => l.trim()).map((line, j) => (
+                                          <li key={j} className="text-xs text-gray-700 dark:text-gray-300 flex items-start gap-2">
+                                            <span className="text-gray-300 dark:text-gray-600 mt-px shrink-0">&bull;</span>
+                                            <span>{line}</span>
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    </div>
                                   </div>
                                 </div>
                               </div>
