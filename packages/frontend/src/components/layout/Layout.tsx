@@ -1,13 +1,18 @@
 import { Outlet, useLocation } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Header } from './Header';
 import { Sidebar } from './Sidebar';
 
 export function Layout() {
   const location = useLocation();
+  const mainRef = useRef<HTMLElement>(null);
   const [sidebarOpen, setSidebarOpen] = useState(
     () => typeof window !== 'undefined' && window.innerWidth >= 768
   );
+
+  useEffect(() => {
+    mainRef.current?.scrollTo(0, 0);
+  }, [location.pathname]);
 
   const closeSidebar = () => {
     if (window.innerWidth < 768) setSidebarOpen(false);
@@ -25,7 +30,7 @@ export function Layout() {
           />
         )}
         <Sidebar isOpen={sidebarOpen} onClose={closeSidebar} />
-        <main className="flex-1 overflow-y-auto p-6 pb-24 flex justify-center">
+        <main ref={mainRef} className="flex-1 overflow-y-auto p-6 pb-24 flex justify-center">
           <div key={location.pathname} className="w-full max-w-3xl animate-fade-in-up">
             <Outlet />
           </div>
