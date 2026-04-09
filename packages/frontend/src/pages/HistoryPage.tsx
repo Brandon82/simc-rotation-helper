@@ -295,40 +295,52 @@ export function HistoryPage() {
                     </tr>
 
                     {/* Expanded changelog row */}
-                    {expandedIds.has(g.id) && g.changelog?.items && (
+                    {g.changelog?.items?.length ? (
                       <tr className="border-b border-gray-200/60 dark:border-gray-800/60">
-                        <td colSpan={7} className="p-3 bg-gray-50/50 dark:bg-gray-900/50">
-                          <div className="rounded-lg border border-gray-200 dark:border-gray-700/60 bg-white dark:bg-gray-800/60 overflow-hidden">
-                            <div className="flex items-center gap-2 px-3 py-2 border-b border-gray-200 dark:border-gray-700/60 bg-gray-50 dark:bg-gray-800/80">
-                              <svg className="w-3 h-3 text-gray-400 dark:text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M12 20h9" /><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
-                              </svg>
-                              <span className="text-xs text-gray-500 dark:text-gray-400">
-                                Changes from{' '}
-                                <a
-                                  href={`https://github.com/simulationcraft/simc/commit/${g.changelog.previousCommitSha}`}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  onClick={e => e.stopPropagation()}
-                                  className="text-indigo-500 dark:text-indigo-400 hover:underline font-mono"
-                                >
-                                  {g.changelog.previousCommitSha.slice(0, 7)}
-                                </a>
-                                {' · '}{new Date(g.changelog.previousGeneratedAt).toLocaleDateString()}
-                              </span>
+                        <td colSpan={7} className="p-0 bg-gray-50/50 dark:bg-gray-900/50">
+                          <div
+                            className="grid transition-[grid-template-rows,opacity] duration-200 ease-in-out"
+                            style={{
+                              gridTemplateRows: expandedIds.has(g.id) ? '1fr' : '0fr',
+                              opacity: expandedIds.has(g.id) ? 1 : 0,
+                            }}
+                          >
+                            <div className="overflow-hidden">
+                              <div className="p-3">
+                                <div className="rounded-lg border border-gray-200 dark:border-gray-700/60 bg-white dark:bg-gray-800/60 overflow-hidden">
+                                  <div className="flex items-center gap-2 px-3 py-2 border-b border-gray-200 dark:border-gray-700/60 bg-gray-50 dark:bg-gray-800/80">
+                                    <svg className="w-3 h-3 text-gray-400 dark:text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                      <path d="M12 20h9" /><path d="M16.5 3.5a2.121 2.121 0 1 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                                    </svg>
+                                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                                      Changes from{' '}
+                                      <a
+                                        href={`https://github.com/simulationcraft/simc/commit/${g.changelog.previousCommitSha}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        onClick={e => e.stopPropagation()}
+                                        className="text-indigo-500 dark:text-indigo-400 hover:underline font-mono"
+                                      >
+                                        {g.changelog.previousCommitSha.slice(0, 7)}
+                                      </a>
+                                      {' · '}{new Date(g.changelog.previousGeneratedAt).toLocaleDateString()}
+                                    </span>
+                                  </div>
+                                  <ul className="px-3 py-2 space-y-1">
+                                    {g.changelog.items.map((item: string, j: number) => (
+                                      <li key={j} className="text-xs text-gray-700 dark:text-gray-300 flex items-start gap-2">
+                                        <span className="text-gray-300 dark:text-gray-600 mt-px shrink-0">•</span>
+                                        <InlineMarkdown text={item} />
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              </div>
                             </div>
-                            <ul className="px-3 py-2 space-y-1">
-                              {g.changelog.items.map((item: string, j: number) => (
-                                <li key={j} className="text-xs text-gray-700 dark:text-gray-300 flex items-start gap-2">
-                                  <span className="text-gray-300 dark:text-gray-600 mt-px shrink-0">•</span>
-                                  <InlineMarkdown text={item} />
-                                </li>
-                              ))}
-                            </ul>
                           </div>
                         </td>
                       </tr>
-                    )}
+                    ) : null}
                     </Fragment>
                   ))
                 )}
