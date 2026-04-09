@@ -27,7 +27,7 @@ const SPEC_ICON_SLUG: Record<string, string> = {
   // Demon Hunter
   demon_hunter_havoc:      'ability_demonhunter_specdps',
   demon_hunter_vengeance:  'ability_demonhunter_spectank',
-  demon_hunter_devourer:   'ability_demonhunter_specdps', // non-standard, fallback
+  demon_hunter_devourer:   'classicon_demonhunter_void_64',
 
   // Druid
   druid_balance:     'spell_nature_starfall',
