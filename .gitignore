@@ -28,3 +28,4 @@ packages/frontend/dist/
 packages/backend/data/
 /.claude
 CLAUDE.md
+/packages/backend/.claude
