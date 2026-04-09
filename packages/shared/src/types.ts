@@ -153,6 +153,10 @@ export interface ChangelogCommit {
 
 export interface ChangelogApiResponse {
   commits: ChangelogCommit[];
+  page: number;
+  perPage: number;
+  total: number;
+  totalPages: number;
 }
 
 // ── Q&A Types ───────────────────────────────────────────────

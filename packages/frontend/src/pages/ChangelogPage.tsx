@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useChangelog } from '../hooks/useChangelog';
+import type { ChangelogCommit } from '../types';
 
 function formatRelativeDate(isoDate: string): string {
   const now = Date.now();
@@ -16,8 +18,8 @@ function formatRelativeDate(isoDate: string): string {
   return new Date(isoDate).toLocaleDateString();
 }
 
-function groupCommitsByDate(commits: { date: string }[]): Map<string, typeof commits> {
-  const groups = new Map<string, typeof commits>();
+function groupCommitsByDate(commits: ChangelogCommit[]): Map<string, ChangelogCommit[]> {
+  const groups = new Map<string, ChangelogCommit[]>();
   for (const commit of commits) {
     const day = new Date(commit.date).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -31,7 +33,8 @@ function groupCommitsByDate(commits: { date: string }[]): Map<string, typeof com
 }
 
 export function ChangelogPage() {
-  const { data, isLoading, error } = useChangelog();
+  const [page, setPage] = useState(1);
+  const { data, isLoading, error, isFetching } = useChangelog(page);
 
   if (isLoading) {
     return (
@@ -68,11 +71,11 @@ export function ChangelogPage() {
         </Link>
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2 mt-0.5">Project Changelog</h1>
         <p className="text-gray-600 dark:text-gray-400 text-sm">
-          Recent commits and updates to SimC Rotation Helper.
+          All commits and updates to SimC Rotation Helper.
         </p>
       </div>
 
-      <div className="space-y-6">
+      <div className={`space-y-6 ${isFetching ? 'opacity-60' : ''} transition-opacity`}>
         {[...grouped.entries()].map(([day, commits]) => (
           <div key={day}>
             <h2 className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2 px-1">
@@ -119,6 +122,29 @@ export function ChangelogPage() {
           </div>
         ))}
       </div>
+
+      {/* Pagination */}
+      {data.totalPages > 1 && (
+        <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-200 dark:border-gray-800">
+          <button
+            onClick={() => { setPage(p => p - 1); window.scrollTo(0, 0); }}
+            disabled={page <= 1}
+            className="px-3 py-1.5 rounded-lg text-xs font-medium bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+          >
+            &larr; Previous
+          </button>
+          <span className="text-xs text-gray-500 dark:text-gray-400">
+            Page {page} of {data.totalPages} ({data.total} commits)
+          </span>
+          <button
+            onClick={() => { setPage(p => p + 1); window.scrollTo(0, 0); }}
+            disabled={page >= data.totalPages}
+            className="px-3 py-1.5 rounded-lg text-xs font-medium bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+          >
+            Next &rarr;
+          </button>
+        </div>
+      )}
     </div>
   );
 }

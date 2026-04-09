@@ -49,7 +49,7 @@ export async function validateQaKey(qaKey: string): Promise<QAValidateResponse> 
   return res.data;
 }
 
-export async function fetchChangelog(): Promise<ChangelogApiResponse> {
-  const res = await api.get<ChangelogApiResponse>('/changelog');
+export async function fetchChangelog(page: number = 1): Promise<ChangelogApiResponse> {
+  const res = await api.get<ChangelogApiResponse>('/changelog', { params: { page, per_page: 20 } });
   return res.data;
 }

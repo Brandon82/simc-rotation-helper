@@ -1,11 +1,12 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import { fetchChangelog } from '../api/client';
 
-export function useChangelog() {
+export function useChangelog(page: number) {
   return useQuery({
-    queryKey: ['changelog'],
-    queryFn: fetchChangelog,
+    queryKey: ['changelog', page],
+    queryFn: () => fetchChangelog(page),
     staleTime: 10 * 60 * 1000,
     retry: 1,
+    placeholderData: keepPreviousData,
   });
 }

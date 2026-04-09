@@ -11,49 +11,68 @@ const githubHeaders: Record<string, string> = config.githubToken
   ? { Authorization: `Bearer ${config.githubToken}` }
   : {};
 
-// Simple in-memory cache
+// Cache all commits with a TTL
 let cache: { commits: ChangelogCommit[]; fetchedAt: number } | null = null;
 const CACHE_TTL_MS = 10 * 60 * 1000; // 10 minutes
 
-async function fetchCommitsFromGitHub(limit: number): Promise<ChangelogCommit[]> {
+async function fetchAllCommits(): Promise<ChangelogCommit[]> {
   const now = Date.now();
-  if (cache && now - cache.fetchedAt < CACHE_TTL_MS && cache.commits.length >= limit) {
-    return cache.commits.slice(0, limit);
+  if (cache && now - cache.fetchedAt < CACHE_TTL_MS) {
+    return cache.commits;
   }
 
-  const url = `https://api.github.com/repos/${PROJECT_REPO}/commits`;
-  const response = await axios.get(url, {
-    headers: githubHeaders,
-    params: { per_page: 100, sha: 'main' },
-  });
+  const allCommits: ChangelogCommit[] = [];
+  let page = 1;
 
-  const raw = response.data as Array<{
-    sha: string;
-    commit: {
-      message: string;
-      author: { name: string; date: string };
-    };
-    html_url: string;
-  }>;
+  while (true) {
+    const url = `https://api.github.com/repos/${PROJECT_REPO}/commits`;
+    const response = await axios.get(url, {
+      headers: githubHeaders,
+      params: { per_page: 100, sha: 'main', page },
+    });
 
-  const commits: ChangelogCommit[] = raw.map(c => ({
-    sha: c.sha,
-    shortSha: c.sha.slice(0, 7),
-    message: c.commit.message,
-    author: c.commit.author.name,
-    date: c.commit.author.date,
-    url: c.html_url,
-  }));
+    const raw = response.data as Array<{
+      sha: string;
+      commit: {
+        message: string;
+        author: { name: string; date: string };
+      };
+      html_url: string;
+    }>;
 
-  cache = { commits, fetchedAt: now };
-  return commits.slice(0, limit);
+    if (raw.length === 0) break;
+
+    for (const c of raw) {
+      allCommits.push({
+        sha: c.sha,
+        shortSha: c.sha.slice(0, 7),
+        message: c.commit.message,
+        author: c.commit.author.name,
+        date: c.commit.author.date,
+        url: c.html_url,
+      });
+    }
+
+    if (raw.length < 100) break;
+    page++;
+  }
+
+  cache = { commits: allCommits, fetchedAt: now };
+  return allCommits;
 }
 
 router.get('/', async (req, res) => {
   try {
-    const limit = Math.min(Math.max(parseInt(req.query.limit as string) || 50, 1), 100);
-    const commits = await fetchCommitsFromGitHub(limit);
-    res.json({ commits });
+    const page = Math.max(parseInt(req.query.page as string) || 1, 1);
+    const perPage = Math.min(Math.max(parseInt(req.query.per_page as string) || 20, 1), 100);
+
+    const allCommits = await fetchAllCommits();
+    const total = allCommits.length;
+    const totalPages = Math.ceil(total / perPage);
+    const start = (page - 1) * perPage;
+    const commits = allCommits.slice(start, start + perPage);
+
+    res.json({ commits, page, perPage, total, totalPages });
   } catch (err) {
     console.error('[changelog] Failed to fetch commits:', err);
     res.status(500).json({ error: 'Failed to fetch project changelog' });
