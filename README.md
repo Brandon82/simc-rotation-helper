@@ -16,7 +16,10 @@ Every spec across all 13 classes is tracked. When SimC's APL changes (detected v
 - **AI-generated guides** from live SimC APLs using `claude-sonnet-4-6`
 - **Auto-sync** - daily cron detects APL changes via GitHub commit SHA and regenerates only what changed
 - **Guide history** - every generated version is archived with its APL commit SHA, generation date, and model used
-- **Complexity rankings** -specs ranked by APL action count for single-target and AoE
+- **Changelog tracking** - automatic diff detection between guide versions highlights what changed
+- **Ask AI** - Q&A chatbot lets you ask questions about any spec's rotation (requires QA API key)
+- **Complexity rankings** - specs ranked by APL action count for single-target and AoE
+- **Dark mode** - full dark/light theme toggle with persistent preference
 - **Responsive UI** with class-colored sidebar, role badges, and priority list rendering
 
 ## Architecture
@@ -95,12 +98,30 @@ docker-compose up
 | `GET` | `/api/guides/:specName/history/:id` | A specific historical guide |
 | `GET` | `/api/rankings` | Specs ranked by APL action count |
 
-### Admin (Bearer token required)
+### Q&A (requires `X-QA-Key` header)
+
+| Method | Path | Description |
+|---|---|---|
+| `GET` | `/api/qa/validate` | Validate a QA API key |
+| `POST` | `/api/qa/ask` | Ask a question about a spec's rotation |
+
+**`POST /api/qa/ask` body:**
+
+```jsonc
+{ "specName": "warrior_arms", "question": "When should I use Mortal Strike?" }
+```
+
+### Admin (requires `Authorization: Bearer <ADMIN_SECRET>` header)
 
 | Method | Path | Description |
 |---|---|---|
 | `POST` | `/api/admin/refresh` | Trigger guide generation |
 | `DELETE` | `/api/admin/guides/history` | Delete old (non-current) guide versions |
+| `POST` | `/api/admin/backfill-changelog` | Generate changelogs for past guides |
+| `DELETE` | `/api/admin/changelogs` | Clear all changelogs |
+| `POST` | `/api/admin/qa-keys` | Create a QA API key |
+| `GET` | `/api/admin/qa-keys` | List all QA API keys |
+| `DELETE` | `/api/admin/qa-keys/:id` | Deactivate a QA API key |
 
 **`POST /api/admin/refresh` body:**
 
@@ -119,7 +140,37 @@ docker-compose up
 { "spec": "warrior_arms" }  // One spec only
 ```
 
-Rate limiting: 120 req/min (general), 10 req/min (admin).
+**`POST /api/admin/backfill-changelog` body:**
+
+```jsonc
+{ "spec": "warrior_arms" }                  // Single spec, current guide only
+{ "spec": "warrior_arms", "mode": "all" }   // Single spec, all history
+{ "spec": "all" }                            // All specs (runs in background)
+```
+
+**`POST /api/admin/qa-keys` body:**
+
+```jsonc
+{ "label": "Brandon" }  // Returns { id, apiKey, label }
+```
+
+### Rate Limiting
+
+| Tier | Limit | Endpoints |
+|---|---|---|
+| General | 120 req/min | specs, guides, rankings |
+| Admin | 10 req/min | all `/api/admin/*` routes |
+| Q&A | 5 req/min | all `/api/qa/*` routes |
+
+## Frontend Routes
+
+| Path | Page |
+|---|---|
+| `/` | Home - class selector and spec grid |
+| `/guide/:specName` | Spec guide with changelog and version history |
+| `/rankings` | Specs ranked by APL action count (ST and AoE) |
+| `/history` | Filterable table of all generated guides |
+| `/ask-ai` | Q&A chatbot for asking about spec rotations |
 
 ## Adding / Modifying Specs
 
@@ -129,6 +180,12 @@ After adding a new spec, trigger its first guide generation via the admin API.
 
 ## Prompt Engineering
 
-The LLM prompt lives in [packages/backend/src/prompts/guidePrompt.ts](packages/backend/src/prompts/guidePrompt.ts). It instructs Claude to act as a WoW theorycrafting expert, translate SimC condition syntax into plain English, follow APL priority order faithfully, and output structured JSON with these sections: `overview`, `talent_notes`, `precombat`, `single_target`, `aoe`, `items_and_racials`.
+LLM prompts live in `packages/backend/src/prompts/`:
+
+| File | Purpose |
+|---|---|
+| `guidePrompt.ts` | Main APL-to-guide generation. Instructs Claude to translate SimC conditions into plain English and output structured JSON with sections: `overview`, `talent_notes`, `precombat`, `single_target`, `aoe`, `items_and_racials` |
+| `qaPrompt.ts` | Q&A answering. Provides the guide content and raw APL as context for answering user questions about rotations |
+| `changelogPrompt.ts` | Changelog generation. Compares old and new guide versions and outputs bullet-point descriptions of what changed |
 
 The `PROMPT_VERSION` env var is stored alongside each guide for traceability when the prompt is updated.
