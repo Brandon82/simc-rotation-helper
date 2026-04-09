@@ -113,7 +113,7 @@ export function AskAiPage() {
             value={specName}
             onChange={e => setSpecName(e.target.value)}
             disabled={specsLoading}
-            className="flex-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500/40 focus:border-purple-500 disabled:opacity-50 appearance-none cursor-pointer"
+            className="flex-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-amber-500/40 focus:border-amber-500 disabled:opacity-50 appearance-none cursor-pointer"
           >
             <option value="">Select a spec...</option>
             {data?.classes.map(cls => {
@@ -150,12 +150,12 @@ export function AskAiPage() {
                     onChange={e => { setKeyInput(e.target.value); setKeyError(''); }}
                     onKeyDown={e => e.key === 'Enter' && handleValidateKey()}
                     placeholder="qa_..."
-                    className="flex-1 px-3 py-1.5 text-xs rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    className="flex-1 px-3 py-1.5 text-xs rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                   />
                   <button
                     onClick={handleValidateKey}
                     disabled={validatingKey || !keyInput.trim()}
-                    className="px-3 py-1.5 text-xs font-medium rounded bg-purple-600 text-white hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="px-3 py-1.5 text-xs font-medium rounded bg-amber-600 text-white hover:bg-amber-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
                     {validatingKey ? 'Checking...' : 'Unlock'}
                   </button>
@@ -172,7 +172,7 @@ export function AskAiPage() {
                         <div
                           className={`max-w-[85%] rounded-lg px-3 py-2 text-xs ${
                             msg.role === 'user'
-                              ? 'bg-purple-600 text-white'
+                              ? 'bg-amber-600 text-white'
                               : 'bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100'
                           }`}
                         >
@@ -209,12 +209,12 @@ export function AskAiPage() {
                     placeholder="Ask about this rotation..."
                     disabled={loading}
                     maxLength={1000}
-                    className="flex-1 px-3 py-1.5 text-xs rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent disabled:opacity-50"
+                    className="flex-1 px-3 py-1.5 text-xs rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent disabled:opacity-50"
                   />
                   <button
                     onClick={handleAsk}
                     disabled={loading || !question.trim()}
-                    className="px-3 py-1.5 text-xs font-medium rounded bg-purple-600 text-white hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    className="px-3 py-1.5 text-xs font-medium rounded bg-amber-600 text-white hover:bg-amber-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   >
                     Ask
                   </button>
@@ -249,7 +249,7 @@ export function AskAiPage() {
       {/* Empty state */}
       {!specName && !specsLoading && (
         <div className="text-center py-12 text-gray-400 dark:text-gray-600">
-          <svg className="w-8 h-8 mx-auto mb-3 text-purple-300 dark:text-purple-800" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <svg className="w-8 h-8 mx-auto mb-3 text-amber-300 dark:text-amber-800" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
           </svg>
           <p className="text-sm">Select a spec above to start asking questions.</p>
