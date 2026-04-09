@@ -8,6 +8,7 @@ import { NotFoundPage } from './pages/NotFoundPage';
 import { RankingsPage } from './pages/RankingsPage';
 import { HistoryPage } from './pages/HistoryPage';
 import { AskAiPage } from './pages/AskAiPage';
+import { ChangelogPage } from './pages/ChangelogPage';
 import { useThemeStore } from './store/themeStore';
 
 const queryClient = new QueryClient({
@@ -37,6 +38,7 @@ function App() {
             <Route path="/rankings" element={<RankingsPage />} />
             <Route path="/history" element={<HistoryPage />} />
             <Route path="/ask-ai" element={<AskAiPage />} />
+            <Route path="/changelog" element={<ChangelogPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>

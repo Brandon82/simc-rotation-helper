@@ -140,6 +140,21 @@ export interface AllGuidesApiResponse {
   guides: GuideSummaryItem[];
 }
 
+// ── Changelog (Project) Types ───────────────────────────────
+
+export interface ChangelogCommit {
+  sha: string;
+  shortSha: string;
+  message: string;
+  author: string;
+  date: string;       // ISO 8601
+  url: string;        // GitHub commit URL
+}
+
+export interface ChangelogApiResponse {
+  commits: ChangelogCommit[];
+}
+
 // ── Q&A Types ───────────────────────────────────────────────
 
 export interface QARequest {

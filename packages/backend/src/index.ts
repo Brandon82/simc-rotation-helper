@@ -10,6 +10,7 @@ import guidesRouter from './routes/guides.js';
 import adminRouter from './routes/admin.js';
 import rankingsRouter from './routes/rankings.js';
 import qaRouter from './routes/qa.js';
+import changelogRouter from './routes/changelog.js';
 
 const app = express();
 
@@ -54,6 +55,7 @@ app.use('/api/guides', generalLimiter, guidesRouter);
 app.use('/api/admin', adminLimiter, adminRouter);
 app.use('/api/rankings', generalLimiter, rankingsRouter);
 app.use('/api/qa', qaLimiter, qaRouter);
+app.use('/api/changelog', generalLimiter, changelogRouter);
 
 app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', uptime: Math.floor(process.uptime()) });
@@ -62,8 +64,16 @@ app.get('/api/health', (_req, res) => {
 // ── Start ────────────────────────────────────────────────────
 async function main() {
   // Initialize DB (creates file + tables if they don't exist)
-  getDb();
+  const db = getDb();
   console.log('[db] SQLite initialized');
+
+  // Auto-seed sample data if the DB has no guides (local dev convenience)
+  const { count } = db.prepare('SELECT COUNT(*) as count FROM guides').get() as { count: number };
+  if (count === 0) {
+    console.log('[db] No guides found, seeding sample data...');
+    const { seedSampleData } = await import('./scripts/seedSample.js');
+    await seedSampleData();
+  }
 
   // Start daily cron
   startCron();

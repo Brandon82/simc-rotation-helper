@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { SpecsApiResponse, GuideApiResponse, GuideHistoryApiResponse, RankingsApiResponse, AllGuidesApiResponse, QAResponse, QAValidateResponse } from '../types';
+import type { SpecsApiResponse, GuideApiResponse, GuideHistoryApiResponse, RankingsApiResponse, AllGuidesApiResponse, QAResponse, QAValidateResponse, ChangelogApiResponse } from '../types';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL ? `${import.meta.env.VITE_API_BASE_URL}/api` : '/api',
@@ -46,5 +46,10 @@ export async function validateQaKey(qaKey: string): Promise<QAValidateResponse> 
   const res = await api.get<QAValidateResponse>('/qa/validate', {
     headers: { 'X-QA-Key': qaKey },
   });
+  return res.data;
+}
+
+export async function fetchChangelog(): Promise<ChangelogApiResponse> {
+  const res = await api.get<ChangelogApiResponse>('/changelog');
   return res.data;
 }

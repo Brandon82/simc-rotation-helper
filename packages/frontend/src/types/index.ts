@@ -20,4 +20,6 @@ export type {
   QARequest,
   QAResponse,
   QAValidateResponse,
+  ChangelogCommit,
+  ChangelogApiResponse,
 } from '../../../shared/src/types';
