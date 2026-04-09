@@ -117,31 +117,41 @@ export function SpecPage() {
       </div>
 
       {/* History panel */}
-      {showHistory && historyData && (
-        <div className="mb-6 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 p-3">
-          <p className="text-xs text-gray-500 mb-2">Previously generated guides:</p>
-          <div className="space-y-1">
-            {historyData.history.map(h => (
-              <button
-                key={h.id}
-                onClick={() => {
-                  if (h.id === guide.id) {
-                    setHistoricalGuide(null);
-                  } else {
-                    loadHistoricalGuide(h.id);
-                  }
-                }}
-                className={`w-full text-left flex items-center gap-3 px-3 py-1.5 rounded text-xs transition-colors ${
-                  (historicalGuide?.id ?? guide.id) === h.id
-                    ? 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white'
-                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-800 dark:hover:text-gray-200'
-                }`}
-              >
-                <code className="text-yellow-600 dark:text-yellow-600">{h.aplCommitSha.slice(0, 8)}</code>
-                <span>{new Date(h.generatedAt).toLocaleDateString()}</span>
-                {h.id === guide.id && <span className="ml-auto text-green-600 dark:text-green-500">current</span>}
-              </button>
-            ))}
+      {historyData && historyData.history.length > 1 && (
+        <div
+          className="grid transition-[grid-template-rows,opacity] duration-200 ease-in-out"
+          style={{
+            gridTemplateRows: showHistory ? '1fr' : '0fr',
+            opacity: showHistory ? 1 : 0,
+          }}
+        >
+          <div className="overflow-hidden">
+            <div className="mb-6 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 p-3">
+              <p className="text-xs text-gray-500 mb-2">Previously generated guides:</p>
+              <div className="space-y-1">
+                {historyData.history.map(h => (
+                  <button
+                    key={h.id}
+                    onClick={() => {
+                      if (h.id === guide.id) {
+                        setHistoricalGuide(null);
+                      } else {
+                        loadHistoricalGuide(h.id);
+                      }
+                    }}
+                    className={`w-full text-left flex items-center gap-3 px-3 py-1.5 rounded text-xs transition-colors ${
+                      (historicalGuide?.id ?? guide.id) === h.id
+                        ? 'bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white'
+                        : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-800 dark:hover:text-gray-200'
+                    }`}
+                  >
+                    <code className="text-yellow-600 dark:text-yellow-600">{h.aplCommitSha.slice(0, 8)}</code>
+                    <span>{new Date(h.generatedAt).toLocaleDateString()}</span>
+                    {h.id === guide.id && <span className="ml-auto text-green-600 dark:text-green-500">current</span>}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       )}
