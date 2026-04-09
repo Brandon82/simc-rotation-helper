@@ -127,31 +127,31 @@ docker-compose up
 
 ```jsonc
 { "spec": "warrior_arms" }                    // Single spec
-{ "class": "warrior" }                         // All specs in a class
+{ "class": "warrior" }                        // All specs in a class
 { "spec": ["warrior_arms", "warrior_fury"] }  // Multiple specs
-{ "spec": "all" }                              // All 44 specs
+{ "spec": "all" }                             // All 44 specs
 { "spec": "warrior_arms", "force": true }     // Skip SHA check
 ```
 
 **`DELETE /api/admin/guides/history` body:**
 
 ```jsonc
-{}                            // All specs
-{ "spec": "warrior_arms" }   // One spec only
+{}                                            // All specs
+{ "spec": "warrior_arms" }                    // One spec only
 ```
 
 **`POST /api/admin/backfill-changelog` body:**
 
 ```jsonc
-{ "spec": "warrior_arms" }                 // Single spec, current guide only
-{ "spec": "warrior_arms", "mode": "all" }  // Single spec, all history
-{ "spec": "all" }                           // All specs (runs in background)
+{ "spec": "warrior_arms" }                    // Single spec, current guide only
+{ "spec": "warrior_arms", "mode": "all" }     // Single spec, all history
+{ "spec": "all" }                             // All specs (runs in background)
 ```
 
 **`POST /api/admin/qa-keys` body:**
 
 ```jsonc
-{ "label": "Brandon" }  // Returns { id, apiKey, label }
+{ "label": "Brandon" }                        // Returns { id, apiKey, label }
 ```
 
 ### Rate Limiting
