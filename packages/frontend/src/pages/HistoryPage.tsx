@@ -143,18 +143,11 @@ export function HistoryPage() {
               {label}
             </button>
           ))}
-        </div>
 
-        {/* Spec filter chips */}
-        <div
-          className="grid transition-[grid-template-rows,opacity] duration-200 ease-in-out w-full"
-          style={{
-            gridTemplateRows: classFilter && specs.length > 1 ? '1fr' : '0fr',
-            opacity: classFilter && specs.length > 1 ? 1 : 0,
-          }}
-        >
-          <div className="overflow-hidden">
-            <div className="flex flex-wrap gap-1.5 pb-1">
+          {/* Spec filter chips — inline after class chips */}
+          {classFilter && specs.length > 1 && (
+            <>
+              <span className="w-px h-5 bg-gray-300 dark:bg-gray-700 mx-0.5" />
               <button
                 onClick={() => setSpecFilter('')}
                 className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${
@@ -180,8 +173,8 @@ export function HistoryPage() {
                   {label}
                 </button>
               ))}
-            </div>
-          </div>
+            </>
+          )}
         </div>
 
         {/* Current-only toggle */}
