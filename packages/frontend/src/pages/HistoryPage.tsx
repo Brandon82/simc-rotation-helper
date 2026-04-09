@@ -1,4 +1,4 @@
-import { useState, useMemo, Fragment } from 'react';
+import { useState, useMemo, useEffect, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import { useAllGuides } from '../hooks/useAllGuides';
 import type { GuideSummaryItem } from '../types';
@@ -31,6 +31,8 @@ export function HistoryPage() {
   const [sortKey, setSortKey] = useState<SortKey>('generatedAt');
   const [sortAsc, setSortAsc] = useState(false);
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
+  const [page, setPage] = useState(1);
+  const perPage = 20;
 
   const classes = useMemo(() => {
     if (!data) return [];
@@ -58,6 +60,13 @@ export function HistoryPage() {
       return sortAsc ? va.localeCompare(vb) : vb.localeCompare(va);
     });
   }, [data, classFilter, currentOnly, search, sortKey, sortAsc]);
+
+  // Reset to page 1 when filters change
+  useEffect(() => { setPage(1); }, [classFilter, currentOnly, search, sortKey, sortAsc]);
+
+  const totalPages = Math.ceil(filtered.length / perPage);
+  const safePage = Math.min(page, Math.max(totalPages, 1));
+  const paginatedRows = filtered.slice((safePage - 1) * perPage, safePage * perPage);
 
   const handleSort = (key: SortKey) => {
     if (sortKey === key) setSortAsc(p => !p);
@@ -137,7 +146,8 @@ export function HistoryPage() {
       {/* Stats bar */}
       {!isLoading && data && (
         <p className="text-xs text-gray-400 dark:text-gray-600 mb-3">
-          Showing {filtered.length} of {data.guides.length} entries
+          Showing {filtered.length === 0 ? 0 : (page - 1) * perPage + 1}--{Math.min(page * perPage, filtered.length)} of {filtered.length} entries
+          {filtered.length !== data.guides.length && ` (${data.guides.length} total)`}
         </p>
       )}
 
@@ -153,6 +163,7 @@ export function HistoryPage() {
           Failed to load guide history.
         </div>
       ) : (
+        <>
         <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -195,7 +206,7 @@ export function HistoryPage() {
                     </td>
                   </tr>
                 ) : (
-                  filtered.map((g, i) => (
+                  paginatedRows.map((g, i) => (
                     <Fragment key={g.id}>
                     <tr
                       onClick={() => g.changelog?.items?.length && setExpandedIds(prev => { const next = new Set(prev); next.has(g.id) ? next.delete(g.id) : next.add(g.id); return next; })}
@@ -348,6 +359,30 @@ export function HistoryPage() {
             </table>
           </div>
         </div>
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-between mt-4">
+            <button
+              onClick={() => { setPage(p => p - 1); window.scrollTo(0, 0); }}
+              disabled={page <= 1}
+              className="px-3 py-1.5 rounded-lg text-xs font-medium bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            >
+              &larr; Previous
+            </button>
+            <span className="text-xs text-gray-500 dark:text-gray-400">
+              Page {page} of {totalPages}
+            </span>
+            <button
+              onClick={() => { setPage(p => p + 1); window.scrollTo(0, 0); }}
+              disabled={page >= totalPages}
+              className="px-3 py-1.5 rounded-lg text-xs font-medium bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            >
+              Next &rarr;
+            </button>
+          </div>
+        )}
+        </>
       )}
     </div>
   );
