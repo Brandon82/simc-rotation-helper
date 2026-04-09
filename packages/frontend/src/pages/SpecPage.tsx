@@ -169,7 +169,7 @@ export function SpecPage() {
           />
 
           {displayGuide.changelog && displayGuide.changelog.items?.length > 0 && (
-            <div className="mb-2 border border-gray-200 dark:border-gray-800 rounded-lg bg-gray-50 dark:bg-gray-900 animate-fade-in-up">
+            <div className="mb-2 border border-gray-200 dark:border-gray-800 rounded-lg bg-gray-50 dark:bg-gray-900">
               <button
                 onClick={() => setShowChangelog(!showChangelog)}
                 className="w-full flex items-center justify-between px-4 py-2.5 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-left"
