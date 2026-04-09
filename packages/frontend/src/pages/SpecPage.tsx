@@ -193,24 +193,32 @@ export function SpecPage() {
                   </span>
                 </div>
                 <svg
-                  className={`w-3.5 h-3.5 text-gray-400 transition-transform ${showChangelog ? 'rotate-180' : ''}`}
+                  className={`w-3.5 h-3.5 text-gray-400 transition-transform ${showChangelog ? 'rotate-90' : ''}`}
                   viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
                 >
-                  <polyline points="6 9 12 15 18 9" />
+                  <polyline points="9 6 15 12 9 18" />
                 </svg>
               </button>
-              {showChangelog && (
-                <div className="px-4 pb-3 pt-2">
-                  <ul className="space-y-1.5">
-                    {displayGuide.changelog.items.map((item, i) => (
-                      <li key={i} className="text-xs text-gray-700 dark:text-gray-300 flex items-start gap-2">
-                        <span className="text-gray-300 dark:text-gray-600 mt-px shrink-0">•</span>
-                        <InlineMarkdown text={item} />
-                      </li>
-                    ))}
-                  </ul>
+              <div
+                className="grid transition-[grid-template-rows,opacity] duration-200 ease-in-out"
+                style={{
+                  gridTemplateRows: showChangelog ? '1fr' : '0fr',
+                  opacity: showChangelog ? 1 : 0,
+                }}
+              >
+                <div className="overflow-hidden">
+                  <div className="px-4 pb-3 pt-2">
+                    <ul className="space-y-1.5">
+                      {displayGuide.changelog.items.map((item, i) => (
+                        <li key={i} className="text-xs text-gray-700 dark:text-gray-300 flex items-start gap-2">
+                          <span className="text-gray-300 dark:text-gray-600 mt-px shrink-0">•</span>
+                          <InlineMarkdown text={item} />
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
-              )}
+              </div>
             </div>
           )}
 
