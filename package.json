@@ -8,6 +8,7 @@
     "dev:backend": "npm --workspace packages/backend run dev",
     "dev:frontend": "npm --workspace packages/frontend run dev",
     "build:backend": "npm --workspace packages/backend run build",
-    "build:frontend": "npm --workspace packages/frontend run build"
+    "build:frontend": "npm --workspace packages/frontend run build",
+    "seed:sample": "npm --workspace packages/backend run seed:sample"
   }
 }
