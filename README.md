@@ -62,17 +62,19 @@ cp .env.example .env
 # 1. Install all workspace dependencies
 npm install
 
-# 2. Start the backend (http://localhost:3001)
+# 2. Seed the database with sample data (instant, no API calls)
+npm run seed:sample
+
+# 3. Start the backend (http://localhost:3001)
 npm run dev:backend
 
-# 3. Start the frontend (http://localhost:5173)
+# 4. Start the frontend (http://localhost:5173)
 npm run dev:frontend
-
-# 4. (First run) Seed the database with all 44 specs
-npm run seed --workspace packages/backend
 ```
 
-> **Seeding cost:** Generating guides for all 44 specs makes one LLM call per spec. Estimated cost is $1–5 depending on APL length and model pricing.
+The sample seed loads pre-generated guides for all 44 specs and creates a dev QA API key (`qa_dev_000000000000000000000000000000000000000000000000`) for testing the Ask AI feature. No Anthropic API key is required.
+
+> **Full seed (optional):** To generate fresh guides from the live SimC APLs using your own API key, run `npm run seed --workspace packages/backend` instead. Estimated cost is $1-5 depending on APL length and model pricing.
 
 ### Docker Deployment
 
@@ -189,3 +191,32 @@ LLM prompts live in `packages/backend/src/prompts/`:
 | `changelogPrompt.ts` | Changelog generation. Compares old and new guide versions and outputs bullet-point descriptions of what changed |
 
 The `PROMPT_VERSION` env var is stored alongside each guide for traceability when the prompt is updated.
+
+## Scripts
+
+Helper scripts live in the `scripts/` directory:
+
+| Script | Description |
+|---|---|
+| `dev.sh` | Starts both backend and frontend dev servers in parallel (kills both on Ctrl+C) |
+| `dev-backend.sh` | Starts the backend dev server only |
+| `dev-frontend.sh` | Starts the frontend dev server only |
+| `admin_api_helper.sh` | Interactive admin CLI for managing the deployed backend (see below) |
+
+### Admin API Helper
+
+`scripts/admin_api_helper.sh` is an interactive Bash script for managing the deployed backend without crafting raw `curl` commands. It prompts for your Railway URL and admin secret, then presents a menu:
+
+| Action | Description |
+|---|---|
+| Refresh guides | Regenerate one spec, multiple specs, an entire class, or all 44 specs (with optional force flag to skip SHA check) |
+| Delete old guides | Purge non-current historical guide versions for one or all specs |
+| Backfill changelogs | Generate changelogs for existing guides that are missing them |
+| Delete all changelogs | Clear every changelog entry |
+| Create a QA key | Issue a new API key for the Ask AI feature |
+| List QA keys | Show all active QA keys |
+| Revoke a QA key | Deactivate a specific QA key by ID |
+
+```bash
+bash scripts/admin_api_helper.sh
+```
