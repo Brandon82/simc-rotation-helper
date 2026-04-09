@@ -144,38 +144,38 @@ export function HistoryPage() {
             </button>
           ))}
 
-          {/* Spec filter chips — inline after class chips */}
-          {classFilter && specs.length > 1 && (
-            <>
-              <span className="w-px h-5 bg-gray-300 dark:bg-gray-700 mx-0.5" />
+        </div>
+
+        {/* Spec filter chips */}
+        {classFilter && specs.length > 1 && (
+          <div className="flex flex-wrap gap-1.5 w-full">
+            <button
+              onClick={() => setSpecFilter('')}
+              className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${
+                !specFilter
+                  ? 'bg-gray-500 dark:bg-gray-600 text-white'
+                  : 'bg-gray-200 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-300 dark:hover:bg-gray-700'
+              }`}
+            >
+              All specs
+            </button>
+            {specs.map(([name, label]) => (
               <button
-                onClick={() => setSpecFilter('')}
+                key={name}
+                onClick={() => setSpecFilter(f => f === name ? '' : name)}
                 className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${
-                  !specFilter
-                    ? 'bg-gray-500 dark:bg-gray-600 text-white'
+                  specFilter === name
+                    ? 'bg-gray-300 dark:bg-gray-700 text-gray-900 dark:text-white ring-1'
                     : 'bg-gray-200 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-300 dark:hover:bg-gray-700'
                 }`}
+                style={specFilter === name ? { ringColor: CLASS_COLORS[classFilter] ?? '#888', color: CLASS_COLORS[classFilter] ?? '#888' } : {}}
               >
-                All specs
+                <img src={specIconUrl(name, 'medium')} alt="" className="w-3.5 h-3.5 rounded-sm" />
+                {label}
               </button>
-              {specs.map(([name, label]) => (
-                <button
-                  key={name}
-                  onClick={() => setSpecFilter(f => f === name ? '' : name)}
-                  className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${
-                    specFilter === name
-                      ? 'bg-gray-300 dark:bg-gray-700 text-gray-900 dark:text-white ring-1'
-                      : 'bg-gray-200 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-300 dark:hover:bg-gray-700'
-                  }`}
-                  style={specFilter === name ? { ringColor: CLASS_COLORS[classFilter] ?? '#888', color: CLASS_COLORS[classFilter] ?? '#888' } : {}}
-                >
-                  <img src={specIconUrl(name, 'medium')} alt="" className="w-3.5 h-3.5 rounded-sm" />
-                  {label}
-                </button>
-              ))}
-            </>
-          )}
-        </div>
+            ))}
+          </div>
+        )}
 
         {/* Current-only toggle */}
         <label className="flex items-center gap-2 ml-auto cursor-pointer select-none">
