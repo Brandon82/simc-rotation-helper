@@ -195,7 +195,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                         />
                         <span className="truncate">{spec.label}</span>
                         {!spec.hasGuide && (
-                          <span className="ml-auto text-[10px] text-gray-400 dark:text-gray-700 shrink-0">—</span>
+                          <span className="ml-auto text-[10px] text-gray-400 dark:text-gray-700 shrink-0">unsupported</span>
                         )}
                       </NavLink>
                     ))}

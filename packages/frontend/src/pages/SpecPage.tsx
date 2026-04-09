@@ -67,10 +67,10 @@ export function SpecPage() {
     return (
       <div className="flex flex-col items-center justify-center h-64 text-center">
         <p className="text-gray-600 dark:text-gray-400 mb-2">
-          {error ? 'Failed to load guide.' : 'No guide available yet for this spec.'}
+          {error ? 'Failed to load guide.' : 'This spec is unsupported.'}
         </p>
         <p className="text-gray-500 text-sm mb-4">
-          Guides are generated daily when APLs change on SimulationCraft GitHub.
+          This spec most likely does not have an APL on SimulationCraft and is not supported by SimC.
         </p>
         <Link to="/" className="text-sm text-blue-500 dark:text-blue-400 hover:underline">← Back to home</Link>
       </div>

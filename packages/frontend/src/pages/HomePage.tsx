@@ -201,7 +201,7 @@ export function HomePage() {
                   {spec.hasGuide ? (
                     <span className="text-xs text-gray-500 shrink-0">View →</span>
                   ) : (
-                    <span className="text-xs text-gray-400 dark:text-gray-600 shrink-0">Pending</span>
+                    <span className="text-xs text-gray-400 dark:text-gray-600 shrink-0">Unsupported</span>
                   )}
                 </button>
               ))}
