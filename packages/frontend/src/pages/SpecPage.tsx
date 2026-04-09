@@ -126,7 +126,7 @@ export function SpecPage() {
           }}
         >
           <div className="overflow-hidden">
-            <div className="mb-6 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 p-3">
+            <div className="mb-2 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 px-4 py-2.5">
               <p className="text-xs text-gray-500 mb-2">Previously generated guides:</p>
               <div className="space-y-1">
                 {historyData.history.map(h => (
@@ -157,7 +157,7 @@ export function SpecPage() {
       )}
 
       {historicalGuide && (
-        <div className="mb-4 flex items-center gap-2 text-xs text-yellow-700 dark:text-yellow-600 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800/50 rounded px-3 py-2">
+        <div className="mb-2 flex items-center gap-2 text-xs text-yellow-700 dark:text-yellow-600 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800/50 rounded-lg px-4 py-2.5">
           <span>⚠ Viewing historical guide.</span>
           <button
             onClick={() => setHistoricalGuide(null)}
