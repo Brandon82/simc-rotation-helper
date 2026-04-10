@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import type { Guide, AplSnapshot, Changelog } from '@simc-guides/shared';
 import { config } from '../config.js';
 import * as db from '../db/client.js';
+import { withTransaction } from '../db/client.js';
 import * as github from './githubService.js';
 import { generateGuide, generateChangelog } from './llmService.js';
 import { getSpecInfo, getClassForSpec, getClassInfo, ALL_SPECS } from '../data/specs.js';
@@ -73,10 +74,7 @@ export async function checkAndUpdateSpec(specName: string, force = false): Promi
       }
     }
 
-    // 6. Mark old guides as not current
-    await db.markGuidesNotCurrent(specName);
-
-    // 7. Insert new current guide
+    // 6. Mark old guides as not current + insert new guide in a transaction
     const guide: Guide = {
       id: uuidv4(),
       spec_name: specName,
@@ -91,7 +89,10 @@ export async function checkAndUpdateSpec(specName: string, force = false): Promi
       prompt_version: config.promptVersion,
       changelog,
     };
-    await db.insertGuide(guide);
+    withTransaction(() => {
+      db.markGuidesNotCurrent(specName);
+      db.insertGuide(guide);
+    });
 
     console.log(`[guideService] ${specName}: guide saved (id=${guide.id})`);
     return 'updated';

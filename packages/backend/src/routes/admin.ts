@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import type { Request, Response } from 'express';
 import crypto from 'crypto';
-import { config } from '../config.js';
+import { requireAdmin } from '../middleware/auth.js';
 import { checkAndUpdateSpec, checkAndUpdateMany, checkAndUpdateClass, checkAndUpdateAll } from '../services/guideService.js';
 import { getSpecInfo, getClassInfo, getClassForSpec, ALL_SPECS } from '../data/specs.js';
 import { deleteOldGuides, insertQaApiKey, listQaApiKeys, deactivateQaApiKey, getCurrentGuide, getGuideHistory, updateGuideChangelog, clearAllChangelogs } from '../db/client.js';
@@ -9,15 +9,8 @@ import { generateChangelog } from '../services/llmService.js';
 
 const router = Router();
 
-function requireAdminAuth(req: Request, res: Response): boolean {
-  const authHeader = req.headers.authorization ?? '';
-  const token = authHeader.replace('Bearer ', '');
-  if (token !== config.adminSecret) {
-    res.status(401).json({ error: 'Unauthorized' });
-    return false;
-  }
-  return true;
-}
+// All admin routes require authentication
+router.use(requireAdmin);
 
 async function backfillChangelogs(
   specNames: string[],
@@ -76,7 +69,6 @@ async function backfillChangelogs(
 // POST /api/admin/refresh
 // Body: { "spec": "warrior_arms" }
 router.post('/refresh', async (req: Request, res: Response) => {
-  if (!requireAdminAuth(req, res)) return;
 
   const { spec, class: className, force } = req.body as { spec?: string | string[]; class?: string; force?: boolean };
 
@@ -127,7 +119,6 @@ router.post('/refresh', async (req: Request, res: Response) => {
 // DELETE /api/admin/guides/history
 // Optional body: { "spec": "warrior_arms" } to limit to one spec
 router.delete('/guides/history', async (req: Request, res: Response) => {
-  if (!requireAdminAuth(req, res)) return;
 
   const { spec } = req.body as { spec?: string };
 
@@ -147,7 +138,6 @@ router.delete('/guides/history', async (req: Request, res: Response) => {
 // Skips guides that already have a changelog or have no previous guide to compare against.
 // For "all" specs: runs in the background to avoid request timeouts.
 router.post('/backfill-changelog', async (req: Request, res: Response) => {
-  if (!requireAdminAuth(req, res)) return;
 
   const { spec, mode = 'current' } = req.body as { spec?: string; mode?: 'current' | 'all' };
   if (!spec) {
@@ -184,7 +174,6 @@ router.post('/backfill-changelog', async (req: Request, res: Response) => {
 // DELETE /api/admin/changelogs
 // Clears all changelogs from every guide.
 router.delete('/changelogs', async (req: Request, res: Response) => {
-  if (!requireAdminAuth(req, res)) return;
 
   const cleared = await clearAllChangelogs();
   res.json({ cleared });
@@ -194,7 +183,6 @@ router.delete('/changelogs', async (req: Request, res: Response) => {
 
 // POST /api/admin/qa-keys  { "label": "Brandon" }
 router.post('/qa-keys', (req: Request, res: Response) => {
-  if (!requireAdminAuth(req, res)) return;
 
   const { label } = req.body as { label?: string };
   if (!label) {
@@ -210,13 +198,11 @@ router.post('/qa-keys', (req: Request, res: Response) => {
 
 // GET /api/admin/qa-keys
 router.get('/qa-keys', (req: Request, res: Response) => {
-  if (!requireAdminAuth(req, res)) return;
   res.json({ keys: listQaApiKeys() });
 });
 
 // DELETE /api/admin/qa-keys/:id
 router.delete('/qa-keys/:id', (req: Request, res: Response) => {
-  if (!requireAdminAuth(req, res)) return;
 
   const found = deactivateQaApiKey(req.params.id);
   if (!found) {
