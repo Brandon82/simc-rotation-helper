@@ -271,7 +271,7 @@ export function HomePage() {
 
         {/* GitHub link — full width, secondary treatment */}
         <a
-          href="https://github.com/Brandon82/simc-rotation-helper"
+          href="https://github.com/Brandon82/SimCRotationGuides"
           target="_blank"
           rel="noopener noreferrer"
           className="group flex items-center gap-4 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-gray-400 dark:hover:border-gray-600 rounded-2xl p-4 transition-all hover:bg-gray-50 dark:hover:bg-gray-800/60"

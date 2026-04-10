@@ -1,5 +1,5 @@
 {
-  "name": "@simc-helper/backend",
+  "name": "@simc-guides/backend",
   "version": "1.0.0",
   "type": "module",
   "main": "dist/index.js",
@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.39.0",
-    "@simc-helper/shared": "*",
+    "@simc-guides/shared": "*",
     "axios": "^1.7.0",
     "better-sqlite3": "^12.6.2",
     "cors": "^2.8.5",

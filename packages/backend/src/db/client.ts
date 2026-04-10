@@ -2,7 +2,7 @@ import Database from 'better-sqlite3';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
-import type { Guide, AplSnapshot, Changelog } from '@simc-helper/shared';
+import type { Guide, AplSnapshot, Changelog } from '@simc-guides/shared';
 import { config } from '../config.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));

@@ -15,7 +15,7 @@ function ask(question: string): Promise<string> {
 }
 
 async function seed() {
-  console.log('=== SimC Rotation Helper: DB Seed ===');
+  console.log('=== SimC Rotation Guides: DB Seed ===');
 
   const forceAnswer = await ask('Force regenerate all guides (even if up-to-date)? [y/N]: ');
   const force = forceAnswer.toLowerCase() === 'y';

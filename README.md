@@ -1,6 +1,6 @@
-# SimC Rotation Helper
+# SimC Rotation Guides
 
-> **Live App:** [https://simc-rotation-helper.vercel.app/](https://simc-rotation-helper.vercel.app/)
+> **Live App:** [https://simcrotationguides.vercel.app/](https://simcrotationguides.vercel.app/)
 
 AI-powered World of Warcraft rotation guides generated directly from [SimulationCraft](https://github.com/simulationcraft/simc) Action Priority Lists (APLs). Each guide is built by feeding the raw `.simc` APL file into Claude, producing a structured, human-readable rotation guide that stays automatically synchronized with the SimC `midnight` branch.
 

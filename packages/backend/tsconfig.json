@@ -11,7 +11,7 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "paths": {
-      "@simc-helper/shared": ["../shared/src/types.ts"]
+      "@simc-guides/shared": ["../shared/src/types.ts"]
     }
   },
   "include": ["src", "../shared/src"],

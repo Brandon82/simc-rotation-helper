@@ -7,7 +7,7 @@ import {
   getAllGuideSummaries,
 } from '../db/client.js';
 import { getSpecInfo, getClassForSpec, getClassInfo } from '../data/specs.js';
-import type { GuideApiResponse, GuideHistoryApiResponse, AllGuidesApiResponse } from '@simc-helper/shared';
+import type { GuideApiResponse, GuideHistoryApiResponse, AllGuidesApiResponse } from '@simc-guides/shared';
 
 const router = Router();
 

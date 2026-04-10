@@ -29,7 +29,7 @@ export function ChangelogPage() {
         <BackLink to="/">All classes</BackLink>
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1 mt-0.5">Project Changelog</h1>
         <p className="text-sm text-gray-500">
-          All commits and updates to SimC Rotation Helper.
+          All commits and updates to SimC Rotation Guides.
         </p>
       </div>
 

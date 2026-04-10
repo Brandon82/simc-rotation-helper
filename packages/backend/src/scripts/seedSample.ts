@@ -7,7 +7,7 @@
 import crypto from 'crypto';
 import { getDb, insertGuide, insertAplSnapshot, markGuidesNotCurrent, insertQaApiKey, listQaApiKeys } from '../db/client.js';
 import { CLASSES } from '../data/specs.js';
-import type { GuideContent, PriorityItem, Guide, AplSnapshot, Role } from '@simc-helper/shared';
+import type { GuideContent, PriorityItem, Guide, AplSnapshot, Role } from '@simc-guides/shared';
 
 // ── Role-based templates ───────────────────────────────────────
 

@@ -1,11 +1,11 @@
 import { Router } from 'express';
 import axios from 'axios';
 import { config } from '../config.js';
-import type { ChangelogCommit } from '@simc-helper/shared';
+import type { ChangelogCommit } from '@simc-guides/shared';
 
 const router = Router();
 
-const PROJECT_REPO = 'Brandon82/simc-rotation-helper';
+const PROJECT_REPO = 'Brandon82/SimCRotationGuides';
 
 const githubHeaders: Record<string, string> = config.githubToken
   ? { Authorization: `Bearer ${config.githubToken}` }

@@ -2,7 +2,7 @@ import { Router } from 'express';
 import type { Request, Response } from 'express';
 import { getAllCurrentGuides } from '../db/client.js';
 import { CLASSES } from '../data/specs.js';
-import type { RankingsApiResponse, RankingItem } from '@simc-helper/shared';
+import type { RankingsApiResponse, RankingItem } from '@simc-guides/shared';
 
 const router = Router();
 

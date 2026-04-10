@@ -1,4 +1,4 @@
-import type { ClassInfo } from '@simc-helper/shared';
+import type { ClassInfo } from '@simc-guides/shared';
 
 // Ground truth: all WoW specs mapped to their SimC APL filename (without .simc)
 // Class colors sourced from Blizzard's official WoW class color palette

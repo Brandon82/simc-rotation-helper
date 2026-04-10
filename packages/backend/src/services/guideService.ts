@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import type { Guide, AplSnapshot, Changelog } from '@simc-helper/shared';
+import type { Guide, AplSnapshot, Changelog } from '@simc-guides/shared';
 import { config } from '../config.js';
 import * as db from '../db/client.js';
 import * as github from './githubService.js';

@@ -209,7 +209,7 @@ do_revoke_qa_key() {
 # ── Main menu ────────────────────────────────────────────────
 
 echo ""
-echo "=== SimC Rotation Helper Admin ==="
+echo "=== SimC Rotation Guides Admin ==="
 echo ""
 echo "Guides:"
 echo "  1) Refresh guides"

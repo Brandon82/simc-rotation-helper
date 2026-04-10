@@ -1,5 +1,5 @@
 import Anthropic from '@anthropic-ai/sdk';
-import type { GuideContent } from '@simc-helper/shared';
+import type { GuideContent } from '@simc-guides/shared';
 import { config } from '../config.js';
 import { SYSTEM_PROMPT, buildUserPrompt } from '../prompts/guidePrompt.js';
 import { QA_SYSTEM_PROMPT, buildQaUserPrompt } from '../prompts/qaPrompt.js';

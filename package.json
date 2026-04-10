@@ -1,5 +1,5 @@
 {
-  "name": "simc-rotation-helper",
+  "name": "simc-rotation-guides",
   "private": true,
   "workspaces": [
     "packages/*"
