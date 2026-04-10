@@ -141,7 +141,7 @@ export function AskAiPage() {
 
   return (
     /* Undo Layout padding to fill full height. 3.5rem = header h-14 */
-    <div className="-m-6 -mb-24 h-[calc(100dvh-3.5rem)] flex flex-col">
+    <div className="-m-6 -mb-24 h-[calc(100dvh-3.5rem)] flex flex-col overflow-hidden">
 
       {/* ── Header bar — only in chat ── */}
       {inChat && (
