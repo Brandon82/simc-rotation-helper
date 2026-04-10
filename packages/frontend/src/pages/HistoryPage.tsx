@@ -175,24 +175,25 @@ export function HistoryPage() {
           ))}
         </div>
 
-        {/* Current-only toggle */}
-        <label className="flex items-center gap-2 ml-auto cursor-pointer select-none">
-          <span className="text-xs text-gray-600 dark:text-gray-400">Current only</span>
-          <div
-            onClick={() => setCurrentOnly(p => !p)}
-            className={`w-8 h-4 rounded-full transition-colors relative ${currentOnly ? 'bg-indigo-600' : 'bg-gray-300 dark:bg-gray-700'}`}
-          >
-            <span className={`absolute top-0.5 w-3 h-3 rounded-full bg-white transition-transform ${currentOnly ? 'translate-x-4' : 'translate-x-0.5'}`} />
-          </div>
-        </label>
       </div>
 
-      {/* Stats bar */}
+      {/* Stats bar + Current-only toggle */}
       {!isLoading && data && (
-        <p className="text-xs text-gray-400 dark:text-gray-600 mb-3">
-          Showing {filtered.length === 0 ? 0 : (page - 1) * perPage + 1}--{Math.min(page * perPage, filtered.length)} of {filtered.length} entries
-          {filtered.length !== data.guides.length && ` (${data.guides.length} total)`}
-        </p>
+        <div className="flex items-center mb-3">
+          <p className="text-xs text-gray-400 dark:text-gray-600">
+            Showing {filtered.length === 0 ? 0 : (page - 1) * perPage + 1}--{Math.min(page * perPage, filtered.length)} of {filtered.length} entries
+            {filtered.length !== data.guides.length && ` (${data.guides.length} total)`}
+          </p>
+          <label className="flex items-center gap-2 ml-auto cursor-pointer select-none">
+            <span className="text-xs text-gray-600 dark:text-gray-400">Current only</span>
+            <div
+              onClick={() => setCurrentOnly(p => !p)}
+              className={`w-8 h-4 rounded-full transition-colors relative ${currentOnly ? 'bg-indigo-600' : 'bg-gray-300 dark:bg-gray-700'}`}
+            >
+              <span className={`absolute top-0.5 w-3 h-3 rounded-full bg-white transition-transform ${currentOnly ? 'translate-x-4' : 'translate-x-0.5'}`} />
+            </div>
+          </label>
+        </div>
       )}
 
       {/* Table */}
