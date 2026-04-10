@@ -3,8 +3,8 @@ dist/
 .env
 *.env.local
 
-# LowDB data file (contains generated content - gitignore or not, your choice)
-packages/backend/data/db.json
+# Legacy data file (project now uses SQLite)
+# packages/backend/data/db.json
 
 # Logs
 *.log
