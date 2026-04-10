@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import type { Request, Response } from 'express';
-import { getAllCurrentGuides } from '../db/client.js';
+import { getRankingData } from '../db/client.js';
 import { CLASSES } from '../data/specs.js';
 import type { RankingsApiResponse, RankingItem } from '@simc-guides/shared';
 
@@ -22,7 +22,7 @@ for (const cls of CLASSES) {
 // GET /api/rankings
 router.get('/', async (_req: Request, res: Response) => {
   try {
-    const guides = await getAllCurrentGuides();
+    const guides = getRankingData();
 
     const stRaw: Omit<RankingItem, 'rank'>[] = [];
     const aoeRaw: Omit<RankingItem, 'rank'>[] = [];
