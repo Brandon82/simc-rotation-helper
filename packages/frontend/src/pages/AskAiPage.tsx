@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { useSpecs } from '../hooks/useSpecs';
 import { useQaKeyStore } from '../store/qaKeyStore';
 import { askQuestion, validateQaKey } from '../api/client';
@@ -11,6 +11,8 @@ interface Message {
   role: 'user' | 'ai';
   text: string;
 }
+
+const TEXTAREA_MAX_HEIGHT = 144; // ~6 lines, matches Tailwind max-h-36
 
 const SUGGESTED_QUESTIONS = [
   'What is the basic rotation priority?',
@@ -54,16 +56,19 @@ export function AskAiPage() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  const selectedSpec = data?.classes
-    .flatMap(cls => cls.specs)
-    .find(s => s.name === specName);
+  const selectedSpec = useMemo(
+    () => data?.classes.flatMap(cls => cls.specs).find(s => s.name === specName),
+    [data, specName],
+  );
 
-  const selectedClassName = data?.classes
-    .find(cls => cls.specs.some(s => s.name === specName))?.name ?? '';
+  const selectedClassName = useMemo(
+    () => data?.classes.find(cls => cls.specs.some(s => s.name === specName))?.name ?? '',
+    [data, specName],
+  );
 
   // Hide parent scrollbar — this page manages its own scroll
   useEffect(() => {
-    const main = document.querySelector('main');
+    const main = document.getElementById('main-content');
     if (main) main.style.overflow = 'hidden';
     return () => { if (main) main.style.overflow = ''; };
   }, []);
@@ -128,7 +133,7 @@ export function AskAiPage() {
     setQuestion(e.target.value);
     const el = e.target;
     el.style.height = 'auto';
-    el.style.height = `${Math.min(el.scrollHeight, 144)}px`;
+    el.style.height = `${Math.min(el.scrollHeight, TEXTAREA_MAX_HEIGHT)}px`;
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {

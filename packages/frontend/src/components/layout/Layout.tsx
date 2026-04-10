@@ -30,7 +30,7 @@ export function Layout() {
           />
         )}
         <Sidebar isOpen={sidebarOpen} onClose={closeSidebar} />
-        <main ref={mainRef} className="flex-1 overflow-y-auto p-6 pb-24 flex justify-center">
+        <main id="main-content" ref={mainRef} className="flex-1 overflow-y-auto p-6 pb-24 flex justify-center">
           <div key={location.pathname} className="w-full max-w-3xl animate-fade-in-up">
             <Outlet />
           </div>
