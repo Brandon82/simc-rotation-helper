@@ -61,6 +61,13 @@ export function AskAiPage() {
   const selectedClassName = data?.classes
     .find(cls => cls.specs.some(s => s.name === specName))?.name ?? '';
 
+  // Hide parent scrollbar — this page manages its own scroll
+  useEffect(() => {
+    const main = document.querySelector('main');
+    if (main) main.style.overflow = 'hidden';
+    return () => { if (main) main.style.overflow = ''; };
+  }, []);
+
   // Close dropdown on click outside
   useEffect(() => {
     const handler = (e: MouseEvent) => {
