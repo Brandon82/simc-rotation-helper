@@ -67,11 +67,18 @@ export function getDb(): Database.Database {
   // Add changelog column if not present (safe for existing DBs)
   try {
     db.exec('ALTER TABLE guides ADD COLUMN changelog TEXT');
-  } catch {
-    // Column already exists — ignore
+  } catch (err: unknown) {
+    const msg = (err as Error)?.message ?? '';
+    if (!msg.includes('duplicate column name')) throw err;
   }
 
   return db;
+}
+
+// ── Transaction helper ────────────────────────────────────────
+
+export function withTransaction<T>(fn: () => T): T {
+  return getDb().transaction(fn)();
 }
 
 // ── Row ↔ Guide conversion ────────────────────────────────────
@@ -165,6 +172,16 @@ export async function getAllCurrentGuides(): Promise<Guide[]> {
     .prepare('SELECT * FROM guides WHERE is_current = 1')
     .all() as Record<string, unknown>[];
   return rows.map(rowToGuide);
+}
+
+export function getRankingData(): Array<{ spec_name: string; guide_content: Guide['guide_content'] }> {
+  const rows = getDb()
+    .prepare('SELECT spec_name, guide_content FROM guides WHERE is_current = 1')
+    .all() as Array<{ spec_name: string; guide_content: string }>;
+  return rows.map(row => ({
+    spec_name: row.spec_name,
+    guide_content: JSON.parse(row.guide_content),
+  }));
 }
 
 // ── APL Snapshot helpers ─────────────────────────────────────

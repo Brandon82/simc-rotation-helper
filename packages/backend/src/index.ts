@@ -19,35 +19,22 @@ app.set('trust proxy', 1);
 
 app.use(helmet());
 app.use(cors({ origin: config.corsOrigin }));
-app.use(express.json());
+app.use(express.json({ limit: '100kb' }));
 
 // ── Rate Limiters ─────────────────────────────────────────────
-// General: 120 requests per minute per IP for public API
-const generalLimiter = rateLimit({
-  windowMs: 60 * 1000,
-  max: 120,
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: { error: 'Too many requests, please slow down.' },
-});
+function createLimiter(max: number, message: string) {
+  return rateLimit({
+    windowMs: 60 * 1000,
+    max,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: message },
+  });
+}
 
-// Admin: 10 requests per minute per IP (auth-protected but still limit)
-const adminLimiter = rateLimit({
-  windowMs: 60 * 1000,
-  max: 10,
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: { error: 'Too many admin requests.' },
-});
-
-// QA: 5 requests per minute per IP (each request triggers a Claude call)
-const qaLimiter = rateLimit({
-  windowMs: 60 * 1000,
-  max: 5,
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: { error: 'Too many Q&A requests, please slow down.' },
-});
+const generalLimiter = createLimiter(config.rateLimitGeneral, 'Too many requests, please slow down.');
+const adminLimiter = createLimiter(config.rateLimitAdmin, 'Too many admin requests.');
+const qaLimiter = createLimiter(config.rateLimitQa, 'Too many Q&A requests, please slow down.');
 
 // ── Routes ───────────────────────────────────────────────────
 app.use('/api/specs', generalLimiter, specsRouter);

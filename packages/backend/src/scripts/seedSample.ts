@@ -230,16 +230,18 @@ export async function seedSampleData() {
     }
   }
 
-  // Create a dev QA API key
-  const DEV_QA_KEY = 'qa_dev_000000000000000000000000000000000000000000000000';
-  const existingKeys = listQaApiKeys();
-  const devKeyExists = existingKeys.some(k => k.api_key === DEV_QA_KEY && k.is_active);
+  // Create a dev QA API key (skip in production)
+  if (process.env.NODE_ENV !== 'production') {
+    const existingKeys = listQaApiKeys();
+    const hasActiveDevKey = existingKeys.some(k => k.label === 'dev' && k.is_active);
 
-  if (!devKeyExists) {
-    insertQaApiKey(crypto.randomUUID(), DEV_QA_KEY, 'dev');
-    console.log(`\nDev QA API key created: ${DEV_QA_KEY}`);
-  } else {
-    console.log('\nDev QA API key already exists (skipped).');
+    if (!hasActiveDevKey) {
+      const devKey = `qa_dev_${crypto.randomBytes(24).toString('hex')}`;
+      insertQaApiKey(crypto.randomUUID(), devKey, 'dev');
+      console.log(`\nDev QA API key created: ${devKey}`);
+    } else {
+      console.log('\nDev QA API key already exists (skipped).');
+    }
   }
 
   console.log(`[seed] Sample seed complete: ${inserted} inserted, ${skipped} skipped.`);

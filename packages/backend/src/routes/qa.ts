@@ -1,19 +1,12 @@
 import { Router } from 'express';
 import type { Request, Response } from 'express';
+import { config } from '../config.js';
 import { validateQaApiKey, getCurrentGuide } from '../db/client.js';
+import { requireQaKey } from '../middleware/auth.js';
 import { getSpecInfo, getClassForSpec } from '../data/specs.js';
 import { answerQuestion } from '../services/llmService.js';
 
 const router = Router();
-
-function requireQaAuth(req: Request, res: Response): boolean {
-  const apiKey = req.headers['x-qa-key'] as string | undefined;
-  if (!apiKey || !validateQaApiKey(apiKey)) {
-    res.status(401).json({ error: 'Invalid or missing QA API key' });
-    return false;
-  }
-  return true;
-}
 
 // GET /api/qa/validate
 router.get('/validate', (req: Request, res: Response) => {
@@ -27,9 +20,7 @@ router.get('/validate', (req: Request, res: Response) => {
 });
 
 // POST /api/qa/ask
-router.post('/ask', async (req: Request, res: Response) => {
-  if (!requireQaAuth(req, res)) return;
-
+router.post('/ask', requireQaKey, async (req: Request, res: Response) => {
   const { specName, question } = req.body as { specName?: string; question?: string };
 
   if (!specName || !question) {
@@ -37,8 +28,13 @@ router.post('/ask', async (req: Request, res: Response) => {
     return;
   }
 
-  if (question.length > 1000) {
-    res.status(400).json({ error: 'Question too long (max 1000 characters)' });
+  if (typeof specName !== 'string' || specName.length > 100) {
+    res.status(400).json({ error: 'Invalid specName' });
+    return;
+  }
+
+  if (question.length > config.questionMaxLength) {
+    res.status(400).json({ error: `Question too long (max ${config.questionMaxLength} characters)` });
     return;
   }
 

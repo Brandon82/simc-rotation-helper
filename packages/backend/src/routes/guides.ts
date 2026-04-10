@@ -47,7 +47,7 @@ router.get('/:specName', async (req: Request, res: Response) => {
   try {
     const guide = await getCurrentGuide(specName);
     if (!guide) {
-      res.status(404).json({ error: `No guide found for spec: ${specName}` });
+      res.status(404).json({ error: 'Guide not found' });
       return;
     }
 
