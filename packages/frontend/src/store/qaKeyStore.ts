@@ -8,7 +8,7 @@ interface QaKeyStore {
 
 function getStoredKey(): string {
   try {
-    return localStorage.getItem('qa_key') ?? '';
+    return sessionStorage.getItem('qa_key') ?? '';
   } catch {
     return '';
   }
@@ -17,11 +17,11 @@ function getStoredKey(): string {
 export const useQaKeyStore = create<QaKeyStore>((set) => ({
   qaKey: getStoredKey(),
   setKey: (key: string) => {
-    try { localStorage.setItem('qa_key', key); } catch {}
+    try { sessionStorage.setItem('qa_key', key); } catch {}
     set({ qaKey: key });
   },
   clearKey: () => {
-    try { localStorage.removeItem('qa_key'); } catch {}
+    try { sessionStorage.removeItem('qa_key'); } catch {}
     set({ qaKey: '' });
   },
 }));
