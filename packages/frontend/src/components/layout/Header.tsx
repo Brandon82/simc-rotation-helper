@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useThemeStore } from '../../store/themeStore';
+import { SIMC_WEBSITE_URL, ANTHROPIC_URL } from '../../utils/constants';
 import { SwordsIcon } from '../icons/SwordsIcon';
 
 interface HeaderProps {
@@ -64,7 +65,7 @@ export function Header({ onToggleSidebar }: HeaderProps) {
           <span className="text-gray-400 dark:text-gray-600 text-xs hidden md:block">
             Powered by{' '}
             <a
-              href="https://www.simulationcraft.org"
+              href={SIMC_WEBSITE_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-gray-600 dark:hover:text-gray-400 transition-colors underline underline-offset-2"
@@ -73,7 +74,7 @@ export function Header({ onToggleSidebar }: HeaderProps) {
             </a>
             {' + '}
             <a
-              href="https://www.anthropic.com/claude"
+              href={ANTHROPIC_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-gray-600 dark:hover:text-gray-400 transition-colors underline underline-offset-2"

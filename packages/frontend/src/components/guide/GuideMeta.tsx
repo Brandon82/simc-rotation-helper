@@ -1,3 +1,5 @@
+import { simcAplFileUrl } from '../../utils/constants';
+
 interface GuideMetaProps {
   aplFileName: string;
   aplCommitSha: string;
@@ -12,7 +14,7 @@ export function GuideMeta({ aplFileName, aplCommitSha, aplCommitDate, generatedA
       year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',
     });
 
-  const aplUrl = `https://github.com/simulationcraft/simc/blob/${aplCommitSha}/ActionPriorityLists/default/${aplFileName}.simc`;
+  const aplUrl = simcAplFileUrl(aplCommitSha, aplFileName);
 
   return (
     <div className="flex flex-wrap gap-3 text-xs text-gray-500 bg-gray-50 dark:bg-gray-900 rounded-lg px-4 py-2.5 border border-gray-200 dark:border-gray-800 mb-2">

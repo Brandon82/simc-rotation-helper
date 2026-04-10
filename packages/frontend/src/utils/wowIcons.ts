@@ -1,4 +1,6 @@
-const WH_CDN = 'https://wow.zamimg.com/images/wow/icons';
+import { WOW_ICON_CDN } from './constants';
+
+const WH_CDN = WOW_ICON_CDN;
 
 export type IconSize = 'small' | 'medium' | 'large';
 

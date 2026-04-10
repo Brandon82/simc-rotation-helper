@@ -4,19 +4,8 @@ import { useSpecs } from '../hooks/useSpecs';
 import { classIconUrl, specIconUrl } from '../utils/wowIcons';
 import { useThemeStore } from '../store/themeStore';
 import { CLASS_COLORS_DARK, CLASS_COLORS_LIGHT } from '../utils/classColors';
+import { GITHUB_PROJECT_URL, ROLE_LABELS, ROLE_COLORS } from '../utils/constants';
 import { SwordsIcon } from '../components/icons/SwordsIcon';
-
-const ROLE_LABELS: Record<string, string> = {
-  dps: 'DPS',
-  tank: 'Tank',
-  healer: 'Healer',
-};
-
-const ROLE_COLORS: Record<string, string> = {
-  dps:    'text-red-500 dark:text-red-400',
-  tank:   'text-blue-500 dark:text-blue-400',
-  healer: 'text-green-500 dark:text-green-400',
-};
 
 export function HomePage() {
   const { data, isLoading } = useSpecs();
@@ -271,7 +260,7 @@ export function HomePage() {
 
         {/* GitHub link — full width, secondary treatment */}
         <a
-          href="https://github.com/Brandon82/SimCRotationGuides"
+          href={GITHUB_PROJECT_URL}
           target="_blank"
           rel="noopener noreferrer"
           className="group flex items-center gap-4 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-gray-400 dark:hover:border-gray-600 rounded-2xl p-4 transition-all hover:bg-gray-50 dark:hover:bg-gray-800/60"

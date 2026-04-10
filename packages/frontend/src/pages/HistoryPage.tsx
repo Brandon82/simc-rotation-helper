@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAllGuides } from '../hooks/useAllGuides';
 import type { GuideSummaryItem } from '../types';
 import { classIconUrl, specIconUrl } from '../utils/wowIcons';
+import { simcCommitUrl } from '../utils/constants';
 import { useThemeStore } from '../store/themeStore';
 import { CLASS_COLORS_DARK, CLASS_COLORS_LIGHT } from '../utils/classColors';
 import { InlineMarkdown } from '../components/guide/InlineMarkdown';
@@ -370,7 +371,7 @@ export function HistoryPage() {
                                     <span className="text-xs text-gray-500 dark:text-gray-400">
                                       Changes from{' '}
                                       <a
-                                        href={`https://github.com/simulationcraft/simc/commit/${g.changelog.previousCommitSha}`}
+                                        href={simcCommitUrl(g.changelog.previousCommitSha)}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         onClick={e => e.stopPropagation()}
