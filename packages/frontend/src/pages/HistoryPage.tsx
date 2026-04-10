@@ -6,6 +6,7 @@ import { classIconUrl, specIconUrl } from '../utils/wowIcons';
 import { useThemeStore } from '../store/themeStore';
 import { CLASS_COLORS_DARK, CLASS_COLORS_LIGHT } from '../utils/classColors';
 import { InlineMarkdown } from '../components/guide/InlineMarkdown';
+import { BackLink } from '../components/ui/BackLink';
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleString(undefined, {
@@ -96,9 +97,7 @@ export function HistoryPage() {
   return (
     <div className="pb-8">
       <div className="mb-6">
-        <Link to="/" className="text-xs text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
-          ← All classes
-        </Link>
+        <BackLink to="/">All classes</BackLink>
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1 mt-0.5">Guide History</h1>
         <p className="text-sm text-gray-500">
           All generated guides across every spec — current and historical.

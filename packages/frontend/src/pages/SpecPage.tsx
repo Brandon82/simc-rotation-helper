@@ -1,4 +1,5 @@
 import { useParams, Link } from 'react-router-dom';
+import { BackLink } from '../components/ui/BackLink';
 import { useGuide, useGuideHistory } from '../hooks/useGuide';
 import { GuideMeta } from '../components/guide/GuideMeta';
 import { GuideSection } from '../components/guide/GuideSection';
@@ -72,7 +73,7 @@ export function SpecPage() {
         <p className="text-gray-500 text-sm mb-4">
           This spec most likely does not have an APL on SimulationCraft and is not supported by SimC.
         </p>
-        <Link to="/" className="text-sm text-blue-500 dark:text-blue-400 hover:underline">← Back to home</Link>
+        <BackLink to="/">Back to home</BackLink>
       </div>
     );
   }
@@ -98,9 +99,7 @@ export function SpecPage() {
             />
           </div>
           <div>
-            <Link to="/" className="text-xs text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
-              ← All classes
-            </Link>
+            <BackLink to="/">All classes</BackLink>
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white mt-0.5">{specLabel}</h1>
           </div>
         </div>

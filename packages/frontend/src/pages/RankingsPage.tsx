@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { BackLink } from '../components/ui/BackLink';
 import { useRankings } from '../hooks/useRankings';
 import type { RankingItem } from '../types';
 import { specIconUrl } from '../utils/wowIcons';
@@ -58,7 +59,7 @@ export function RankingsPage() {
     return (
       <div className="flex flex-col items-center justify-center h-64 text-center">
         <p className="text-gray-600 dark:text-gray-400 mb-2">Failed to load rankings.</p>
-        <Link to="/" className="text-sm text-blue-500 dark:text-blue-400 hover:underline">← Back to home</Link>
+        <BackLink to="/">Back to home</BackLink>
       </div>
     );
   }
@@ -66,9 +67,7 @@ export function RankingsPage() {
   return (
     <div className="pb-8">
       <div className="mb-6">
-        <Link to="/" className="text-xs text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
-          ← All classes
-        </Link>
+        <BackLink to="/">All classes</BackLink>
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2 mt-0.5">Rotation Complexity</h1>
         <p className="text-gray-600 dark:text-gray-400 text-sm">
           Specs ranked by number of priority actions in their SimC APL rotation.

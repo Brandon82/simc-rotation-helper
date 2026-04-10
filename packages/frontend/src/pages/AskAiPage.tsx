@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { useSpecs } from '../hooks/useSpecs';
+import { BackLink } from '../components/ui/BackLink';
 import { useQaKeyStore } from '../store/qaKeyStore';
 import { askQuestion, validateQaKey } from '../api/client';
 import { Markdown } from '../components/qa/Markdown';
@@ -86,9 +86,7 @@ export function AskAiPage() {
     <div className="pb-8">
       {/* Header */}
       <div className="mb-6">
-        <Link to="/" className="text-xs text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
-          ← All classes
-        </Link>
+        <BackLink to="/">All classes</BackLink>
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white mt-1">Ask AI</h1>
         <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
           Ask questions about any spec's rotation guide.

@@ -1,6 +1,6 @@
 import { useState, Fragment } from 'react';
-import { Link } from 'react-router-dom';
 import { useChangelog } from '../hooks/useChangelog';
+import { BackLink } from '../components/ui/BackLink';
 import type { ChangelogCommit } from '../types';
 
 function formatDate(iso: string) {
@@ -26,9 +26,7 @@ export function ChangelogPage() {
   return (
     <div className="pb-8">
       <div className="mb-6">
-        <Link to="/" className="text-xs text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors">
-          &larr; All classes
-        </Link>
+        <BackLink to="/">All classes</BackLink>
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1 mt-0.5">Project Changelog</h1>
         <p className="text-sm text-gray-500">
           All commits and updates to SimC Rotation Helper.
