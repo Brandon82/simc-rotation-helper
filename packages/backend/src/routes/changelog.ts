@@ -5,19 +5,16 @@ import type { ChangelogCommit } from '@simc-guides/shared';
 
 const router = Router();
 
-const PROJECT_REPO = 'Brandon82/SimCRotationGuides';
-
 const githubHeaders: Record<string, string> = config.githubToken
   ? { Authorization: `Bearer ${config.githubToken}` }
   : {};
 
-// Cache all commits with a TTL
+// Cache all commits with a configurable TTL (default 1 hour)
 let cache: { commits: ChangelogCommit[]; fetchedAt: number } | null = null;
-const CACHE_TTL_MS = 10 * 60 * 1000; // 10 minutes
 
 async function fetchAllCommits(): Promise<ChangelogCommit[]> {
   const now = Date.now();
-  if (cache && now - cache.fetchedAt < CACHE_TTL_MS) {
+  if (cache && now - cache.fetchedAt < config.changelogCacheTtlMs) {
     return cache.commits;
   }
 
@@ -25,7 +22,7 @@ async function fetchAllCommits(): Promise<ChangelogCommit[]> {
   let page = 1;
 
   while (true) {
-    const url = `https://api.github.com/repos/${PROJECT_REPO}/commits`;
+    const url = `https://api.github.com/repos/${config.projectRepo}/commits`;
     const response = await axios.get(url, {
       headers: githubHeaders,
       params: { per_page: 100, sha: 'main', page },

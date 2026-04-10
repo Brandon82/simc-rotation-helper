@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { config } from '../config.js';
 
-const REPO = 'simulationcraft/simc';
-const BRANCH = 'midnight';
-const APL_PATH = 'ActionPriorityLists/default';
+const REPO = config.simcRepo;
+const BRANCH = config.simcBranch;
+const APL_PATH = config.simcAplPath;
 
 const githubHeaders = config.githubToken
   ? { Authorization: `Bearer ${config.githubToken}` }
