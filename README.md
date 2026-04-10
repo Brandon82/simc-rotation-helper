@@ -1,6 +1,6 @@
 # SimC Rotation Guides
 
-> **Live App:** [https://simcrotationguides.vercel.app/](https://simcrotationguides.vercel.app/)
+> **Live App:** [https://simc-rotation-guides.vercel.app/](https://simc-rotation-guides.vercel.app/)
 
 AI-powered World of Warcraft rotation guides generated directly from [SimulationCraft](https://github.com/simulationcraft/simc) Action Priority Lists (APLs). Each guide is built by feeding the raw `.simc` APL file into Claude, producing a structured, human-readable rotation guide that stays automatically synchronized with the SimC `midnight` branch.
 
@@ -45,16 +45,30 @@ cp .env.example .env
 
 | Variable | Required | Default | Description |
 |---|---|---|---|
-| `ANTHROPIC_API_KEY` | Yes | -| Anthropic API key for Claude |
-| `ADMIN_SECRET` | Yes | -| Bearer token for admin endpoints |
+| `ANTHROPIC_API_KEY` | Yes | -- | Anthropic API key for Claude |
+| `ADMIN_SECRET` | Production | Auto-generated in dev | Bearer token for admin endpoints |
 | `PORT` | No | `3001` | Backend HTTP port |
 | `DB_PATH` | No | `./data/db.sqlite` | Path to SQLite database file |
 | `ANTHROPIC_MODEL` | No | `claude-sonnet-4-6` | Claude model to use |
 | `PROMPT_VERSION` | No | `1.0.0` | Logged alongside generated guides |
-| `GITHUB_TOKEN` | No | -| GitHub PAT (avoids 60 req/hr rate limit) |
+| `GITHUB_TOKEN` | No | -- | GitHub PAT (avoids 60 req/hr rate limit) |
 | `CRON_SCHEDULE` | No | `0 3 * * *` | Cron schedule (default: 3 AM UTC daily) |
-| `CORS_ORIGIN` | No | `*` | Allowed CORS origins |
+| `CORS_ORIGIN` | No | `http://localhost:5173` | Allowed CORS origin |
 | `VITE_API_BASE_URL` | Frontend | `/api` | Full backend URL for Vercel deployment |
+
+Additional optional configuration (see `.env.example` for full list):
+
+| Variable | Default | Description |
+|---|---|---|
+| `RATE_LIMIT_GENERAL` | `120` | Requests per minute for public API |
+| `RATE_LIMIT_ADMIN` | `10` | Requests per minute for admin endpoints |
+| `RATE_LIMIT_QA` | `5` | Requests per minute for Q&A endpoints |
+| `QA_MAX_LENGTH` | `1000` | Max character length for Q&A questions |
+| `CHANGELOG_CACHE_TTL_MS` | `3600000` | Changelog cache TTL (default 1 hour) |
+| `SIMC_REPO` | `simulationcraft/simc` | SimulationCraft GitHub repository |
+| `SIMC_BRANCH` | `midnight` | SimC branch to track |
+| `SIMC_APL_PATH` | `ActionPriorityLists/default` | APL directory within the SimC repo |
+| `PROJECT_REPO` | `Brandon82/SimCRotationGuides` | This project's GitHub repo (for changelog) |
 
 ### Local Development
 
@@ -72,7 +86,7 @@ npm run dev:backend
 npm run dev:frontend
 ```
 
-The sample seed loads pre-generated guides for all 44 specs and creates a dev QA API key (`qa_dev_000000000000000000000000000000000000000000000000`) for testing the Ask AI feature. No Anthropic API key is required.
+The sample seed loads pre-generated guides for all 44 specs and creates a dev QA API key (printed to the console) for testing the Ask AI feature. No Anthropic API key is required.
 
 > **Full seed (optional):** To generate fresh guides from the live SimC APLs using your own API key, run `npm run seed --workspace packages/backend` instead. Estimated cost is $1-5 depending on APL length and model pricing.
 
@@ -157,6 +171,8 @@ docker-compose up
 ```
 
 ### Rate Limiting
+
+Defaults (configurable via env vars):
 
 | Tier | Limit | Endpoints |
 |---|---|---|
