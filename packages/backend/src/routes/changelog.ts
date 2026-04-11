@@ -18,44 +18,53 @@ async function fetchAllCommits(): Promise<ChangelogCommit[]> {
     return cache.commits;
   }
 
-  const allCommits: ChangelogCommit[] = [];
-  let page = 1;
+  try {
+    const allCommits: ChangelogCommit[] = [];
+    let page = 1;
 
-  while (true) {
-    const url = `https://api.github.com/repos/${config.projectRepo}/commits`;
-    const response = await axios.get(url, {
-      headers: githubHeaders,
-      params: { per_page: 100, sha: 'main', page },
-    });
-
-    const raw = response.data as Array<{
-      sha: string;
-      commit: {
-        message: string;
-        author: { name: string; date: string };
-      };
-      html_url: string;
-    }>;
-
-    if (raw.length === 0) break;
-
-    for (const c of raw) {
-      allCommits.push({
-        sha: c.sha,
-        shortSha: c.sha.slice(0, 7),
-        message: c.commit.message,
-        author: c.commit.author.name,
-        date: c.commit.author.date,
-        url: c.html_url,
+    while (true) {
+      const url = `https://api.github.com/repos/${config.projectRepo}/commits`;
+      const response = await axios.get(url, {
+        headers: githubHeaders,
+        params: { per_page: 100, sha: 'main', page },
+        timeout: 10_000,
       });
+
+      const raw = response.data as Array<{
+        sha: string;
+        commit: {
+          message: string;
+          author: { name: string; date: string };
+        };
+        html_url: string;
+      }>;
+
+      if (raw.length === 0) break;
+
+      for (const c of raw) {
+        allCommits.push({
+          sha: c.sha,
+          shortSha: c.sha.slice(0, 7),
+          message: c.commit.message,
+          author: c.commit.author.name,
+          date: c.commit.author.date,
+          url: c.html_url,
+        });
+      }
+
+      if (raw.length < 100) break;
+      page++;
     }
 
-    if (raw.length < 100) break;
-    page++;
+    cache = { commits: allCommits, fetchedAt: now };
+    return allCommits;
+  } catch (err) {
+    if (cache) {
+      console.warn('[changelog] GitHub fetch failed, serving stale cache');
+      return cache.commits;
+    }
+    throw err;
   }
-
-  cache = { commits: allCommits, fetchedAt: now };
-  return allCommits;
 }
 
 router.get('/', async (req, res) => {
