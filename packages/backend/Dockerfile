@@ -23,7 +23,7 @@ COPY --from=builder /app/packages/backend/dist ./dist
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/packages/backend/package.json ./package.json
 
-RUN mkdir -p /app/data && chown appuser:appgroup /app/data
+RUN mkdir -p /app/data && chmod 777 /app/data && chown appuser:appgroup /app/data
 
 ENV DB_PATH=/app/data/db.sqlite
 ENV NODE_ENV=production
