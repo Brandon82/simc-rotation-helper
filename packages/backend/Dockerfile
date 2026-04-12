@@ -23,16 +23,15 @@ COPY --from=builder /app/packages/backend/dist ./dist
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/packages/backend/package.json ./package.json
 
-RUN mkdir -p /app/data && chmod 777 /app/data && chown appuser:appgroup /app/data
+RUN apk add --no-cache su-exec \
+ && mkdir -p /app/data && chown appuser:appgroup /app/data
 
 ENV DB_PATH=/app/data/db.sqlite
 ENV NODE_ENV=production
-
-USER appuser
 
 EXPOSE 3001
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s \
   CMD wget -qO- http://localhost:3001/api/health || exit 1
 
-CMD ["node", "dist/backend/src/index.js"]
+CMD ["sh", "-c", "chown appuser:appgroup /app/data && exec su-exec appuser node dist/backend/src/index.js"]
