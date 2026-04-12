@@ -17,9 +17,21 @@ export function getDb(): Database.Database {
     fs.mkdirSync(dir, { recursive: true });
   }
 
+  console.log(`[db] Opening database at ${config.dbPath}`);
   db = new Database(config.dbPath);
   db.pragma('journal_mode = WAL');
   db.pragma('foreign_keys = ON');
+
+  // Verify the database is writable (fail fast instead of during cron)
+  try {
+    db.exec('CREATE TABLE IF NOT EXISTS _write_test (id INTEGER); DROP TABLE _write_test;');
+  } catch (err) {
+    throw new Error(
+      `Database at ${config.dbPath} is not writable. ` +
+      `Ensure DB_PATH points to a persistent volume with write permissions. ` +
+      `Original error: ${(err as Error).message}`
+    );
+  }
 
   db.exec(`
     CREATE TABLE IF NOT EXISTS guides (
